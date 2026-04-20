@@ -1,0 +1,1 @@
+C:/MyWork/hanstaigerbottles/hanstaigerbottles/AGENTS.md
