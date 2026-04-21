@@ -1,0 +1,182 @@
+<div class="pt-[10vw] product-info-section" id="product-info-{{ section.id }}">
+  <div class="flex flex-col items-center">
+    <div class="mb-[1.528vw]">
+      {% render 'x1-icon' %}
+    </div>
+    <span class="text-black text-[0.972vw] leading-[1.389vw]"> From the X1</span>
+    <div class="h-[25.417vw] w-full relative">
+      <div class="w-full h-full flex flex-col items-center justify-end absolute bottom-0 left-1/2 transform -translate-x-1/2">
+        <h2
+          id="pi-heading-left-{{ section.id }}"
+          class="font-light text-(--color-primary) text-center text-[8.333vw] leading-[7.5vw]"
+        >
+          {{ section.settings.product_info_title_first_line }}
+        </h2>
+        <h2
+          id="pi-heading-right-{{ section.id }}"
+          class="font-light text-(--color-primary) text-center text-[8.333vw] leading-[7.5vw]"
+        >
+          {{ section.settings.product_info_title_second_line }}
+        </h2>
+      </div>
+      <img
+        id="pi-bottle-{{ section.id }}"
+        width="400"
+        height="400"
+        src="{% if section.settings.product_info_image %}{{ section.settings.product_info_image | img_url: 'master' }}{% else %}{{ 'x1-product.png' | asset_url }}{% endif %}"
+        alt="Hanstaiger X1 Bottle"
+        class="w-[38.056vw] block h-[24.931vw] object-contain absolute -bottom-[4vw] left-1/2 transform -translate-x-1/2 z-10"
+      >
+    </div>
+  </div>
+  <div class="pt-[15.139vw] flex items-end justify-between max-w-[58.889vw] mx-auto">
+    <div class="w-[35%]">
+      <p class="text-[#83868E] text-[1.111vw] leading-[1.528vw] mb-[2.5vw]">{{ section.settings.product_info_text }}</p>
+      <p class="text-[#222222] font-medium text-[1.111vw] leading-[1.528vw]">
+        For those who don’t settle for standard.
+      </p>
+    </div>
+    <div class="w-[65%]">
+      <p class="text-[#222222] font-medium text-[0.903vw] leading-[1.181vw] text-right">Born onboard, evolved beyond</p>
+      <ul class="flex gap-[0.417vw] flex-wrap justify-end mt-[1.667vw]">
+        {% for block in section.blocks %}
+          <li class="text-(--color-primary-hover) px-[0.764vw] py-[0.278vw] border border-color-(--color-primary-hover) text-[0.972vw] leading-[1.389vw] rounded-[0.139vw]">
+            {{ block.settings.feature_text }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  function initProductInfoAnim() {
+    var sectionId = document.currentScript
+      ? document.currentScript.closest('[id^="shopify-section-"]')
+      : null;
+
+    var suffix = '{{ section.id }}';
+    var bottle   = document.getElementById('pi-bottle-'       + suffix);
+    var headLeft = document.getElementById('pi-heading-left-' + suffix);
+    var headRight= document.getElementById('pi-heading-right-'+ suffix);
+    var section  = document.getElementById('product-info-'    + suffix);
+
+    if (!bottle || !headLeft || !headRight || !section) return;
+
+    function setup() {
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+        setTimeout(setup, 100);
+        return;
+      }
+      gsap.registerPlugin(ScrollTrigger);
+
+      var tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 90%',
+          end:   'top 10%',
+          scrub: 1.2,
+        }
+      });
+
+      tl.fromTo(bottle,   { y: 160, opacity: 0 }, { y: 0, opacity: 1, ease: 'none' }, 0)
+        .fromTo(headLeft, { x: -180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0)
+        .fromTo(headRight,{ x:  180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0);
+    }
+
+    setup();
+  }
+
+  if (!window.__gsapProductInfoLoaded) {
+    window.__gsapProductInfoLoaded = true;
+
+    var gsapScript = document.createElement('script');
+    gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+    gsapScript.onload = function() {
+      var stScript = document.createElement('script');
+      stScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js';
+      stScript.onload = initProductInfoAnim;
+      document.head.appendChild(stScript);
+    };
+    document.head.appendChild(gsapScript);
+  } else {
+    initProductInfoAnim();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Info",
+  "settings": [
+    {
+      "type": "text",
+      "id": "product_info_title_first_line",
+      "label": "Product Info Title - First Line",
+      "default": "Developed"
+    },
+    {
+      "type": "text",
+      "id": "product_info_title_second_line",
+      "label": "Product Info Title - Second Line",
+      "default": "to endure"
+    },
+    {
+      "type": "text",
+      "id": "product_info_text",
+      "label": "Product Info Text",
+      "default": "Every product in Hanstaiger World was tested aboard the X1 trimaran during extended voyages across the Mediterranean and Atlantic."
+    },
+    {
+      "type": "image_picker",
+      "id": "product_info_image",
+      "label": "Product Info Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_text",
+          "label": "Feature Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Info",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Engineering"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Durability"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_text": "BPA-Free Lid"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Performance"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

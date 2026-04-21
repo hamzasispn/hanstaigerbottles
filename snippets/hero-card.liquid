@@ -1,0 +1,18 @@
+<div class="hero-card max-w-[13.333vw] absolute bottom-0 right-0 p-[1.111vw] rounded-[0.417vw] bg-white/12 backdrop-blur-2xl">
+  <div class="flex flex-col items-start gap-[0.833vw]">
+    <img
+      height="94"
+      width="160"
+      src="{% if image %}{{ image | image_url: '2048x2048' }}{% else %}{{ 'hero-card.jpg' | asset_url }}{% endif %}"
+      alt="Hanstaiger X1 Icon"
+      class="w-full block h-[6.528vw]"
+    >
+    <a
+      href="{{ link }}"
+      class="capitalize text-white text-[0.972vw] leading-[1.389vw] tracking-[0.02em] font-normal flex items-center gap-[0.417vw]"
+    >
+      Check Bottles
+      {% render 'icon-arrow' %}
+    </a>
+  </div>
+</div>

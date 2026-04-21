@@ -1,0 +1,40 @@
+<style>
+  .announcement-bar {
+      background-color: {{ section.settings.background_color }};
+  }
+  .announcement-bar__message {
+      color: {{ section.settings.text_color }};
+  }
+</style>
+
+<div class="announcement-bar flex items-center justify-center py-[0.417vw]">
+  <p class="announcement-bar__message text-center uppercase text-[0.833vw] leading-[1.25] font-normal font-[var(--font-primary--family)]">
+    {{ section.settings.announcement_message }}
+  </p>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_message",
+      "label": "Announcement Message",
+      "default": "Designed at sea, engineered for performance  /  Free shipping on orders over $100"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#B92F00"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    }
+  ]
+}
+{% endschema %}

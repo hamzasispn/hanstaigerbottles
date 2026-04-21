@@ -1,0 +1,112 @@
+<style>
+  .hero-section {
+    background-image: url('{% if section.settings.background_image %}{{ section.settings.background_image | image_url: '2048x2048' }}{% else %}{{ 'hero-bg.jpg' | asset_url }}{% endif %}');
+    background-size: cover;
+    background-position: center;
+  }
+  .hero-section__title {
+    color: {{ section.settings.text_color }};
+  }
+</style>
+
+<div class="hero-section h-screen pt-[10.694vw] pb-[3.75vw] relative overflow-hidden">
+  <div class="max-w-[88.889vw] mx-auto relative h-full">
+    {% comment %} Hero Content Area  {% endcomment %}
+    <div class="hero-content max-w-[30.833vw]">
+      <h1 class="hero-section__title text-[3.333vw] leading-[4.028vw] font-[var(--font-primary--family)] mb-[2.222vw]">
+        {{ section.settings.title }}
+      </h1>
+      <div class="flex items-center">
+        <a
+          href="{{ section.settings.button_link }}"
+          class="hero-section__button btn-primary"
+        >
+          {{ section.settings.button_text }}
+        </a>
+        <a
+          href="{{ section.settings.button_link_2 }}"
+          class="hero-section__button btn-secondary"
+        >
+          {{ section.settings.button_text_2 }}
+        </a>
+      </div>
+    </div>
+    {% comment %} Position Elements {% endcomment %}
+    <h2 class="absolute left-[5.347vw] font-normal bottom-0 text-[8.611vw] text-white w-full">
+      {{ section.settings.bgtitle }}
+    </h2>
+    
+    {% render 'hero-card', image: section.settings.hero_card_image, link: section.settings.hero_card_link %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_background_image",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Hydration and gear inspired by the Hanstaiger X1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop the collection"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "button_text_2",
+      "label": "Button Text",
+      "default": "Discover the X1"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Button Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "bgtitle",
+      "label": "Background Title",
+      "default": "Engineered at sea"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_card_image",
+      "label": "Hero Card Image"
+    },
+    {
+      "type": "url",
+      "id": "hero_card_link",
+      "label": "Hero Card Link",
+      "default": "/collections/all"
+    }
+  ]
+}
+{% endschema %}

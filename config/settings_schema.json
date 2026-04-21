@@ -64,6 +64,18 @@
       },
       {
         "type": "color",
+        "id": "primary_color",
+        "default": "#F37021",
+        "label": "t:labels.primary"
+      },
+      {
+          "type": "color",
+          "id": "hover_primary_color",
+          "default": "#A44309",
+          "label": "t:labels.primary_hover"
+      },
+      {
+        "type": "color",
         "id": "foreground_color",
         "default": "#333333",
         "label": "t:labels.foreground"
