@@ -11,11 +11,49 @@
   "sections": {
     "main": {
       "type": "hero-section",
-      "settings": {}
+      "settings": {
+        "title": "Hydration and gear inspired by the Hanstaiger X1",
+        "text_color": "#ffffff",
+        "button_text": "Shop the collection",
+        "button_link": "shopify://collections/all",
+        "button_text_2": "Discover the X1",
+        "button_link_2": "shopify://collections/all",
+        "bgtitle": "Engineered at sea",
+        "hero_card_link": "shopify://collections/all"
+      }
     },
     "product-info": {
       "type": "product-info",
-      "settings": {}
+      "blocks": {
+        "feature_tyJb7C": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Engineering"
+          }
+        },
+        "feature_R44Wib": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Durability"
+          }
+        },
+        "feature_JbXFzg": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Performance"
+          }
+        }
+      },
+      "block_order": [
+        "feature_tyJb7C",
+        "feature_R44Wib",
+        "feature_JbXFzg"
+      ],
+      "settings": {
+        "product_info_title_first_line": "Developed",
+        "product_info_title_second_line": "to endure",
+        "product_info_text": "Every product in Hanstaiger World was tested aboard the X1 trimaran during extended voyages across the Mediterranean and Atlantic."
+      }
     }
   },
   "order": [
