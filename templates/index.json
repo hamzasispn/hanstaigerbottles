@@ -16,10 +16,20 @@
     "product-info": {
       "type": "product-info",
       "settings": {}
-    }
+    },
+    "video": {
+      "type": "video-section",
+      "settings": {}
+    },
+    "collections-tabs": {
+      "type": "collections-tabs",
+      "settings": {}
+    } 
   },
   "order": [
     "main",
-    "product-info"
+    "product-info",
+    "video",
+    "collections-tabs"
   ]
 }

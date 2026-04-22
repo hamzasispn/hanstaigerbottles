@@ -1,0 +1,330 @@
+{% assign tab_blocks = section.blocks | where: 'type', 'collection_tab' %}
+
+<script>
+  window['collectionsData_{{ section.id }}'] = [
+    {% for block in tab_blocks %}
+    {
+      label: {{ block.settings.tab_label | json }},
+      products: [
+        {% for product in collections[block.settings.collection].products limit: 8 %}
+        {% assign av = product.first_available_variant | default: product.variants.first %}
+        {
+          id: {{ product.id | json }},
+          title: {{ product.title | json }},
+          price: {{ product.price | money | json }},
+          image: {{ product.featured_image | image_url: width: 800 | json }},
+          alt: {{ product.featured_image.alt | default: product.title | json }},
+          url: {{ product.url | json }},
+          variantId: {{ av.id | json }},
+          variantTitle: {{ av.title | json }},
+          available: {{ av.available | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+</script>
+
+<section
+  id="section-{{ section.id }}"
+  class="bg-white overflow-hidden pt-[4vw] pb-[3vw]"
+  x-data="
+    {
+      collections: window['collectionsData_{{ section.id }}'] || [],
+      activeTab:   0,
+      current:     0,
+      isAnimating: false,
+      autoplayTimer: null,
+
+      SLIDE_W:  22.222,
+      SLIDE_H: 26.389,
+      ACTIVE_W: 30.889,
+      ACTIVE_H: 34.278,
+      GAP:      1.25,
+      BEFORE:   2,
+
+      get products() { return this.collections[this.activeTab]?.products || []; },
+      get total()    { return this.products.length; },
+      get activeProduct() { return this.products[this.current] || null; },
+      get isSoldOut() {
+        const p = this.activeProduct;
+        return !p || !p.available || !p.variantId;
+      },
+      get allSlides() {
+        if (!this.total) return [];
+        return [...this.products.slice(-this.BEFORE), ...this.products, ...this.products.slice(0, this.BEFORE)];
+      },
+      get UNIT() { return this.SLIDE_W + this.GAP; },
+      offsetPx(idx) {
+        const realIdx = this.BEFORE + idx;
+        return realIdx * this.UNIT - this.BEFORE * this.UNIT;
+      },
+      isActive(i) { return i === this.BEFORE + this.current; },
+
+      init() { this.current = 0; this.startAutoplay(); },
+
+      switchTab(index) {
+        this.stopAutoplay();
+        this.activeTab   = index;
+        this.current     = 0;
+        this.isAnimating = false;
+        this.startAutoplay();
+      },
+
+      goTo(idx) {
+        if (this.isAnimating || !this.total) return;
+        this.isAnimating = true;
+        this.current = ((idx % this.total) + this.total) % this.total;
+        setTimeout(() => { this.isAnimating = false; }, 520);
+      },
+      next() { this.goTo(this.current + 1); },
+      prev() { this.goTo(this.current - 1); },
+
+      startAutoplay() {
+        const enabled = {{ section.settings.autoplay | default: false | json }};
+        const speed   = {{ section.settings.speed | default: 3000 }};
+        if (!enabled) return;
+        this.autoplayTimer = setInterval(() => this.next(), speed);
+      },
+      stopAutoplay() {
+        if (this.autoplayTimer) { clearInterval(this.autoplayTimer); this.autoplayTimer = null; }
+      },
+
+      dragStartX: 0,
+      onDragStart(e) { this.dragStartX = e.touches ? e.touches[0].clientX : e.clientX; },
+      onDragEnd(e) {
+        const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+        const diff = endX - this.dragStartX;
+        if (diff >  50) this.prev();
+        if (diff < -50) this.next();
+      },
+
+      atcLabel: 'Add to cart',
+      atcBusy:  false,
+      addToCart() {
+        const variantId = this.activeProduct?.variantId;
+        if (!variantId || this.isSoldOut || this.atcBusy) return;
+        this.atcBusy  = true;
+        this.atcLabel = '...';
+        fetch('/cart/add.js', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ id: variantId, quantity: 1 }),
+        })
+          .then(r => r.json())
+          .then(() => {
+            this.atcLabel = 'Added!';
+            setTimeout(() => { this.atcLabel = 'Add to cart'; this.atcBusy = false; }, 1500);
+          })
+          .catch(() => { this.atcLabel = 'Add to cart'; this.atcBusy = false; });
+      },
+    }
+  "
+  x-init="init()"
+>
+  <div class="grid grid-cols-12 items-center px-[4.444vw] mb-[8.333vw]">
+    <!-- label + heading -->
+    <div class="col-span-4">
+      <p class="text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">
+        {{ section.settings.label | default: 'Core Products' }}
+      </p>
+      <div class="flex items-center gap-[1.667vw]">
+        {% for block in section.blocks %}
+          {% if block.type == 'collection_tab' %}
+            <button
+              class="flex items-center gap-[0.5vw] text-[0.872vw] font-normal transition-colors duration-200"
+              :class="activeTab === {{ forloop.index0 }} ? 'text-black' : 'text-gray-400 hover:text-gray-600'"
+              @click="switchTab({{ forloop.index0 }})"
+              {{ block.shopify_attributes }}
+            >
+              <span
+                class="w-[0.5vw] h-[0.5vw] rounded-sm inline-block transition-colors duration-200 flex-shrink-0"
+                :class="activeTab === {{ forloop.index0 }} ? 'bg-black' : 'bg-transparent border border-gray-300'"
+              ></span>
+              {{ block.settings.tab_label | default: 'Tab' }}
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- tabs + description -->
+    <div class="col-span-8">
+      <h2 class="text-[4.167vw] font-normal leading-none tracking-tight text-gray-900 mb-[1.667vw]">
+        {{ section.settings.heading | default: 'Essential Hydration' }}
+      </h2>
+
+      <p class="text-[0.833vw] text-gray-500 leading-relaxed">
+        {{
+          section.settings.description
+          | default: 'Designed to be used together. Engineered to perform independently.'
+        }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 4: slider + overlay card -->
+  <div
+    class="relative cursor-grab active:cursor-grabbing select-none max-w-[95vw] ml-auto overflow-hidden h-[35.278vw] flex items-end"
+    @mousedown="onDragStart"
+    @mouseup="onDragEnd"
+    @touchstart.passive="onDragStart"
+    @touchend="onDragEnd"
+  >
+    <!-- Sliding track -->
+    <div
+      class="flex items-end"
+      :style="
+        {
+          gap:        GAP + 'vw',
+          transform:  'translateX(-' + offsetPx(current) + 'vw)',
+          transition: isAnimating ? 'transform 0.5s ease' : 'none',
+          willChange: 'transform',
+        }
+      "
+    >
+      <template x-for="(product, i) in allSlides" :key="i">
+        <div
+          class="flex-shrink-0 relative overflow-hidden transition-all duration-500 cursor-pointer"
+          :style="
+            {
+              width:   (isActive(i) ? ACTIVE_W : SLIDE_W) + 'vw',
+              height:  (isActive(i) ? ACTIVE_H : SLIDE_H) + 'vw',
+            }
+          "
+          @click="goTo( ((i - BEFORE) % total + total) % total )"
+        >
+          <!-- active product title + price -->
+          <div
+            :class="isActive(i) ? 'flex' : 'hidden'"
+            class="items-center justify-between mb-[1.2vw]"
+          >
+            <p class="text-[1.1vw] font-normal text-gray-900 leading-snug" x-text="activeProduct?.title || ''"></p>
+            <p class="text-[1.1vw] text-gray-900" x-text="isSoldOut ? 'Sold out' : (activeProduct?.price || '')"></p>
+          </div>
+
+          <div class="bg-[#e1e1e1] p-[2vw] w-full h-full relative">
+            <img
+              :src="product.image || ''"
+              :alt="product.alt || ''"
+              loading="lazy"
+              class="object-contain h-[80%] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            >
+            <!-- Buy now — active slide only -->
+            <a
+              :href="product.url || '#'"
+              class="absolute bottom-[1.2vw] right-[1.2vw] flex items-center gap-[0.35vw] text-[0.75vw] text-gray-900 transition-opacity duration-300"
+              :class="isActive(i) ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+              @click.stop
+            >
+              Buy now
+              <svg style="width:13px;height:13px" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="#111" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- ATC overlay card — top-left of slider -->
+    <div
+      class="absolute top-0 left-0 z-10 bg-[#1D1D1D]/40 backdrop-blur-sm"
+      style="width:18vw; padding:0.9vw 1.1vw;"
+    >
+      <!-- product info row -->
+      <div class="flex items-center justify-between mb-[0.8vw]">
+        <span class="text-[0.694vw] text-white font-normal" x-text="activeProduct?.title || ''"></span>
+        <div class="flex items-center gap-[0.8vw]">
+          <span
+            class="text-[0.625vw] text-white"
+            x-text="activeProduct?.variantTitle && activeProduct.variantTitle !== 'Default Title' ? activeProduct.variantTitle : ''"
+          ></span>
+          <span
+            class="text-[0.694vw] text-white"
+            x-text="isSoldOut ? 'Sold out' : (activeProduct?.price || '')"
+          ></span>
+        </div>
+      </div>
+
+      <!-- ATC row -->
+      <div class="flex items-center justify-between">
+        <span class="text-[0.625vw] text-white">Add items to your cart</span>
+        <button
+          class="w-[4vw] h-[2vw] flex items-center justify-center bg-white text-gray-900 text-[1vw] font-light transition-colors duration-200 disabled:opacity-40"
+          :disabled="isSoldOut || atcBusy"
+          @click.stop="addToCart()"
+          :title="atcLabel"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 5: pagination ticks — centered -->
+  <div class="flex items-center justify-center gap-[12px] mt-[2vw]">
+    <template x-for="(p, i) in products" :key="i">
+      <span
+        class="inline-block cursor-pointer transition-all duration-200 w-[1px] bg-[#6C6F77] overflow-visible relative"
+        :style="
+          `height: ${
+            i === current ? '30px' :
+            Math.abs(i - current) === 1 ? '22px' :
+            Math.abs(i - current) === 2 ? '19px' :
+            '12px'
+          }`
+        "
+        @click="goTo(i)"
+      >
+        <span
+          x-show="current === i"
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[12px] w-[12px] bg-[#FF5029] flex items-center justify-center text-white text-[8px]"
+        ></span>
+      </span>
+    </template>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Tabs Slider",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section Label", "default": "Core Products" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Essential Hydration" },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Designed to be used together. Engineered to perform independently."
+    },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Autoplay Speed (ms)",
+      "min": 1000,
+      "max": 8000,
+      "step": 500,
+      "default": 3000
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_tab",
+      "name": "Collection Tab",
+      "settings": [
+        { "type": "text", "id": "tab_label", "label": "Tab Label", "default": "Bottles" },
+        { "type": "collection", "id": "collection", "label": "Collection" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Tabs Slider",
+      "blocks": [{ "type": "collection_tab" }, { "type": "collection_tab" }]
+    }
+  ]
+}
+{% endschema %}

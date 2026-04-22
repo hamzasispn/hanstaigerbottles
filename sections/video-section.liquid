@@ -1,0 +1,123 @@
+{% assign media_type = section.settings.media_type | default: 'video' %}
+
+<div class="mt-[9.167vw] h-screen relative flex items-end justify-between px-[2.778vw] py-[2.778vw] text-white">
+
+  {% comment %} Background Media {% endcomment %}
+  {% if media_type == 'video' and section.settings.video_url != blank %}
+    <div class="absolute inset-0 -z-10 overflow-hidden">
+      <video
+        class="w-full h-full object-cover"
+        autoplay
+        muted
+        loop
+        playsinline
+        {% if section.settings.video_poster != blank %}
+          poster="{{ section.settings.video_poster | image_url: width: 1920 }}"
+        {% endif %}
+      >
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    </div>
+  {% elsif media_type == 'image' and section.settings.background_image != blank %}
+    <div class="absolute inset-0 -z-10 overflow-hidden">
+      <img
+        src="{{ section.settings.background_image | image_url: width: 1920 }}"
+        alt="{{ section.settings.background_image.alt | escape }}"
+        class="w-full h-full object-cover"
+        loading="eager"
+      >
+    </div>
+  {% else %}
+    <div class="absolute inset-0 -z-10 overflow-hidden">
+      <img
+        src="{{ 'video-bg.jpg' | asset_url }}"
+        alt="Background"
+        class="w-full h-full object-cover"
+        loading="eager"
+      >
+    </div>
+  {% endif %}
+
+  <div class="p-[1.667vw] w-[20vw] bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.139vw] border border-white/9">
+    <h2 class="pl-[1.25vw] font-normal text-[0.972vw] leading-[1.389vw] mb-[2.778vw] relative">
+      <span
+        class="rounded-xs bg-white w-[0.556vw] h-[0.556vw] inline-block absolute transform -translate-y-1/2 top-1/2 left-0"
+      ></span>
+      {{ section.settings.video_title }}
+    </h2>
+    <p class="text-[0.972vw] leading-[1.389vw]">{{ section.settings.video_description }}</p>
+  </div>
+
+  
+    <a href="{{ section.settings.cta_link }}"
+    class="font-normal text-[0.972vw] leading-[1.389vw] py-[0.556vw] px-[0.833vw] flex items-center gap-[0.556vw] bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.139vw]"
+  >
+    <span>{{ section.settings.cta_text }}</span>
+    {% render 'icon-arrow-left' %}
+  </a>
+
+</div>
+
+{% schema %}
+{
+  "name": "Video Section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Background Media Type",
+      "options": [
+        { "value": "video", "label": "Video" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "video"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Background Video URL",
+      "info": "Used when Media Type is set to Video. Upload your video file to Files and paste the URL here."
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video Poster / Fallback Image",
+      "info": "Shown before the video loads. Also used as fallback on devices that can't autoplay."
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image",
+      "info": "Used when Media Type is set to Image."
+    },
+    {
+      "type": "text",
+      "id": "video_title",
+      "label": "Title",
+      "default": "The Hanstaiger X1"
+    },
+    {
+      "type": "textarea",
+      "id": "video_description",
+      "label": "Description",
+      "default": "Crossing the Mediterranean sea. If you want to discover the X1, please visit hanstaiger.com"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Link",
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text",
+      "default": "Discover the yacht"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Section"
+    }
+  ]
+}
+{% endschema %}

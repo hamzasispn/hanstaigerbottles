@@ -18,5 +18,8 @@
     "sass": "^1.99.0",
     "tailwindcss": "^4.2.2",
     "vite": "^8.0.9"
+  },
+  "dependencies": {
+    "swiper": "^12.1.3"
   }
 }

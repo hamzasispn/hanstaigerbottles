@@ -1,0 +1,184 @@
+{% comment %}
+  Section: bundles-section.liquid → /sections/
+  Accordion card row: clicking + on a collapsed card expands it (full bleed image),
+  collapses the active one. Last card open by default.
+  Requires: Alpine.js, Tailwind CSS
+  Snippet:  /snippets/bundle-card.liquid
+{% endcomment %}
+
+<section
+  x-data="{
+    active: {{ section.blocks.size | minus: 1 }},
+    variants: {},
+    init() {
+      {%- for block in section.blocks -%}
+        this.variants[{{ forloop.index0 }}] = 'v1';
+      {%- endfor -%}
+    },
+    open(i) { this.active = i; },
+    isActive(i) { return this.active === i; }
+  }"
+  class="w-full bg-white"
+  style="padding: 4.44vw 3.61vw 5.56vw;"
+>
+
+  {%- comment -%} ── Header Row ──────────────────────────────────────────── {%- endcomment -%}
+  <div class="flex items-start justify-between" style="margin-bottom: 3.47vw;">
+
+    <h2
+      class="font-light text-[#111111] leading-[1.05] tracking-[-0.02em]"
+      style="font-size: 5.56vw; max-width: 22vw;"
+    >
+      {{ section.settings.heading | default: 'Everything you need' }}
+    </h2>
+
+    <p
+      class="text-[#555555] leading-[1.55]"
+      style="font-size: 1.04vw; max-width: 26vw; padding-top: 0.69vw;"
+    >
+      {{ section.settings.description | default: 'Pre-configured bundies that simplify your hydration setup. Performance without complexity.' }}
+    </p>
+
+  </div>
+
+  {%- comment -%} ── Cards Row ───────────────────────────────────────────── {%- endcomment -%}
+  <div class="flex items-stretch" style="gap: 1.11vw; height: 34.03vw;">
+
+    {%- for block in section.blocks -%}
+      {% render 'bundle-card', block: block, idx: forloop.index0 %}
+    {%- endfor -%}
+
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Bundle Cards Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Everything you need"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Pre-configured bundies that simplify your hydration setup. Performance without complexity."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bundle",
+      "name": "Bundle Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card Image / Background"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Bundle Title",
+          "default": "Essentials Bundle"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Electrolytes"
+        },
+        {
+          "type": "text",
+          "id": "tag_1",
+          "label": "Feature Tag 1",
+        },
+        {
+          "type": "text",
+          "id": "tag_2",
+          "label": "Feature Tag 2 (bordered badge)",
+        },
+        {
+          "type": "text",
+          "id": "variant_1",
+          "label": "Variant Option 1",
+          "default": "Subtle Citrus"
+        },
+        {
+          "type": "text",
+          "id": "variant_2",
+          "label": "Variant Option 2",
+          "default": "Pure Neutral"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "€95"
+        },
+        {
+          "type": "text",
+          "id": "save_text",
+          "label": "Save Label",
+          "default": "SAVE €5"
+        },
+        {
+          "type": "text",
+          "id": "subscription_label",
+          "label": "Subscription Label (shown when expanded)",
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Bundle URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle Cards Section",
+      "blocks": [
+        {
+          "type": "bundle",
+          "settings": {
+            "title": "Essentials Bundle",
+            "subtitle": "Electrolytes",
+            "variant_1": "Subtle Citrus",
+            "variant_2": "Pure Neutral",
+            "price": "€95",
+            "save_text": "SAVE €5"
+          }
+        },
+        {
+          "type": "bundle",
+          "settings": {
+            "title": "Complete Bundle",
+            "subtitle": "SixH Bottle + Electrolytes",
+            "variant_1": "Subtle Citrus",
+            "variant_2": "Pure Neutral",
+            "price": "€105",
+            "save_text": "SAVE €15"
+          }
+        },
+        {
+          "type": "bundle",
+          "settings": {
+            "title": "Voyage Bundle",
+            "tag_1": "30-Day Electrolytes",
+            "tag_2": "Free Bottle",
+            "variant_1": "Subtle Citrus",
+            "variant_2": "Pure Neutral",
+            "price": "€195",
+            "save_text": "SAVE €55",
+            "subscription_label": "MIN. SUBSCRIPTION: 3 MONTHS"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
