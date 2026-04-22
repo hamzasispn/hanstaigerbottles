@@ -1,13 +1,219 @@
-<div class="bg-[#F4F4F5] pt-[5.556vw] pb-[3.889vw]">
+<div class="bg-[#F4F4F5] pt-[5.556vw] pb-[3.889vw]" x-data>
+  {% render 'section-header',
+    label: section.settings.label,
+    heading: section.settings.heading,
+    description: section.settings.description,
+    link: section.settings.link,
+    link_text: section.settings.link_text
+  %}
 
-    {% render 'section-header', label: section.settings.label, heading: section.settings.heading, description: section.settings.description, link: section.settings.link, link_text: section.settings.link_text %}
+  <div class="pt-[8.333vw] relative">
+    <!-- Swiper -->
+    <div class="swiper blocks-slider overflow-hidden pl-[5.556vw]">
+      <div class="swiper-wrapper items-stretch">
+        {% for block in section.blocks %}
+          {% if block.type == 'slide' %}
+            <div class="swiper-slide !w-[56.944vw] !h-auto" {{ block.shopify_attributes }}>
+              <div class="flex h-full bg-[#F4F4F5]">
+                <!-- Image -->
+                <div class="w-[34.306vw] flex-shrink-0 overflow-hidden">
+                  {% if block.settings.image %}
+                    <img
+                      src="{{ block.settings.image | img_url: '1000x800', crop: 'center' }}"
+                      alt="{{ block.settings.image.alt | escape }}"
+                      width="494"
+                      height="462"
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="w-full h-full bg-[#E0E0E0] flex items-center justify-center text-[#999] text-[0.972vw]">
+                      No image
+                    </div>
+                  {% endif %}
+                </div>
 
-    <div class="pt-[8.333vw] swiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                
+                <!-- Text Content -->
+                <div class="flex flex-col justify-center px-[3.472vw] py-[3.472vw]">
+                  {% if block.settings.heading != blank %}
+                    <h3 class="text-[2.222vw] leading-[2.639vw] font-light tracking-[-0.02em] text-[#1A1A1A] mb-[1.667vw]">
+                      {{ block.settings.heading }}
+                    </h3>
+                  {% endif %}
+
+                  {% if block.settings.description != blank %}
+                    <p class="text-[0.972vw] leading-[1.528vw] text-[#5A5A5A] mb-[2.222vw] max-w-[18.056vw]">
+                      {{ block.settings.description }}
+                    </p>
+                  {% endif %}
+
+                  {% if block.settings.button_label != blank and block.settings.button_url != blank %}
+                    <a
+                      href="{{ block.settings.button_url }}"
+                      class="inline-flex items-center gap-[0.694vw] border border-[#D0D0D0] bg-[#EBEBEC] text-[#1A1A1A] text-[0.833vw] tracking-[0.02em] px-[1.111vw] h-[2.778vw] w-fit hover:bg-[#1A1A1A] hover:text-white hover:border-[#1A1A1A] transition-colors duration-300"
+                    >
+                      {{ block.settings.button_label }}
+                      <svg
+                        width="1.111vw"
+                        height="0.694vw"
+                        viewBox="0 0 16 10"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-[1.111vw] h-[0.694vw]"
+                      >
+                        <path d="M1 5H15M15 5L11 1M15 5L11 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
             </div>
-          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
 
+    <!-- Navigation Arrows -->
+    <div class="flex justify-end items-center gap-[0.694vw] mt-[2.778vw] pr-[5.556vw]">
+      <button
+        class="blocks-slider-prev w-[3.472vw] h-[3.472vw] rotate-180 flex items-center justify-center border border-[#D0D0D0] bg-[#F4F4F5] hover:bg-[#1A1A1A] hover:border-[#1A1A1A] group transition-colors duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Previous slide"
+      >
+        {% render 'button-arrow' %}
+      </button>
+      <button
+        class="blocks-slider-next w-[3.472vw] h-[3.472vw] flex items-center justify-center border border-[#1A1A1A] bg-[#EBEBEC] hover:bg-[#1A1A1A] hover:border-[#1A1A1A] group transition-colors duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Next slide"
+      >
+        {% render 'button-arrow' %}
+      </button>
+    </div>
+  </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.blocks-slider', {
+      slidesPerView: 'auto',
+      spaceBetween: window.innerWidth * (24 / 1440), // 1.667vw in px
+      freeMode: false,
+      navigation: {
+        nextEl: '.blocks-slider-next',
+        prevEl: '.blocks-slider-prev',
+      },
+      breakpoints: {
+        0: {
+          spaceBetween: 12,
+        },
+        768: {
+          spaceBetween: window.innerWidth * (24 / 1440),
+        },
+      },
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Blocks Slider",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Crafted for every occasion"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Explore our curated pieces, each designed with intention."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Header Link URL"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Header Link Text",
+      "default": "View all"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Effortless refinement"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Cut from premium Italian linen, our shirts breathe naturally in the heat while maintaining a crisp silhouette. Tailored for those who understand that true luxury lies in the details."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Explore linen shirts"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blocks Slider",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Effortless refinement",
+            "description": "Cut from premium Italian linen, our shirts breathe naturally in the heat while maintaining a crisp silhouette. Tailored for those who understand that true luxury lies in the details.",
+            "button_label": "Explore linen shirts"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Understated authority",
+            "description": "The X1 Cap: unstructured, essential. A finishing touch for those who know. Designed for the discerning eye.",
+            "button_label": "Explore caps"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Built for motion",
+            "description": "Precision-cut performance pieces that move with you — from morning sessions to evening engagements, without compromise.",
+            "button_label": "Shop performance"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
