@@ -25,8 +25,12 @@
             {% if block.type == 'feature_item' %}
               <li class="text-[0.972vw] leading-[1.389vw] flex items-center gap-[1.111vw] mb-[1.389vw]" {{ block.shopify_attributes }}>
                 <span class="w-[1.667vw] h-[1.667vw] p-[0.347vw]">
-                  {% if block.settings.icon != blank %}
-                    {% render block.settings.icon %}
+                  {% if block.settings.icon == "calender-icon" %}
+                    {% render 'calender-icon' %}
+                  {% elsif block.settings.icon == "globe-icon" %}
+                    {% render 'globe-icon' %}
+                  {% elsif block.settings.icon == "replay-music-icon" %}
+                    {% render 'replay-music-icon' %}
                   {% else %}
                     {% render 'calender-icon' %}
                   {% endif %}
