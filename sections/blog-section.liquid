@@ -95,8 +95,9 @@
   document.addEventListener('DOMContentLoaded', function () {
     new Swiper('.blocks-slider', {
       slidesPerView: 'auto',
-      spaceBetween: window.innerWidth * (24 / 1440), // 1.667vw in px
+      spaceBetween: window.innerWidth * (24 / 1440),
       freeMode: false,
+      modules: [window.Navigation],
       navigation: {
         nextEl: '.blocks-slider-next',
         prevEl: '.blocks-slider-prev',

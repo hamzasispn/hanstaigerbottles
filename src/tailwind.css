@@ -2,9 +2,9 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-[var(--color-primary)] font-normal text-white py-[0.972vw] px-[1.667vw] text-[0.972vw] leading-[1.389vw] tracking-[0.02em];
+    @apply bg-[var(--color-primary)] font-normal text-white py-[0.972vw] px-[1.667vw] text-[0.972vw] leading-[1.389vw] tracking-[0.02em] inline-block;
   }
   .btn-secondary {
-    @apply bg-transparent text-white font-normal py-[0.972vw] px-[1.667vw] text-[0.972vw] leading-[1.389vw] tracking-[0.02em];
+    @apply bg-transparent text-white font-normal py-[0.972vw] px-[1.667vw] text-[0.972vw] leading-[1.389vw] tracking-[0.02em] inline-block;
   }
 }
