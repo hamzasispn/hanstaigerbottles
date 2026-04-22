@@ -62,12 +62,17 @@
     "collections-tabs": {
       "type": "collections-tabs",
       "settings": {}
+    },
+    "image-box": {
+        "type": "image-box",
+        "settings": {}
     }
   },
   "order": [
     "main",
     "product-info",
     "video",
-    "collections-tabs"
+    "collections-tabs",
+    "image-box"
   ]
 }
