@@ -1,0 +1,259 @@
+{% comment %}
+  Section: product-accordion.liquid → /sections/
+  Accordion card row: clicking + on a collapsed card expands it (full bleed image),
+  collapses the active one. Second card open by default.
+  Requires: Alpine.js, Tailwind CSS
+  Product data pulled directly from product picker — no manual fields needed.
+{% endcomment %}
+
+<section
+  x-data="{
+    active: 1,
+    open(i) { this.active = i; },
+    isActive(i) { return this.active === i; }
+  }"
+  class="w-full bg-[#F4F4F5]"
+  style="padding: 4.44vw 3.61vw 5.56vw;"
+>
+
+  <div class="flex items-stretch" style="gap: 1.11vw; height: 25.69vw;">
+
+    {%- for block in section.blocks -%}
+      {%- assign i = forloop.index0 -%}
+      {%- assign product = block.settings.product -%}
+
+      {%- assign card_title = product.title | default: 'Product' -%}
+      {%- assign card_image = product.featured_image -%}
+      {%- assign card_price = product.price_min | money -%}
+      {%- assign card_variant = product.first_available_variant -%}
+      {%- assign card_url = product.url -%}
+
+      <div
+        x-bind:style="isActive({{ i }})
+          ? 'flex: 3.5; min-width: 0;'
+          : 'flex: 1; min-width: 0;'"
+        class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+        style="border-radius: 0.56vw; flex: 1;"
+        {{ block.shopify_attributes }}
+      >
+
+        {%- comment -%} ═══ EXPANDED STATE ═══ {%- endcomment -%}
+        <div
+          x-show="isActive({{ i }})"
+          x-transition:enter="transition-opacity duration-300 delay-150"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition-opacity duration-150"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0"
+          class="absolute inset-0 flex flex-col"
+        >
+          {%- comment -%} Background image {%- endcomment -%}
+          <div class="absolute inset-0">
+            {%- if card_image != blank -%}
+              <img
+                src="{{ card_image | image_url: width: 1400 }}"
+                alt="{{ card_image.alt | escape | default: card_title }}"
+                class="w-full h-full object-cover"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="w-full h-full bg-gradient-to-br from-[#3a6070] via-[#1e3040] to-[#0a0f14]"></div>
+            {%- endif -%}
+            <div
+              class="absolute inset-0"
+              style="background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.70) 100%);"
+            ></div>
+          </div>
+
+          {%- comment -%} Minus / close button — top right {%- endcomment -%}
+          <button
+            @click="active = -1"
+            class="absolute z-20 flex items-center justify-center rounded-full border border-white border-opacity-50 text-white bg-black bg-opacity-20 hover:bg-opacity-35 transition-all duration-200"
+            style="top: 1.11vw; right: 1.11vw; width: 1.67vw; height: 1.67vw;"
+            aria-label="Close"
+          >
+            <svg style="width: 0.69vw; height: 0.69vw;" viewBox="0 0 12 2" fill="none">
+              <line x1="0.5" y1="1" x2="11.5" y2="1" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          {%- comment -%} Content — pinned to bottom {%- endcomment -%}
+          <div class="absolute inset-x-0 bottom-0 z-10" style="padding: 1.39vw 1.39vw 1.25vw;">
+
+            {%- comment -%} Title + Price {%- endcomment -%}
+            <div class="flex items-start justify-between" style="margin-bottom: 0.56vw;">
+              <h3 class="font-medium text-white leading-tight" style="font-size: 1.53vw;">
+                {{ card_title }}
+              </h3>
+              <span class="font-medium text-white" style="font-size: 1.25vw;">
+                {{ card_price }}
+              </span>
+            </div>
+
+            {%- comment -%} Option value badges from product options {%- endcomment -%}
+            {%- if product != blank and product.options_with_values.size > 0 -%}
+              <div class="flex items-center flex-wrap" style="gap: 0.42vw; margin-bottom: 1.11vw;">
+                {%- for option in product.options_with_values limit: 2 -%}
+                  {%- assign first_val = option.values | first -%}
+                  <span
+                    class="flex items-center text-white rounded-sm"
+                    style="font-size: 0.83vw; padding: 0.21vw 0.56vw; border: 1px solid rgba(255,255,255,{% if forloop.first %}0.9{% else %}0.45{% endif %});"
+                  >
+                    {{ first_val }}
+                  </span>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Divider {%- endcomment -%}
+            <div class="w-full bg-white bg-opacity-25" style="height: 1px; margin-bottom: 1.11vw;"></div>
+
+            {%- comment -%} Add to cart {%- endcomment -%}
+            {%- if card_variant != blank -%}
+              <form action="/cart/add" method="post">
+                <input type="hidden" name="id" value="{{ card_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button
+                  type="submit"
+                  class="flex items-center justify-between bg-white bg-opacity-15 backdrop-blur-sm text-white font-medium border border-white border-opacity-30 hover:bg-opacity-28 transition-all duration-200 w-full"
+                  style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw;"
+                >
+                  <span>Add to cart</span>
+                  <span>→</span>
+                </button>
+              </form>
+            {%- else -%}
+              <a
+                href="{{ card_url }}"
+                class="flex items-center justify-between bg-white bg-opacity-15 text-white font-medium border border-white border-opacity-30 w-full"
+                style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw;"
+              >
+                <span>View product</span>
+                <span>→</span>
+              </a>
+            {%- endif -%}
+
+          </div>
+        </div>
+
+        {%- comment -%} ═══ COLLAPSED STATE ═══ {%- endcomment -%}
+        <div
+          x-show="!isActive({{ i }})"
+          x-transition:enter="transition-opacity duration-300 delay-100"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition-opacity duration-100"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0"
+          class="absolute inset-0 flex flex-col bg-white"
+          style="padding: 1.11vw;"
+        >
+
+          {%- comment -%} Image + plus button {%- endcomment -%}
+          <div class="relative flex-1 overflow-hidden" style="margin-bottom: 1.11vw; border-radius: 0.28vw;">
+
+            {%- if card_image != blank -%}
+              <img
+                src="{{ card_image | image_url: width: 500 }}"
+                alt="{{ card_image.alt | escape | default: card_title }}"
+                class="w-full h-full object-cover"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="w-full h-full bg-[#E8E8E8] flex items-center justify-center">
+                {{ 'product-1' | placeholder_svg_tag: 'w-12 h-12 opacity-30' }}
+              </div>
+            {%- endif -%}
+
+            <button
+              @click="open({{ i }})"
+              class="absolute top-0 right-0 flex items-center justify-center bg-[#111111] rounded-full text-white"
+              style="width: 1.67vw; height: 1.67vw; margin: 0.56vw;"
+              aria-label="Open {{ card_title }}"
+            >
+              <svg style="width: 0.69vw; height: 0.69vw;" viewBox="0 0 12 12" fill="none">
+                <line x1="6" y1="0.5" x2="6" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="0.5" y1="6" x2="11.5" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+          </div>
+
+          {%- comment -%} Title + price + button {%- endcomment -%}
+          <div class="flex-shrink-0">
+
+            <div class="flex items-center justify-between" style="margin-bottom: 0.97vw;">
+              <h3 class="font-medium text-[#111111] leading-tight" style="font-size: 1.11vw;">
+                {{ card_title }}
+              </h3>
+              <span class="font-medium text-[#111111]" style="font-size: 1.11vw;">
+                {{ card_price }}
+              </span>
+            </div>
+
+            {%- if card_variant != blank -%}
+              <form action="/cart/add" method="post">
+                <input type="hidden" name="id" value="{{ card_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button
+                  type="submit"
+                  class="flex items-center justify-between bg-[#EBEBEB] text-[#111111] font-medium border border-[#CCCCCC] hover:bg-[#111111] hover:text-white hover:border-[#111111] transition-all duration-200 w-full"
+                  style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw;"
+                >
+                  <span>Add to cart</span>
+                  <span>→</span>
+                </button>
+              </form>
+            {%- else -%}
+              <a
+                href="{{ card_url }}"
+                class="flex items-center justify-between bg-[#EBEBEB] text-[#111111] font-medium border border-[#CCCCCC] w-full"
+                style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw;"
+              >
+                <span>View product</span>
+                <span>→</span>
+              </a>
+            {%- endif -%}
+
+          </div>
+        </div>
+
+      </div>
+    {%- endfor -%}
+
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Product Accordion Cards",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Accordion Cards",
+      "blocks": [
+        { "type": "product_card" },
+        { "type": "product_card" },
+        { "type": "product_card" },
+        { "type": "product_card" }
+      ]
+    }
+  ]
+}
+{% endschema %}
