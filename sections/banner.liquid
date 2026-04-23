@@ -7,6 +7,12 @@
       link: section.settings.link,
       link_text: section.settings.link_text
     %}
+
+    {% render 'banner-box',
+      bg-image: section.settings.banner-img,
+      banner_link: section.settings.banner-btn-link,
+      banner_btn_text: section.settings.banner_btn_text
+     %}
   </div>
 </div>
 
@@ -41,6 +47,21 @@
       "type": "text",
       "id": "link_text",
       "label": "Header Link Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner-img",
+      "label": "Banner Image"
+    },
+    {
+      "type": "url",
+      "id": "banner-btn-link",
+      "label": "Banner Btn Link"
+    },
+    {
+      "type": "text",
+      "id": "banner_btn_text",
+      "label": "Banner Btn Text"
     }
   ],
   "presets": [

@@ -1,0 +1,9 @@
+<div
+  class="max-h-[32.222vw] p-[2.778vw] relative mt-[8.333vw] mb-[1.667vw]"
+  style="background-image: url('{% if bg-image %} {{ bg-image }} {% else %} {{ 'banner-bg.jpg' | asset_url }} {% endif %}');"
+>
+  <a href="{{ banner_link }}" class="py-[0.556vw] px-[0.833vw] flex items-center gap-[1.111vw] text-white text-[0.972vw] leading-[1.389vw] bg-[#C4C4C4]/40 backdrop-blur-md">
+    {{ banner_btn_text }} 
+    {% render 'plus-icon' %}
+  </a>
+</div>
