@@ -34,15 +34,9 @@
               <sup>{{ detail_index }}</sup> <span>]</span>
             </h3>
             {% if block.settings.list != blank %}
-              <ul class="flex flex-col gap-[0.556vw]">
-                {% for link in linklists[block.settings.list].links %}
-                  <li class="text-[0.972vw] leading-[1.389vw] text-[#555555]">
-                    <a href="{{ link.url }}" class="hover:text-black transition-colors duration-200">
-                      {{ link.title }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
+              <div class="text-[0.833vw] leading-[1.111vw] text-black">
+                {{ block.settings.list }}
+              </div>
             {% endif %}
           </div>
         {% endif %}
