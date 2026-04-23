@@ -4,8 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 function splitWords(el) {
-  const text = el.innerHTML;
-  const words = text.split(' ');
+  const text = el.textContent.trim();
+  const words = text.split(/\s+/).filter(w => w.length > 0);
   el.innerHTML = words
     .map(w => `<span class="gsap-word" style="display:inline-block;overflow:hidden;vertical-align:bottom;"><span class="gsap-word-inner" style="display:inline-block;">${w}</span></span>`)
     .join(' ');

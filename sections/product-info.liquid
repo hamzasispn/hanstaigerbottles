@@ -31,14 +31,14 @@
   </div>
   <div class="pt-[15.139vw] flex items-end justify-between max-w-[58.889vw] mx-auto">
     <div class="w-[35%]">
-      <p class="text-[#83868E] text-[1.111vw] leading-[1.528vw] mb-[2.5vw]">{{ section.settings.product_info_text }}</p>
-      <p class="text-[#222222] font-medium text-[1.111vw] leading-[1.528vw]">
+      <p data-anim="fade-up" class="text-[#83868E] text-[1.111vw] leading-[1.528vw] mb-[2.5vw]">{{ section.settings.product_info_text }}</p>
+      <p data-anim="fade-up" class="text-[#222222] font-medium text-[1.111vw] leading-[1.528vw]">
         For those who don’t settle for standard.
       </p>
     </div>
     <div class="w-[65%]">
-      <p class="text-[#222222] font-medium text-[0.903vw] leading-[1.181vw] text-right">Born onboard, evolved beyond</p>
-      <ul class="flex gap-[0.417vw] flex-wrap justify-end mt-[1.667vw]">
+      <p data-anim="fade-up" class="text-[#222222] font-medium text-[0.903vw] leading-[1.181vw] text-right">Born onboard, evolved beyond</p>
+      <ul data-anim="stagger-children" class="flex gap-[0.417vw] flex-wrap justify-end mt-[1.667vw]">
         {% for block in section.blocks %}
           <li class="text-(--color-primary-hover) px-[0.764vw] py-[0.278vw] border border-color-(--color-primary-hover) text-[0.972vw] leading-[1.389vw] rounded-[0.139vw]">
             {{ block.settings.feature_text }}
