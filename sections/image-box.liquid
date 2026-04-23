@@ -1,23 +1,30 @@
 <div class="image-box py-[6.944vw] px-[5.556vw]">
-  <div class="h-screen py-[6.944vw] px-[6.25vw] flex flex-col justify-between relative z-10 bg-[#dfe0e2] rounded-sm">
+  <div
+    class="h-screen py-[6.944vw] px-[6.25vw] flex flex-col justify-between relative z-10 bg-[#dfe0e2] rounded-sm overflow-hidden"
+  >
+
+    {%- comment -%} Background Image {%- endcomment -%}
     {% if section.settings.background_image %}
       <img
-        src="{{ section.settings.background_image | img_url: '1000x1000' }}"
-        width="1000"
+        src="{{ section.settings.background_image | img_url: '2000x' }}"
+        width="2000"
         height="1000"
-        class="absolute top-1/2 transform -translate-1/2 left-1/2 -z-10 object-contain"
         alt="{{ section.settings.background_image.alt | escape }}"
+        class="absolute inset-0 w-full h-full -z-10"
+        style="object-fit: {{ section.settings.image_fit }};"
       >
     {% else %}
       <img
         src="{{ 'image-box-bg.jpg' | asset_url }}"
-        width="1000"
+        width="2000"
         height="1000"
-        class="absolute top-1/2 transform -translate-1/2 left-1/2 -z-10 object-contain"
         alt=""
+        class="absolute inset-0 w-full h-full -z-10"
+        style="object-fit: {{ section.settings.image_fit }};"
       >
     {% endif %}
 
+    {%- comment -%} Feature List — top right {%- endcomment -%}
     <div class="w-full flex justify-end">
       {% if section.blocks.size > 0 %}
         <ul data-anim="stagger-children">
@@ -25,11 +32,11 @@
             {% if block.type == 'feature_item' %}
               <li class="text-[0.972vw] leading-[1.389vw] flex items-center gap-[1.111vw] mb-[1.389vw]" {{ block.shopify_attributes }}>
                 <span class="w-[1.667vw] h-[1.667vw] p-[0.347vw]">
-                  {% if block.settings.icon == "calender-icon" %}
+                  {% if block.settings.icon == 'calender-icon' %}
                     {% render 'calender-icon' %}
-                  {% elsif block.settings.icon == "globe-icon" %}
+                  {% elsif block.settings.icon == 'globe-icon' %}
                     {% render 'globe-icon' %}
-                  {% elsif block.settings.icon == "replay-music-icon" %}
+                  {% elsif block.settings.icon == 'replay-music-icon' %}
                     {% render 'replay-music-icon' %}
                   {% else %}
                     {% render 'calender-icon' %}
@@ -50,26 +57,58 @@
       {% endif %}
     </div>
 
+    {%- comment -%} Bottom Content {%- endcomment -%}
     <div class="w-full">
+
       {% if section.settings.heading != blank %}
-        <h2 data-anim="split-words" class="text-[1.889vw] mb-[0.556vw] text-[#4F5257]">{{ section.settings.heading }}</h2>
+        <h2
+          data-anim="split-words"
+          class="text-[1.889vw] mb-[0.556vw]"
+          style="
+            color: {{ section.settings.heading_color }};
+            font-family: '{{ section.settings.font_family }}', sans-serif;
+          "
+        >
+          {{ section.settings.heading }}
+        </h2>
       {% endif %}
 
       {% if section.settings.subheading != blank %}
-        <p data-anim="fade-up" class="text-[0.813vw] uppercase tracking-[0.09vw] text-[#83868E] mb-[1.389vw]">{{ section.settings.subheading }}</p>
+        <p data-anim="fade-up" class="text-[0.813vw] uppercase tracking-[0.09vw] text-[#83868E] mb-[1.389vw]">
+          {{ section.settings.subheading }}
+        </p>
       {% endif %}
 
       {% if section.settings.description != blank %}
-        <p data-anim="fade-up" class="text-[1.111vw] leading-[1.528vw] mb-[2.778vw] max-w-[30.069vw] text-[#83868E]">
+        <p
+          data-anim="fade-up"
+          class="text-[1.111vw] leading-[1.528vw] mb-[2.778vw] max-w-[30.069vw]"
+          style="
+            color: {{ section.settings.description_color }};
+            font-family: '{{ section.settings.font_family }}', sans-serif;
+          "
+        >
           {{ section.settings.description }}
         </p>
       {% endif %}
 
       {% if section.settings.button_url != blank %}
-        <a href="{{ section.settings.button_url }}" class="bg-[#D1D1D1] h-[2.5vw] w-[6.944vw] flex items-center justify-center">
+        <a
+          href="{{ section.settings.button_url }}"
+          class="h-[2.5vw] px-[1.111vw] inline-flex items-center justify-center gap-[0.556vw] text-[0.833vw] font-medium"
+          style="
+            background-color: {{ section.settings.button_bg_color }};
+            color: {{ section.settings.button_text_color }};
+            font-family: '{{ section.settings.font_family }}', sans-serif;
+          "
+        >
+          {% if section.settings.button_label != blank %}
+            <span>{{ section.settings.button_label }}</span>
+          {% endif %}
           {% render 'button-arrow' %}
         </a>
       {% endif %}
+
     </div>
   </div>
 </div>
@@ -81,12 +120,22 @@
   "settings": [
     {
       "type": "header",
-      "content": "Background"
+      "content": "Background Image"
     },
     {
       "type": "image_picker",
       "id": "background_image",
       "label": "Background Image"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image Fit",
+      "options": [
+        { "value": "cover", "label": "Cover (fill & crop)" },
+        { "value": "contain", "label": "Contain (show full image)" }
+      ],
+      "default": "cover"
     },
     {
       "type": "header",
@@ -99,10 +148,16 @@
       "default": "Automated replenishment"
     },
     {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#4F5257"
+    },
+    {
       "type": "text",
       "id": "subheading",
       "label": "Subheading",
-      "default": "SUSCRIBE TO ELECTROLYTES"
+      "default": "SUBSCRIBE TO ELECTROLYTES"
     },
     {
       "type": "textarea",
@@ -111,14 +166,56 @@
       "default": "Receive a fresh 30-day supply of X1 Electrolytes every month, delivered directly to your door. Subscribe or cancel anytime. No commitments, no complexity. Currently available across Europe only."
     },
     {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#83868E"
+    },
+    {
       "type": "header",
       "content": "Button"
     },
     {
       "type": "url",
       "id": "button_url",
-      "label": "Button Link",
-      "default": "/"
+      "label": "Button Link"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Text",
+      "default": "Shop now"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#D1D1D1"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_family",
+      "label": "Font Family",
+      "options": [
+        { "value": "Inter", "label": "Inter" },
+        { "value": "inherit", "label": "Theme Default" },
+        { "value": "Georgia", "label": "Georgia" },
+        { "value": "Playfair Display", "label": "Playfair Display" },
+        { "value": "DM Sans", "label": "DM Sans" },
+        { "value": "Montserrat", "label": "Montserrat" },
+        { "value": "Lato", "label": "Lato" }
+      ],
+      "default": "Inter"
     }
   ],
   "blocks": [
