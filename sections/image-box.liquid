@@ -2,7 +2,6 @@
   <div
     class="h-screen py-[6.944vw] px-[6.25vw] flex flex-col justify-between relative z-10 bg-[#dfe0e2] rounded-sm overflow-hidden"
   >
-
     {%- comment -%} Background Image {%- endcomment -%}
     {% if section.settings.background_image %}
       <img
@@ -30,7 +29,10 @@
         <ul data-anim="stagger-children">
           {% for block in section.blocks %}
             {% if block.type == 'feature_item' %}
-              <li class="text-[0.972vw] leading-[1.389vw] flex items-center gap-[1.111vw] mb-[1.389vw]" {{ block.shopify_attributes }}>
+              <li
+                class="text-[0.972vw] leading-[1.389vw] flex items-center gap-[1.111vw] mb-[1.389vw]"
+                {{ block.shopify_attributes }}
+              >
                 <span class="w-[1.667vw] h-[1.667vw] p-[0.347vw]">
                   {% if block.settings.icon == 'calender-icon' %}
                     {% render 'calender-icon' %}
@@ -59,7 +61,6 @@
 
     {%- comment -%} Bottom Content {%- endcomment -%}
     <div class="w-full">
-
       {% if section.settings.heading != blank %}
         <h2
           data-anim="split-words"
@@ -108,7 +109,6 @@
           {% render 'button-arrow' %}
         </a>
       {% endif %}
-
     </div>
   </div>
 </div>
@@ -187,10 +187,10 @@
       "default": "Shop now"
     },
     {
-      "type": "color",
+      "type": "color_background",
       "id": "button_bg_color",
       "label": "Button Background Color",
-      "default": "#D1D1D1"
+      "default": "rgba(209, 209, 209, 1)"
     },
     {
       "type": "color",
@@ -208,7 +208,7 @@
       "label": "Font Family",
       "options": [
         { "value": "Inter", "label": "Inter" },
-        { "value": "inherit", "label": "Theme Default" },
+        { "value": "Helvetica Neue", "label": "Theme Default" },
         { "value": "Georgia", "label": "Georgia" },
         { "value": "Playfair Display", "label": "Playfair Display" },
         { "value": "DM Sans", "label": "DM Sans" },
