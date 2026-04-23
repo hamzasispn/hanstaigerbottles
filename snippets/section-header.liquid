@@ -1,26 +1,27 @@
-  <div class="grid grid-cols-12 items-start px-[4.444vw] mb-[8.333vw]">
-    <!-- label + heading -->
+<div class="grid grid-cols-12 items-start px-[4.444vw] mb-[8.333vw]">
+  <!-- label + heading -->
+  {% if label != blank %}
     <div class="col-span-4">
-      <p class="text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">
-        {{ label | default: 'Core Products' }}
-      </p>
+      <p class="text-[0.813vw] uppercase tracking-[0.09vw] text-[#83868E] mb-[0.556vw]">{{ label }}</p>
     </div>
+  {% endif %}
 
-    <!-- tabs + description -->
-    <div class="col-span-8">
-      <h2 class="text-[4.167vw] font-normal leading-none tracking-tight text-gray-900 mb-[1.667vw]">
-        {{ heading | default: 'Essential Hydration' }}
-      </h2>
+  <!-- tabs + description -->
+  <div class="col-span-8">
+    {% if heading != blank %}
+      <h2 class="text-[1.889vw] mb-[0.556vw] text-[#4F5257]">{{ heading }}</h2>
+    {% endif %}
 
-      <p class="text-[0.833vw] max-w-[28.889vw] text-gray-500 leading-relaxed">
-        {{
-          description
-          | default: 'Designed to be used together. Engineered to perform independently.'
-        }}
+    {% if description != blank %}
+      <p class="text-[1.111vw] leading-[1.528vw] text-[#5A5A5A] mb-[2.222vw] max-w-[30.069vw]">
+        {{ description }}
       </p>
+    {% endif %}
 
+    {% if link != blank and link_text != blank %}
       <a href="{{ link | default: "#" }}" class="btn-primary mt-[1.667vw]">
         {{ link_text | default: 'Explore full collection' }}
       </a>
-    </div>
+    {% endif %}
   </div>
+</div>
