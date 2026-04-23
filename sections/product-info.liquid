@@ -51,58 +51,33 @@
 
 <script>
 (function() {
-  function initProductInfoAnim() {
-    var sectionId = document.currentScript
-      ? document.currentScript.closest('[id^="shopify-section-"]')
-      : null;
+  var suffix = '{{ section.id }}';
+  var bottle   = document.getElementById('pi-bottle-'       + suffix);
+  var headLeft = document.getElementById('pi-heading-left-' + suffix);
+  var headRight= document.getElementById('pi-heading-right-'+ suffix);
+  var section  = document.getElementById('product-info-'    + suffix);
 
-    var suffix = '{{ section.id }}';
-    var bottle   = document.getElementById('pi-bottle-'       + suffix);
-    var headLeft = document.getElementById('pi-heading-left-' + suffix);
-    var headRight= document.getElementById('pi-heading-right-'+ suffix);
-    var section  = document.getElementById('product-info-'    + suffix);
+  if (!bottle || !headLeft || !headRight || !section) return;
 
-    if (!bottle || !headLeft || !headRight || !section) return;
+  // theme.js (defer) exposes window.gsap + window.ScrollTrigger — wait for it
+  function setup() {
+    if (!window.gsap || !window.ScrollTrigger) { setTimeout(setup, 50); return; }
 
-    function setup() {
-      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-        setTimeout(setup, 100);
-        return;
+    var tl = window.gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 90%',
+        end:   'top 10%',
+        scrub: 1.2,
       }
-      gsap.registerPlugin(ScrollTrigger);
+    });
 
-      var tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 90%',
-          end:   'top 10%',
-          scrub: 1.2,
-        }
-      });
-
-      tl.fromTo(bottle,   { y: 160, opacity: 0 }, { y: 0, opacity: 1, ease: 'none' }, 0)
-        .fromTo(headLeft, { x: -180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0)
-        .fromTo(headRight,{ x:  180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0);
-    }
-
-    setup();
+    tl.fromTo(bottle,   { y: 160, opacity: 0 }, { y: 0, opacity: 1, ease: 'none' }, 0)
+      .fromTo(headLeft, { x: -180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0)
+      .fromTo(headRight,{ x:  180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0);
   }
 
-  if (!window.__gsapProductInfoLoaded) {
-    window.__gsapProductInfoLoaded = true;
-
-    var gsapScript = document.createElement('script');
-    gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
-    gsapScript.onload = function() {
-      var stScript = document.createElement('script');
-      stScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js';
-      stScript.onload = initProductInfoAnim;
-      document.head.appendChild(stScript);
-    };
-    document.head.appendChild(gsapScript);
-  } else {
-    initProductInfoAnim();
-  }
+  setup();
 })();
 </script>
 
