@@ -1,0 +1,182 @@
+{%- comment -%}
+  Snippet: product-card.liquid
+  Usage: {% render 'product-card', product: product, lazy: true %}
+  Params:
+    - product      {Object}  Shopify product object (required)
+    - lazy         {Boolean} Lazy-load image (default: true)
+    - show_vendor  {Boolean} Show vendor label (default: false)
+    - aspect       {String}  Card image aspect ratio class (default: 'aspect-[3/4]')
+{%- endcomment -%}
+
+{%- liquid
+  assign lazy        = lazy | default: true
+  assign show_vendor = show_vendor | default: false
+  assign aspect      = aspect | default: 'aspect-[3/4]'
+  assign current_var = product.selected_or_first_available_variant
+  assign product_url = product.url | within: collection
+-%}
+
+<article
+  class="product-card group relative flex flex-col bg-white"
+  x-data="{
+    activeColor: {{ current_var.id | json }},
+    addedToCart: false,
+    addingToCart: false,
+    async addToCart() {
+      this.addingToCart = true;
+      try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: this.activeColor, quantity: 1 })
+        });
+        if (res.ok) {
+          this.addedToCart = true;
+          window.dispatchEvent(new CustomEvent('cart:refresh'));
+          setTimeout(() => this.addedToCart = false, 2000);
+        }
+      } finally {
+        this.addingToCart = false;
+      }
+    }
+  }"
+>
+
+  {%- comment -%} ── Image wrapper ──────────────────────────────────── {%- endcomment -%}
+  <a
+    href="{{ product_url }}"
+    class="{{ aspect }} relative block overflow-hidden bg-[#e8e8e8]"
+    aria-label="{{ product.title | escape }}"
+  >
+    {%- if product.featured_media -%}
+      {{
+        product.featured_media
+        | image_url: width: 800
+        | image_tag:
+          class: 'absolute inset-0 h-full w-full object-contain p-[5%] transition-transform duration-500 ease-out group-hover:scale-[1.04]',
+          loading: lazy | ternary: 'lazy', 'eager',
+          alt: product.featured_media.alt | escape | default: product.title,
+          widths: '300,400,600,800',
+          sizes: '(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 28vw'
+      }}
+    {%- else -%}
+      <span class="absolute inset-0 flex items-center justify-center text-[#aaa]">
+        {{ 'image' | placeholder_svg_tag: 'w-16 h-16 opacity-20' }}
+      </span>
+    {%- endif -%}
+
+    {%- if product.compare_at_price > product.price -%}
+      <span class="absolute left-[3%] top-[3%] bg-black px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-widest text-white">
+        Sale
+      </span>
+    {%- endif -%}
+  </a>
+
+  {%- comment -%} ── Card body ──────────────────────────────────────── {%- endcomment -%}
+  <div class="flex flex-col gap-y-2 px-0 pb-0 pt-3">
+
+    {%- if show_vendor and product.vendor != blank -%}
+      <p class="text-[0.6rem] uppercase tracking-[0.18em] text-[#888]">
+        {{ product.vendor }}
+      </p>
+    {%- endif -%}
+
+    {%- comment -%} Product type / label {%- endcomment -%}
+    <p class="text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-[#555]">
+      {%- if product.type != blank -%}
+        {{ product.type }}
+      {%- else -%}
+        {{ 'products.product.product' | t | default: 'Product' }}
+      {%- endif -%}
+    </p>
+
+    {%- comment -%} ── Color swatches ──────────────────────────────── {%- endcomment -%}
+    {%- assign color_option = nil -%}
+    {%- for option in product.options_with_values -%}
+      {%- assign option_name_lower = option.name | downcase -%}
+      {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
+        {%- assign color_option = option -%}
+        {%- assign color_option_index = forloop.index0 -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- comment -%} ── ADD TO CART row ─────────────────────────────── {%- endcomment -%}
+    <div class="flex items-center gap-x-3">
+
+      <button
+        type="button"
+        @click="addToCart()"
+        :disabled="addingToCart"
+        class="shrink-0 text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity duration-150 hover:opacity-50 disabled:cursor-wait disabled:opacity-40"
+        aria-label="{{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}"
+      >
+        <span x-show="!addedToCart && !addingToCart">
+          {{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}
+        </span>
+        <span x-show="addingToCart" x-cloak>…</span>
+        <span x-show="addedToCart" x-cloak class="text-green-600">✓ Added</span>
+      </button>
+
+      {%- if color_option != nil -%}
+        <div class="flex items-center gap-x-1.5" role="group" aria-label="Color options">
+          {%- for value in color_option.values -%}
+            {%- assign swatch_variant = nil -%}
+            {%- for variant in product.variants -%}
+              {%- assign v_color = variant.options[color_option_index] -%}
+              {%- if v_color == value and variant.available -%}
+                {%- assign swatch_variant = variant -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- if swatch_variant == nil -%}
+              {%- for variant in product.variants -%}
+                {%- assign v_color = variant.options[color_option_index] -%}
+                {%- if v_color == value -%}
+                  {%- assign swatch_variant = variant -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+
+            {%- if swatch_variant -%}
+              {%- assign value_handle = value | handleize -%}
+              {%- comment -%}
+                Map common colour names → CSS colours.
+                Extend this list for your store's palette.
+              {%- endcomment -%}
+              {%- assign css_color = value_handle
+                | replace: 'orange', '#e86012'
+                | replace: 'rust',   '#c0510e'
+                | replace: 'blue',   '#2d3fcf'
+                | replace: 'navy',   '#0a1a4a'
+                | replace: 'black',  '#1a1a1a'
+                | replace: 'white',  '#f5f5f5'
+                | replace: 'red',    '#d62828'
+                | replace: 'green',  '#2d6a4f'
+                | replace: 'grey',   '#888888'
+                | replace: 'gray',   '#888888'
+                | replace: 'pink',   '#e879a0'
+                | replace: 'yellow', '#f5c400'
+              -%}
+
+              <button
+                type="button"
+                @click="activeColor = {{ swatch_variant.id }}"
+                :class="activeColor === {{ swatch_variant.id }}
+                  ? 'ring-2 ring-black ring-offset-1 scale-110'
+                  : 'ring-1 ring-transparent hover:ring-[#bbb] hover:ring-offset-1'"
+                class="h-[0.9vw] min-h-[10px] w-[0.9vw] min-w-[10px] rounded-full transition-all duration-150"
+                style="background-color: {{ css_color }};"
+                aria-label="{{ value | escape }}"
+                title="{{ value | escape }}"
+              ></button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</article>
