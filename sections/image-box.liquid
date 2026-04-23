@@ -96,7 +96,7 @@
       {% if section.settings.button_url != blank %}
         <a
           href="{{ section.settings.button_url }}"
-          class="h-[2.5vw] px-[1.111vw] inline-flex items-center justify-center gap-[0.556vw] text-[0.833vw] font-medium"
+          class="{% if section.settings.button_label != blank %} w-[6.944vw] {% endif%} h-[2.5vw] px-[1.111vw] inline-flex items-center justify-center gap-[0.556vw] text-[0.833vw] font-medium"
           style="
             background-color: {{ section.settings.button_bg_color }};
             color: {{ section.settings.button_text_color }};
