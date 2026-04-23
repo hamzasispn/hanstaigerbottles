@@ -28,10 +28,10 @@
       {% for block in section.blocks %}
         {% if block.type == 'detail-list' %}
           {% assign detail_index = detail_index | plus: 1 %}
-          <div class="flex-1" {{ block.shopify_attributes }}>
-            <h3 class="mb-[1.736vw] text-[1.111vw] leading-[1.528vw] px-[0.347vw] text-black">
-              <span>[</span> {{ block.settings.heading -}}
-              <sup>{{ detail_index }}</sup> <span>]</span>
+          <div class="w-[8.75vw]" {{ block.shopify_attributes }}>
+            <h3 class="mb-[1.736vw] text-[1.111vw] leading-[1.528vw] px-[0.347vw] text-black font-medium">
+              <span class="text-[#E53D00]">[</span> {{ block.settings.heading -}}
+              <sup>{{ detail_index }}</sup> <span class="text-[#E53D00]">]</span>
             </h3>
             {% if block.settings.list != blank %}
               <div class="text-[0.833vw] leading-[1.111vw] text-black">
