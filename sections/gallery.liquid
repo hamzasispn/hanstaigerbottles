@@ -1,0 +1,108 @@
+<div class="mx-auto max-w-[88.889vw]">
+  {%- comment -%} Image Grid {%- endcomment -%}
+  <div class="grid grid-cols-3 gap-[1.111vw] py-[5.556vw]">
+    {% for block in section.blocks %}
+      {% if block.type == 'image-card' %}
+        {% if block.settings.img != blank %}
+          <img
+            src="{{ block.settings.img | image_url: width: 1080 }}"
+            alt="{{ block.settings.img.alt | escape }}"
+            class="w-full h-full object-cover"
+            width="1080"
+            height="1080"
+            {{ block.shopify_attributes }}
+          >
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {%- comment -%} Detail Lists {%- endcomment -%}
+  <div class="grid grid-cols-12 pb-[3.75vw] items-start">
+    <div class="col-span-4">
+      <p class="text-[0.903vw] text-black leading-[1.181vw]">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <div class="col-span-8 flex items-start gap-[1.111vw]">
+      {% assign detail_index = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'detail-list' %}
+          {% assign detail_index = detail_index | plus: 1 %}
+          <div class="flex-1" {{ block.shopify_attributes }}>
+            <h3 class="mb-[1.736vw] text-[1.111vw] leading-[1.528vw] px-[0.347vw] text-black">
+              <span>[</span> {{ block.settings.heading -}}
+              <sup>{{ detail_index }}</sup> <span>]</span>
+            </h3>
+            {% if block.settings.list != blank %}
+              <ul class="flex flex-col gap-[0.556vw]">
+                {% for link in linklists[block.settings.list].links %}
+                  <li class="text-[0.972vw] leading-[1.389vw] text-[#555555]">
+                    <a href="{{ link.url }}" class="hover:text-black transition-colors duration-200">
+                      {{ link.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Gallery Section",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sub title",
+      "default": "How we do it"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image-card",
+      "name": "Image Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "img",
+          "label": "Upload Image"
+        }
+      ]
+    },
+    {
+      "type": "detail-list",
+      "name": "Details List",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "list",
+          "label": "List"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gallery Section",
+      "blocks": [
+        { "type": "image-card" },
+        { "type": "image-card" },
+        { "type": "image-card" },
+        { "type": "detail-list", "settings": { "heading": "Materials" } },
+        { "type": "detail-list", "settings": { "heading": "Process" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
