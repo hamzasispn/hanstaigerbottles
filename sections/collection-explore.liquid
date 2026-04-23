@@ -109,11 +109,13 @@
   id="section-{{ section.id }}"
   class="collection-explore w-full bg-white font-[system-ui]"
   style="padding: var(--section-py) var(--section-px);"
+  data-sort-by="{{ collection_obj.sort_by | escape }}"
+  data-sort-options="{{ collection_obj.sort_options | map: 'name' | json | escape }}"
   x-data="{
     mobileFiltersOpen: false,
     activeTab: 'all',
-    sortBy: '{{ collection_obj.sort_by | escape }}',
-    sortOptions: {{ collection_obj.sort_options | map: 'name' | json }},
+    sortBy: $el.dataset.sortBy,
+    sortOptions: JSON.parse($el.dataset.sortOptions),
 
     /* Build URL with sort param */
     applySort(val) {
