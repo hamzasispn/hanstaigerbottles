@@ -3,6 +3,7 @@
     <p data-anim="fade-up" class="text-black text-[1.389vw] leading-[1.667vw] mb-[1.667vw]">
       {{ section.settings.description }}
     </p>
+
     <a
       href="{{ section.settings.link }}"
       data-anim="fade-up"
@@ -15,7 +16,14 @@
     </a>
   </div>
   <div class="w-[60%]">
-    {% render 'text-box', secondTextline: section.settings.second_text, blocks: section.blocks %}
+    <p data-anim="fade-up" class="text-[#222222] font-medium text-[0.903vw] leading-[1.181vw] text-right">
+      {{ section.settings.second_text }}
+    </p>
+    <ul data-anim="stagger-children" class="flex gap-[0.417vw] flex-wrap justify-end mt-[1.667vw]">
+      {% for block in section.blocks %}
+        {% render 'text-box', block: block %}
+      {% endfor %}
+    </ul>
   </div>
 </div>
 
@@ -24,19 +32,19 @@
   "name": "Custom Text Box",
   "settings": [
     {
-        "type": "textarea",
-        "id": "description",
-        "label": "Description"
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
     },
     {
-        "type": "url",
-        "id": "link",
-        "label": "Url"
+      "type": "url",
+      "id": "link",
+      "label": "Url"
     },
     {
-        "type": "text",
-        "id": "second_text",
-        "label": "Second Text Line"
+      "type": "text",
+      "id": "second_text",
+      "label": "Second Text Line"
     }
   ],
   "blocks": [

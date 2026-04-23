@@ -1,12 +1,6 @@
-<p data-anim="fade-up" class="text-[#222222] font-medium text-[0.903vw] leading-[1.181vw] text-right">
-  {{ secondTextline }}
-</p>
-    {{ blocks | json }}
-<ul data-anim="stagger-children" class="flex gap-[0.417vw] flex-wrap justify-end mt-[1.667vw]">
-  {% for block in blocks %}
-    {{ blocks | json }}
-    <li class="text-(--color-primary-hover) px-[0.764vw] py-[0.278vw] border border-color-(--color-primary-hover) text-[0.972vw] leading-[1.389vw] rounded-[0.139vw]">
-      {{ block.feature_text }}
-    </li>
-  {% endfor %}
-</ul>
+<li
+  {{ block.shopify_attributes }}
+  class="text-(--color-primary-hover) px-[0.764vw] py-[0.278vw] border border-color-(--color-primary-hover) text-[0.972vw] leading-[1.389vw] rounded-[0.139vw]"
+>
+  {{ block.settings.feature_text }}
+</li>

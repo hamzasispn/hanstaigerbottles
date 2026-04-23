@@ -31,47 +31,59 @@
   </div>
   <div class="pt-[15.139vw] flex items-end justify-between max-w-[58.889vw] mx-auto">
     <div class="w-[35%]">
-      <p data-anim="fade-up" class="text-[#83868E] text-[1.111vw] leading-[1.528vw] mb-[2.5vw]">{{ section.settings.product_info_text }}</p>
+      <p data-anim="fade-up" class="text-[#83868E] text-[1.111vw] leading-[1.528vw] mb-[2.5vw]">
+        {{ section.settings.product_info_text }}
+      </p>
       <p data-anim="fade-up" class="text-[#222222] font-medium text-[1.111vw] leading-[1.528vw]">
         For those who don’t settle for standard.
       </p>
     </div>
     <div class="w-[65%]">
-      {% render 'text-box', secondTextline: section.settings.second_text, blocks: section.blocks %}
+      <p data-anim="fade-up" class="text-[#222222] font-medium text-[0.903vw] leading-[1.181vw] text-right">
+        {{ section.settings.second_text }}
+      </p>
+      <ul data-anim="stagger-children" class="flex gap-[0.417vw] flex-wrap justify-end mt-[1.667vw]">
+        {% for block in section.blocks %}
+          {% render 'text-box', block: block %}
+        {% endfor %}
+      </ul>
     </div>
   </div>
 </div>
 
 <script>
-(function() {
-  var suffix = '{{ section.id }}';
-  var bottle   = document.getElementById('pi-bottle-'       + suffix);
-  var headLeft = document.getElementById('pi-heading-left-' + suffix);
-  var headRight= document.getElementById('pi-heading-right-'+ suffix);
-  var section  = document.getElementById('product-info-'    + suffix);
+  (function () {
+    var suffix = '{{ section.id }}';
+    var bottle = document.getElementById('pi-bottle-' + suffix);
+    var headLeft = document.getElementById('pi-heading-left-' + suffix);
+    var headRight = document.getElementById('pi-heading-right-' + suffix);
+    var section = document.getElementById('product-info-' + suffix);
 
-  if (!bottle || !headLeft || !headRight || !section) return;
+    if (!bottle || !headLeft || !headRight || !section) return;
 
-  // theme.js (defer) exposes window.gsap + window.ScrollTrigger — wait for it
-  function setup() {
-    if (!window.gsap || !window.ScrollTrigger) { setTimeout(setup, 50); return; }
-
-    var tl = window.gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 90%',
-        end:   'top 10%',
-        scrub: 1.2,
+    // theme.js (defer) exposes window.gsap + window.ScrollTrigger — wait for it
+    function setup() {
+      if (!window.gsap || !window.ScrollTrigger) {
+        setTimeout(setup, 50);
+        return;
       }
-    });
 
-    tl.fromTo(bottle,   { y: 160, opacity: 0 }, { y: 0, opacity: 1, ease: 'none' }, 0)
-      .fromTo(headLeft, { x: -180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0)
-      .fromTo(headRight,{ x:  180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0);
-  }
+      var tl = window.gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 90%',
+          end: 'top 10%',
+          scrub: 1.2,
+        },
+      });
 
-  setup();
-})();
+      tl.fromTo(bottle, { y: 160, opacity: 0 }, { y: 0, opacity: 1, ease: 'none' }, 0)
+        .fromTo(headLeft, { x: -180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0)
+        .fromTo(headRight, { x: 180, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0);
+    }
+
+    setup();
+  })();
 </script>
 
 {% schema %}
