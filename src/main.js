@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs';
+import './gsap-animations.js';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';

@@ -20,7 +20,7 @@
 
     <div class="w-full flex justify-end">
       {% if section.blocks.size > 0 %}
-        <ul>
+        <ul data-anim="stagger-children">
           {% for block in section.blocks %}
             {% if block.type == 'feature_item' %}
               <li class="text-[0.972vw] leading-[1.389vw] flex items-center gap-[1.111vw] mb-[1.389vw]" {{ block.shopify_attributes }}>
@@ -52,15 +52,15 @@
 
     <div class="w-full">
       {% if section.settings.heading != blank %}
-        <h2 class="text-[1.889vw] mb-[0.556vw] text-[#4F5257]">{{ section.settings.heading }}</h2>
+        <h2 data-anim="split-words" class="text-[1.889vw] mb-[0.556vw] text-[#4F5257]">{{ section.settings.heading }}</h2>
       {% endif %}
 
       {% if section.settings.subheading != blank %}
-        <p class="text-[0.813vw] uppercase tracking-[0.09vw] text-[#83868E] mb-[1.389vw]">{{ section.settings.subheading }}</p>
+        <p data-anim="fade-up" class="text-[0.813vw] uppercase tracking-[0.09vw] text-[#83868E] mb-[1.389vw]">{{ section.settings.subheading }}</p>
       {% endif %}
 
       {% if section.settings.description != blank %}
-        <p class="text-[1.111vw] leading-[1.528vw] mb-[2.778vw] max-w-[30.069vw] text-[#83868E]">
+        <p data-anim="fade-up" class="text-[1.111vw] leading-[1.528vw] mb-[2.778vw] max-w-[30.069vw] text-[#83868E]">
           {{ section.settings.description }}
         </p>
       {% endif %}

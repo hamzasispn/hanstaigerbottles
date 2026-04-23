@@ -26,6 +26,7 @@
   <div class="flex items-start justify-between" style="margin-bottom: 3.47vw;">
 
     <h2
+      data-anim="split-words"
       class="font-light text-[#111111] leading-[1.05] tracking-[-0.02em]"
       style="font-size: 5.56vw; max-width: 22vw;"
     >
@@ -33,6 +34,7 @@
     </h2>
 
     <p
+      data-anim="fade-up"
       class="text-[#555555] leading-[1.55]"
       style="font-size: 1.04vw; max-width: 26vw; padding-top: 0.69vw;"
     >
@@ -42,7 +44,7 @@
   </div>
 
   {%- comment -%} ── Cards Row ───────────────────────────────────────────── {%- endcomment -%}
-  <div class="flex items-stretch" style="gap: 1.11vw; height: 34.03vw;">
+  <div data-anim="stagger-children" class="flex items-stretch" style="gap: 1.11vw; height: 34.03vw;">
 
     {%- for block in section.blocks -%}
       {% render 'bundle-card', block: block, idx: forloop.index0 %}

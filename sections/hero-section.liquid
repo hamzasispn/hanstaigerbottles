@@ -13,10 +13,10 @@
   <div class="max-w-[88.889vw] mx-auto relative h-full">
     {% comment %} Hero Content Area  {% endcomment %}
     <div class="hero-content max-w-[30.833vw]">
-      <h1 class="hero-section__title text-[3.333vw] leading-[4.028vw] font-[var(--font-primary--family)] mb-[2.222vw]">
+      <h1 data-anim="split-words" class="hero-section__title text-[3.333vw] leading-[4.028vw] font-[var(--font-primary--family)] mb-[2.222vw]">
         {{ section.settings.title }}
       </h1>
-      <div class="flex items-center">
+      <div data-anim="stagger-children" class="flex items-center">
         <a
           href="{{ section.settings.button_link }}"
           class="hero-section__button btn-primary"
@@ -32,7 +32,7 @@
       </div>
     </div>
     {% comment %} Position Elements {% endcomment %}
-    <h2 class="absolute left-[5.347vw] font-normal bottom-0 text-[8.611vw] text-white w-full">
+    <h2 data-anim="fade-in" class="absolute left-[5.347vw] font-normal bottom-0 text-[8.611vw] text-white w-full">
       {{ section.settings.bgtitle }}
     </h2>
     

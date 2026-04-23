@@ -38,7 +38,7 @@
     </div>
   {% endif %}
 
-  <div class="p-[1.667vw] w-[20vw] bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.139vw] border border-white/9">
+  <div data-anim="slide-left" class="p-[1.667vw] w-[20vw] bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.139vw] border border-white/9">
     <h2 class="pl-[1.25vw] font-normal text-[0.972vw] leading-[1.389vw] mb-[2.778vw] relative">
       <span
         class="rounded-xs bg-white w-[0.556vw] h-[0.556vw] inline-block absolute transform -translate-y-1/2 top-1/2 left-0"
@@ -49,7 +49,7 @@
   </div>
 
   
-    <a href="{{ section.settings.cta_link }}"
+    <a data-anim="fade-up" href="{{ section.settings.cta_link }}"
     class="font-normal text-[0.972vw] leading-[1.389vw] py-[0.556vw] px-[0.833vw] flex items-center gap-[0.556vw] bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.139vw]"
   >
     <span>{{ section.settings.cta_text }}</span>

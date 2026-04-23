@@ -2,24 +2,24 @@
   <!-- label + heading -->
   {% if label != blank %}
     <div class="col-span-4">
-      <p class="text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">{{ label }}</p>
+      <p data-anim="fade-up" class="text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">{{ label }}</p>
     </div>
   {% endif %}
 
   <!-- tabs + description -->
   <div class="col-span-8">
     {% if heading != blank %}
-      <h2 class="text-[4.167vw] font-normal leading-[4.722vw] tracking-tight text-gray-900 mb-[1.667vw]">{{ heading }}</h2>
+      <h2 data-anim="split-words" class="text-[4.167vw] font-normal leading-[4.722vw] tracking-tight text-gray-900 mb-[1.667vw]">{{ heading }}</h2>
     {% endif %}
 
     {% if description != blank %}
-      <p class="text-[1.111vw] leading-[1.528vw] text-[#5A5A5A] mb-[2.222vw] max-w-[30.069vw]">
+      <p data-anim="fade-up" class="text-[1.111vw] leading-[1.528vw] text-[#5A5A5A] mb-[2.222vw] max-w-[30.069vw]">
         {{ description }}
       </p>
     {% endif %}
 
     {% if link != blank and link_text != blank %}
-      <a href="{{ link | default: "#" }}" class="btn-primary mt-[1.667vw]">
+      <a data-anim="fade-up" href="{{ link | default: "#" }}" class="btn-primary mt-[1.667vw]">
         {{ link_text | default: 'Explore full collection' }}
       </a>
     {% endif %}

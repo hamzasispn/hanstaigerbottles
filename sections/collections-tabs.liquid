@@ -126,7 +126,7 @@
   <div class="grid grid-cols-12 items-center px-[4.444vw] mb-[8.333vw]">
     <!-- label + heading -->
     <div class="col-span-4">
-      <p class="text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">
+      <p data-anim="fade-up" class="text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">
         {{ section.settings.label | default: 'Core Products' }}
       </p>
       <div class="flex items-center gap-[1.667vw]">
@@ -151,11 +151,11 @@
 
     <!-- tabs + description -->
     <div class="col-span-8">
-      <h2 class="text-[4.167vw] font-normal leading-none tracking-tight text-gray-900 mb-[1.667vw]">
+      <h2 data-anim="split-words" class="text-[4.167vw] font-normal leading-none tracking-tight text-gray-900 mb-[1.667vw]">
         {{ section.settings.heading | default: 'Essential Hydration' }}
       </h2>
 
-      <p class="text-[0.833vw] text-gray-500 leading-relaxed">
+      <p data-anim="fade-up" class="text-[0.833vw] text-gray-500 leading-relaxed">
         {{
           section.settings.description
           | default: 'Designed to be used together. Engineered to perform independently.'
