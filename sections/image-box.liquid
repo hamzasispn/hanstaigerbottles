@@ -46,10 +46,10 @@
                 </span>
                 <div>
                   {% if block.settings.label != blank %}
-                    <span class="text-[#4F5257] mr-[0.833vw] inline-block">{{ block.settings.label }}</span>
+                    <span class="mr-[0.833vw] inline-block" style="color: {{ block.settings.label_color }};">{{ block.settings.label }}</span>
                   {% endif %}
                   {% if block.settings.description != blank %}
-                    <span class="text-[#83868E]">{{ block.settings.description }}</span>
+                    <span style="color: {{ block.settings.description_color }};">{{ block.settings.description }}</span>
                   {% endif %}
                 </div>
               </li>
@@ -75,7 +75,7 @@
       {% endif %}
 
       {% if section.settings.subheading != blank %}
-        <p data-anim="fade-up" class="text-[0.813vw] uppercase tracking-[0.09vw] text-[#83868E] mb-[1.389vw]">
+        <p data-anim="fade-up" class="text-[0.813vw] uppercase tracking-[0.09vw] mb-[1.389vw]" style="color: {{ section.settings.subheading_color }};">
           {{ section.settings.subheading }}
         </p>
       {% endif %}
@@ -160,6 +160,12 @@
       "default": "SUBSCRIBE TO ELECTROLYTES"
     },
     {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#83868E"
+    },
+    {
       "type": "textarea",
       "id": "description",
       "label": "Description",
@@ -241,10 +247,22 @@
           "default": "Feature Label"
         },
         {
+          "type": "color",
+          "id": "label_color",
+          "label": "Label Color",
+          "default": "#4F5257"
+        },
+        {
           "type": "text",
           "id": "description",
           "label": "Description",
           "default": "Short description of the feature."
+        },
+        {
+          "type": "color",
+          "id": "description_color",
+          "label": "Description Color",
+          "default": "#83868E"
         }
       ]
     }
