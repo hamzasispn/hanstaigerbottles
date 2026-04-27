@@ -1,19 +1,21 @@
 <style>
-  .hero-section {
-    background-image: url('{% if section.settings.background_image %}{{ section.settings.background_image | image_url: '2048x2048' }}{% else %}{{ 'hero-bg.jpg' | asset_url }}{% endif %}');
-    background-size: cover;
-    background-position: center;
-  }
-  .hero-section__title {
-    color: {{ section.settings.text_color }};
-  }
+    .hero-section {
+      background-image: url('{% if section.settings.background_image %}{{ section.settings.background_image | image_url: width: 2048 }}{% else %}{{ 'hero-bg.jpg' | asset_url }}{% endif %}');    background-size: cover;
+      background-position: center;
+    }
+    .hero-section__title {
+      color: {{ section.settings.text_color }};
+    }
 </style>
 
 <div class="hero-section h-screen pt-[10.694vw] pb-[3.75vw] relative overflow-hidden">
   <div class="max-w-[88.889vw] mx-auto relative h-full">
     {% comment %} Hero Content Area  {% endcomment %}
     <div class="hero-content max-w-[30.833vw]">
-      <h1 data-hero="title" class="hero-section__title text-[3.333vw] leading-[4.028vw] font-[var(--font-primary--family)] mb-[2.222vw]">
+      <h1
+        data-hero="title"
+        class="hero-section__title text-[3.333vw] leading-[4.028vw] font-[var(--font-primary--family)] mb-[2.222vw]"
+      >
         {{ section.settings.title }}
       </h1>
       <div data-hero="buttons" class="flex items-center">
