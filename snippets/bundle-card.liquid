@@ -66,12 +66,12 @@
     </button>
 
     {%- comment -%} Content — pinned to bottom {%- endcomment -%}
-    <div class="absolute inset-x-0 bottom-0 z-10" style="padding: 1.39vw 1.39vw 1.25vw;">
-      <div class="flex items-center justify-between">
-        {%- comment -%} Title {%- endcomment -%}
+    <div class="absolute inset-x-0 bottom-0 z-10 p-[0.833vw]">
+      <div class="flex justify-between p-[1.389vw]">
+
         <div>
           <h3
-            class="font-medium text-white leading-tight text-[1.53vw] mb-[0.56vw]"
+            class="font-medium text-white leading-[1.528vw] text-[1.111vw] mb-[0.694vw]"
           >
             {{ block.settings.title | default: 'Bundle Name' }}
           </h3>
@@ -99,8 +99,7 @@
         <div>
           {%- if block.settings.subscription_label != blank -%}
             <span
-              class="uppercase text-white"
-              style="font-size: 0.64vw; letter-spacing: 0.10em; opacity: 0.75;"
+              class="uppercase text-[#DFE0E3] text-[0.833vw] tracking-[0.028vw]"
             >
               {{- block.settings.subscription_label -}}
             </span>
