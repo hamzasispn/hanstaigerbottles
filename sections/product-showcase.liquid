@@ -157,7 +157,7 @@
           {%- comment -%} Top zone: image + plus button {%- endcomment -%}
           <div class="relative flex-shrink-0 mb-[3.194vw] h-[11.319vw]">
             {%- comment -%} Product image — top-left {%- endcomment -%}
-            <div class="absolute top-0 left-0 overflow-hidden w-[11.319vw] h-[11.319vw] bg-[#F4F4F5] rounded-[0.187vw]">
+            <div class="absolute top-0 left-0 overflow-hidden w-[11.319vw] h-[11.319vw] bg-[#F4F4F5] rounded-[0.187vw] p-[1vw]">
               {%- if card_image != blank -%}
                 <img
                   src="{{ card_image | image_url: width: 280 }}"
@@ -191,7 +191,7 @@
             <div class="p-[1.389vw]">
               {%- comment -%} Title {%- endcomment -%}
               <div class="flex items-center justify-between">
-                <h3 class="font-medium text-black leading-[1.528vw] text-[1.111vw] tracking-[0.014vw] mb-[0.694vw]">
+                <h3 class="font-medium text-black leading-[1.528vw] text-[0.972vw] tracking-[0.014vw] mb-[0.694vw]">
                   {{ card_title }}
                 </h3>
                 <span class="text-[#83868E] text-[0.972vw]">{{ card_price }}</span>
