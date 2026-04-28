@@ -8,17 +8,17 @@
     }
 </style>
 
-<div class="hero-section h-screen pt-[10.694vw] pb-[3.75vw] relative overflow-hidden">
-  <div class="max-w-[88.889vw] mx-auto relative h-full">
+<div class="hero-section h-screen pt-[28vw] pb-[6vw] lg:pt-[10.694vw] lg:pb-[3.75vw] relative overflow-hidden">
+  <div class="max-w-[92vw] lg:max-w-[88.889vw] mx-auto relative h-full">
     {% comment %} Hero Content Area  {% endcomment %}
-    <div class="hero-content max-w-[30.833vw]">
+    <div class="hero-content max-w-[80vw] lg:max-w-[30.833vw]">
       <h1
         data-hero="title"
-        class="hero-section__title text-[3.333vw] leading-[4.028vw] font-[var(--font-primary--family)] mb-[2.222vw]"
+        class="hero-section__title text-[8vw] leading-[10vw] mb-[5vw] lg:text-[3.333vw] lg:leading-[4.028vw] lg:mb-[2.222vw] font-[var(--font-primary--family)]"
       >
         {{ section.settings.title }}
       </h1>
-      <div data-hero="buttons" class="flex items-center">
+      <div data-hero="buttons" class="flex items-center flex-wrap gap-[2vw] lg:gap-0">
         <a
           href="{{ section.settings.button_link }}"
           class="hero-section__button btn-primary"
@@ -34,7 +34,7 @@
       </div>
     </div>
     {% comment %} Position Elements {% endcomment %}
-    <h2 data-hero="bgtitle" class="absolute left-[5.347vw] font-normal bottom-0 text-[8.611vw] text-white w-full">
+    <h2 data-hero="bgtitle" class="absolute left-[4vw] lg:left-[5.347vw] font-normal bottom-0 text-[16vw] lg:text-[8.611vw] text-white w-full">
       {{ section.settings.bgtitle }}
     </h2>
 

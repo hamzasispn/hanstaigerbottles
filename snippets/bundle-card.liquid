@@ -1,11 +1,8 @@
 {% comment %}
   Snippet: bundle-card.liquid → /snippets/
-  Handles both COLLAPSED (narrow, light) and EXPANDED (wide, full-bleed dark) states.
-  Parent x-data must expose: active, open(i), isActive(i), variants{}
-
   Parameters:
     block — Shopify block object
-    idx   — forloop.index0 (integer, passed as Liquid variable)
+    idx   — forloop.index0 (integer)
 {% endcomment %}
 
 {%- assign i = idx -%}
@@ -16,15 +13,10 @@
     ? 'flex: 2; min-width: 0;'
     : 'flex: 1; min-width: 0;'
   "
-  class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-[0.56vw]"
-  style="flex: 1;"
+  class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-[2vw] lg:rounded-[0.56vw] h-[110vw] lg:h-auto"
   {{ block.shopify_attributes }}
 >
-  {%- comment -%}
-    ═══════════════════════════════════════════════════════════
-        EXPANDED STATE — full-bleed image, dark overlay, rich content bottom
-    ═══════════════════════════════════════════════════════════════════════
-  {%- endcomment -%}
+  {%- comment -%} EXPANDED STATE {%- endcomment -%}
   <div
     x-show="isActive({{ i }})"
     x-transition:enter="transition-opacity duration-300 delay-150"
@@ -35,7 +27,6 @@
     x-transition:leave-end="opacity-0"
     class="absolute inset-0 flex flex-col"
   >
-    {%- comment -%} Background image {%- endcomment -%}
     <div class="absolute inset-0">
       {%- if block.settings.image != blank -%}
         <img
@@ -47,46 +38,37 @@
       {%- else -%}
         <div class="w-full h-full bg-gradient-to-br from-[#3a6070] via-[#1e3040] to-[#0a0f14]"></div>
       {%- endif -%}
-      {%- comment -%} Gradient overlay — transparent top, dark bottom {%- endcomment -%}
-      <div
-        class="absolute inset-0"
-        style="background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.20) 45%, rgba(0,0,0,0.75) 100%);"
-      ></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/5 via-black/20 to-black/75"></div>
     </div>
 
-    {%- comment -%} Minus button — top right {%- endcomment -%}
     <button
-      class="absolute z-20 flex items-center justify-center rounded-full border border-white border-opacity-50 text-white bg-black bg-opacity-20 hover:bg-opacity-35 transition-all duration-200"
-      style="top: 1.11vw; right: 1.11vw; width: 1.67vw; height: 1.67vw;"
+      class="absolute z-20 flex items-center justify-center rounded-full border border-white/50 text-white bg-black/20 hover:bg-black/35 transition-all duration-200 top-[3.5vw] right-[3.5vw] w-[6vw] h-[6vw] lg:top-[1.11vw] lg:right-[1.11vw] lg:w-[1.67vw] lg:h-[1.67vw]"
       aria-label="Close"
     >
-      <svg style="width: 0.69vw; height: 0.69vw;" viewBox="0 0 12 2" fill="none">
+      <svg class="w-[2.4vw] h-[2.4vw] lg:w-[0.69vw] lg:h-[0.69vw]" viewBox="0 0 12 2" fill="none">
         <line x1="0.5" y1="1" x2="11.5" y2="1" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </button>
 
-    {%- comment -%} Content — pinned to bottom {%- endcomment -%}
-    <div class="absolute inset-x-0 bottom-0 z-10 p-[0.833vw]">
-      <div class="flex justify-between p-[1.389vw]">
+    <div class="absolute inset-x-0 bottom-0 z-10 p-[3vw] lg:p-[0.833vw]">
+      <div class="flex justify-between p-[4vw] lg:p-[1.389vw]">
         <div>
           <h3
-            class="font-medium text-white leading-[1.528vw] text-[1.111vw] mb-[0.694vw]"
+            class="font-medium text-white text-[4vw] leading-[5.4vw] mb-[2vw] lg:text-[1.111vw] lg:leading-[1.528vw] lg:mb-[0.694vw]"
           >
             {{ block.settings.title | default: 'Bundle Name' }}
           </h3>
 
-          {%- comment -%} Tags row {%- endcomment -%}
           {%- if block.settings.tag_1 != blank or block.settings.tag_2 != blank -%}
-            <div class="flex items-center flex-wrap gap-[0.556vw]">
+            <div class="flex items-center flex-wrap gap-[2vw] lg:gap-[0.556vw]">
               {%- if block.settings.tag_1 != blank -%}
-                <span class="text-[#DFE0E3] text-[0.972vw] leading-[1.389vw]">
+                <span class="text-[#DFE0E3] text-[3vw] leading-[4vw] lg:text-[0.972vw] lg:leading-[1.389vw]">
                   {{ block.settings.tag_1 }}
                 </span>
               {%- endif -%}
               {%- if block.settings.tag_2 != blank -%}
                 <span
-                  class="text-white border border-white"
-                  style="font-size: 0.83vw; padding: 0.14vw 0.56vw; border-radius: 0.21vw;"
+                  class="text-white border border-white text-[2.6vw] py-[0.5vw] px-[2vw] rounded-[0.7vw] lg:text-[0.83vw] lg:py-[0.14vw] lg:px-[0.56vw] lg:rounded-[0.21vw]"
                 >
                   {{- block.settings.tag_2 -}}
                 </span>
@@ -98,7 +80,7 @@
         <div>
           {%- if block.settings.subscription_label != blank -%}
             <span
-              class="uppercase text-[#DFE0E3] text-[0.833vw] tracking-[0.028vw] mb-[1.389vw] inline-block"
+              class="uppercase text-[#DFE0E3] text-[2.6vw] tracking-[0.1vw] mb-[3vw] lg:text-[0.833vw] lg:tracking-[0.028vw] lg:mb-[1.389vw] inline-block"
             >
               {{- block.settings.subscription_label -}}
             </span>
@@ -106,17 +88,15 @@
 
           {%- if block.settings.variant_1 != blank -%}
             <label
-              class="flex items-center justify-end cursor-pointer gap-[0.56vw] mb-[0.694vw]"
+              class="flex items-center justify-end cursor-pointer gap-[2vw] mb-[2vw] lg:gap-[0.56vw] lg:mb-[0.694vw]"
               :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-80'"
               @click="variants[{{ i }}] = 'v1'"
             >
               <span
-                class="flex-shrink-0 rounded-full w-[0.972vw] h-[0.972vw] transition-colors duration-150 border-2 border-solid border-white"
+                class="flex-shrink-0 rounded-full w-[3.4vw] h-[3.4vw] lg:w-[0.972vw] lg:h-[0.972vw] transition-colors duration-150 border-2 border-solid border-white"
                 :class="variants[{{ i }}] === 'v1' ? 'bg-[#303236]' : 'bg-white'"
               ></span>
-              <span
-                class="text-white font-normal text-[0.972vw] leading-[1.111vw]"
-              >
+              <span class="text-white font-normal text-[3vw] leading-[3.6vw] lg:text-[0.972vw] lg:leading-[1.111vw]">
                 {{- block.settings.variant_1 -}}
               </span>
             </label>
@@ -124,17 +104,15 @@
 
           {%- if block.settings.variant_2 != blank -%}
             <label
-              class="flex items-center justify-end  cursor-pointer gap-[0.56vw]"
+              class="flex items-center justify-end cursor-pointer gap-[2vw] lg:gap-[0.56vw]"
               :class="variants[{{ i }}] === 'v2' ? 'opacity-100' : 'opacity-80'"
               @click="variants[{{ i }}] = 'v2'"
             >
               <span
-                class="flex-shrink-0 rounded-full w-[0.972vw] h-[0.972vw] transition-colors duration-150 border-2 border-solid border-white"
+                class="flex-shrink-0 rounded-full w-[3.4vw] h-[3.4vw] lg:w-[0.972vw] lg:h-[0.972vw] transition-colors duration-150 border-2 border-solid border-white"
                 :class="variants[{{ i }}] === 'v2' ? 'bg-[#303236]' : 'bg-white'"
               ></span>
-              <span
-                class="text-white font-normal text-[0.972vw] leading-[1.111vw]"
-              >
+              <span class="text-white font-normal text-[3vw] leading-[3.6vw] lg:text-[0.972vw] lg:leading-[1.111vw]">
                 {{- block.settings.variant_2 -}}
               </span>
             </label>
@@ -142,36 +120,30 @@
         </div>
       </div>
 
-      {%- comment -%} Divider {%- endcomment -%}
-      <div class="w-full bg-white bg-opacity-25 h-px mb-[1.11vw]"></div>
+      <div class="w-full bg-white/25 h-px mb-[4vw] lg:mb-[1.11vw]"></div>
 
-      <div class="flex items-center justify-between mb-[1.11vw] p-[0.833vw]">
-        <span class="font-medium text-white text-[1.25vw]">
+      <div class="flex items-center justify-between mb-[4vw] p-[3vw] lg:mb-[1.11vw] lg:p-[0.833vw]">
+        <span class="font-medium text-white text-[4.4vw] lg:text-[1.25vw]">
           {{ block.settings.price | default: '€00' }}
         </span>
 
         {%- if block.settings.save_text != blank -%}
-          <span class="text-white font-medium uppercase text-[0.833vw] leading-[1.181vw] tracking-[0.08em]">
+          <span class="text-white font-medium uppercase text-[2.6vw] leading-[3.6vw] lg:text-[0.833vw] lg:leading-[1.181vw] tracking-[0.08em]">
             {{ block.settings.save_text }}
           </span>
         {%- endif -%}
       </div>
 
-      {%- comment -%} Add bundle button {%- endcomment -%}
       <a
         href="{{ block.settings.url | default: '#' }}"
-        class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#F4F4F5]/40 backdrop-blur-sm text-white px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
+        class="flex items-center justify-center ml-auto bg-[#F4F4F5]/40 backdrop-blur-sm text-white text-[3vw] w-[30vw] px-[3vw] py-[2vw] gap-[3vw] lg:text-[0.972vw] lg:w-[8.958vw] lg:px-[0.833vw] lg:py-[0.556vw] lg:gap-[1.111vw] leading-tight lg:leading-[1.389vw]"
       >
         Add bundle <span> {% render 'button-arrow' %} </span>
       </a>
     </div>
   </div>
 
-  {%- comment -%}
-    ═══════════════════════════════════════════════════════════
-        COLLAPSED STATE — light card, small image top-left, + icon top-right
-    ═══════════════════════════════════════════════════════════════════════
-  {%- endcomment -%}
+  {%- comment -%} COLLAPSED STATE {%- endcomment -%}
   <div
     x-show="!isActive({{ i }})"
     x-transition:enter="transition-opacity duration-300 delay-100"
@@ -180,13 +152,11 @@
     x-transition:leave="transition-opacity duration-100"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
-    class="absolute inset-0 flex flex-col bg-[#F4F4F5] p-[1.11vw]"
+    class="absolute inset-0 flex flex-col bg-[#F4F4F5] p-[4vw] lg:p-[1.11vw]"
   >
-    {%- comment -%} Top zone: image + plus button {%- endcomment -%}
-    <div class="relative flex-shrink-0 mb-[3.194vw] h-[15.139vw]">
-      {%- comment -%} Product image — top-left {%- endcomment -%}
+    <div class="relative flex-shrink-0 mb-[8vw] h-[40vw] lg:mb-[3.194vw] lg:h-[15.139vw]">
       <div
-        class="absolute top-0 left-0 overflow-hidden w-[15.139vw] h-full rounded-[0.187vw]"
+        class="absolute top-0 left-0 overflow-hidden w-[40vw] h-full lg:w-[15.139vw] rounded-[0.6vw] lg:rounded-[0.187vw]"
       >
         {%- if block.settings.image != blank -%}
           <img
@@ -202,53 +172,41 @@
         {%- endif -%}
       </div>
 
-      {%- comment -%} Plus button — top-right, click to expand {%- endcomment -%}
       <button
         @click="open({{ i }})"
-        class="absolute top-0 right-0 flex items-center justify-center bg-white rounded-full text-[#111111] hover:bg-[#111111] hover:text-white transition-colors duration-200"
-        style="width: 1.67vw; height: 1.67vw;"
+        class="absolute top-0 right-0 flex items-center justify-center bg-white rounded-full text-[#111111] hover:bg-[#111111] hover:text-white transition-colors duration-200 w-[6vw] h-[6vw] lg:w-[1.67vw] lg:h-[1.67vw]"
         aria-label="Open {{ block.settings.title }}"
       >
-        <svg style="width: 0.69vw; height: 0.69vw;" viewBox="0 0 12 12" fill="none">
+        <svg class="w-[2.4vw] h-[2.4vw] lg:w-[0.69vw] lg:h-[0.69vw]" viewBox="0 0 12 12" fill="none">
           <line x1="6" y1="0.5" x2="6" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           <line x1="0.5" y1="6" x2="11.5" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
     </div>
 
-    {%- comment -%} Content — flexible, fills remaining height {%- endcomment -%}
     <div class="flex flex-col flex-1 justify-between">
-      <div class="p-[1.389vw]">
-        {%- comment -%} Title {%- endcomment -%}
+      <div class="p-[4vw] lg:p-[1.389vw]">
         <h3
-          class="font-medium text-[#222222] leading-[1.528vw] text-[1.111vw] tracking-[0.014vw] mb-[0.694vw]"
+          class="font-medium text-[#222222] text-[4vw] leading-[5.4vw] tracking-[0.05vw] mb-[2vw] lg:text-[1.111vw] lg:leading-[1.528vw] lg:tracking-[0.014vw] lg:mb-[0.694vw]"
         >
           {{ block.settings.title | default: 'Bundle Name' }}
         </h3>
 
-        {%- comment -%} Subtitle {%- endcomment -%}
         {%- if block.settings.subtitle != blank -%}
-          <p
-            class="text-[#83868E] text-[0.972vw] leading-[1.389vw] mb-[0.556vw] font-normal"
-          >
+          <p class="text-[#83868E] text-[3vw] leading-[4vw] mb-[1.5vw] lg:text-[0.972vw] lg:leading-[1.389vw] lg:mb-[0.556vw] font-normal">
             {{ block.settings.subtitle }}
           </p>
         {%- endif -%}
 
-        {%- comment -%} Variant toggles — dot left of label {%- endcomment -%}
-        <div class="flex flex-col" style="gap: 0.42vw;">
+        <div class="flex flex-col gap-[1.5vw] lg:gap-[0.42vw]">
           {%- if block.settings.variant_1 != blank -%}
             <label
-              class="flex items-center cursor-pointer gap-[0.556vw]"
+              class="flex items-center cursor-pointer gap-[2vw] lg:gap-[0.556vw]"
               :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-20'"
               @click="variants[{{ i }}] = 'v1'"
             >
-              <span
-                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 bg-[#303236]"
-              ></span>
-              <span
-                class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
-              >
+              <span class="flex-shrink-0 rounded-full w-[2.4vw] h-[2.4vw] lg:w-[0.694vw] lg:h-[0.694vw] bg-[#303236]"></span>
+              <span class="text-[#303236] font-normal text-[3vw] leading-[4vw] lg:text-[0.833vw] lg:leading-[1.111vw]">
                 {{- block.settings.variant_1 -}}
               </span>
             </label>
@@ -256,16 +214,12 @@
 
           {%- if block.settings.variant_2 != blank -%}
             <label
-              class="flex items-center cursor-pointer gap-[0.556vw]"
+              class="flex items-center cursor-pointer gap-[2vw] lg:gap-[0.556vw]"
               :class="variants[{{ i }}] === 'v2' ? 'opacity-100' : 'opacity-20'"
               @click="variants[{{ i }}] = 'v2'"
             >
-              <span
-                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 bg-[#303236]"
-              ></span>
-              <span
-                class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
-              >
+              <span class="flex-shrink-0 rounded-full w-[2.4vw] h-[2.4vw] lg:w-[0.694vw] lg:h-[0.694vw] bg-[#303236]"></span>
+              <span class="text-[#303236] font-normal text-[3vw] leading-[4vw] lg:text-[0.833vw] lg:leading-[1.111vw]">
                 {{- block.settings.variant_2 -}}
               </span>
             </label>
@@ -273,16 +227,15 @@
         </div>
       </div>
 
-      {%- comment -%} Bottom: divider + price + button {%- endcomment -%}
       <div>
-        <div class="w-full bg-[#DDDDDD] h-px m-[1.11vw 0]"></div>
+        <div class="w-full bg-[#DDDDDD] h-px my-[4vw] lg:my-[1.11vw]"></div>
 
-        <div class="flex items-center justify-between p-[1.389vw]">
-          <span class="font-medium text-[#4F5257] text-[1.11vw]">
+        <div class="flex items-center justify-between p-[4vw] lg:p-[1.389vw]">
+          <span class="font-medium text-[#4F5257] text-[4vw] lg:text-[1.11vw]">
             {{ block.settings.price | default: '€00' }}
           </span>
           {%- if block.settings.save_text != blank -%}
-            <span class="text-[#83868E] font-medium uppercase text-[0.833vw] leading-[1.181vw] tracking-[0.08em]">
+            <span class="text-[#83868E] font-medium uppercase text-[2.6vw] leading-[3.6vw] lg:text-[0.833vw] lg:leading-[1.181vw] tracking-[0.08em]">
               {{ block.settings.save_text }}
             </span>
           {%- endif -%}
@@ -290,7 +243,7 @@
 
         <a
           href="{{ block.settings.url | default: '#' }}"
-          class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
+          class="flex items-center justify-center ml-auto bg-[#EBEBEB] text-[#111111] text-[3vw] w-[30vw] px-[3vw] py-[2vw] gap-[3vw] lg:text-[0.972vw] lg:w-[8.958vw] lg:px-[0.833vw] lg:py-[0.556vw] lg:gap-[1.111vw] leading-tight lg:leading-[1.389vw]"
         >
           Add bundle <span> {% render 'button-arrow' %} </span>
         </a>

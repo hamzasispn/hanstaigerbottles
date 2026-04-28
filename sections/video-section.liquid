@@ -1,6 +1,6 @@
 {% assign media_type = section.settings.media_type | default: 'video' %}
 
-<div class="mt-[9.167vw] h-screen relative flex items-end justify-between px-[2.778vw] py-[2.778vw] text-white">
+<div class="mt-[16vw] lg:mt-[9.167vw] h-[120vw] lg:h-screen relative flex flex-col lg:flex-row items-stretch lg:items-end justify-between gap-[4vw] lg:gap-0 px-[5vw] py-[5vw] lg:px-[2.778vw] lg:py-[2.778vw] text-white">
 
   {% comment %} Background Media {% endcomment %}
   {% if media_type == 'video' and section.settings.video_url != blank %}
@@ -38,19 +38,19 @@
     </div>
   {% endif %}
 
-  <div data-anim="slide-left" class="p-[1.667vw] w-[20vw] bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.139vw] border border-white/9">
-    <h2 class="pl-[1.25vw] font-normal text-[0.972vw] leading-[1.389vw] mb-[2.778vw] relative">
+  <div data-anim="slide-left" class="p-[4vw] w-full lg:p-[1.667vw] lg:w-[20vw] bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.5vw] lg:rounded-[0.139vw] border border-white/9">
+    <h2 class="pl-[3.5vw] lg:pl-[1.25vw] font-normal text-[3vw] leading-[4vw] lg:text-[0.972vw] lg:leading-[1.389vw] mb-[6vw] lg:mb-[2.778vw] relative">
       <span
-        class="rounded-xs bg-white w-[0.556vw] h-[0.556vw] inline-block absolute transform -translate-y-1/2 top-1/2 left-0"
+        class="rounded-xs bg-white w-[1.6vw] h-[1.6vw] lg:w-[0.556vw] lg:h-[0.556vw] inline-block absolute transform -translate-y-1/2 top-1/2 left-0"
       ></span>
       {{ section.settings.video_title }}
     </h2>
-    <p class="text-[0.972vw] leading-[1.389vw]">{{ section.settings.video_description }}</p>
+    <p class="text-[3vw] leading-[4vw] lg:text-[0.972vw] lg:leading-[1.389vw]">{{ section.settings.video_description }}</p>
   </div>
 
-  
+
     <a data-anim="fade-up" href="{{ section.settings.cta_link }}"
-    class="font-normal text-[0.972vw] leading-[1.389vw] py-[0.556vw] px-[0.833vw] flex items-center gap-[0.556vw] bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.139vw]"
+    class="font-normal self-start lg:self-auto text-[3vw] leading-[4vw] py-[2vw] px-[3vw] gap-[2vw] lg:text-[0.972vw] lg:leading-[1.389vw] lg:py-[0.556vw] lg:px-[0.833vw] lg:gap-[0.556vw] flex items-center bg-[#1d1d1d]/28 backdrop-blur-lg rounded-[0.5vw] lg:rounded-[0.139vw]"
   >
     <span>{{ section.settings.cta_text }}</span>
     {% render 'icon-arrow-left' %}

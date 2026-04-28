@@ -1,6 +1,6 @@
-<div class="image-box py-[6.944vw] px-[5.556vw]">
+<div class="image-box py-[12vw] px-[6vw] lg:py-[6.944vw] lg:px-[5.556vw]">
   <div
-    class="h-screen py-[6.944vw] px-[6.25vw] flex flex-col justify-between relative z-10 bg-[#dfe0e2] rounded-sm overflow-hidden"
+    class="h-[140vw] lg:h-screen py-[10vw] px-[8vw] lg:py-[6.944vw] lg:px-[6.25vw] flex flex-col justify-between relative z-10 bg-[#dfe0e2] rounded-sm overflow-hidden"
   >
     {%- comment -%} Background Image {%- endcomment -%}
     {% if section.settings.background_image %}
@@ -24,16 +24,16 @@
     {% endif %}
 
     {%- comment -%} Feature List — top right {%- endcomment -%}
-    <div class="w-full flex justify-end">
+    <div class="w-full flex justify-start lg:justify-end">
       {% if section.blocks.size > 0 %}
         <ul data-anim="stagger-children">
           {% for block in section.blocks %}
             {% if block.type == 'feature_item' %}
               <li
-                class="text-[0.972vw] leading-[1.389vw] flex items-center gap-[1.111vw] mb-[1.389vw]"
+                class="text-[3.2vw] leading-[4.2vw] gap-[3vw] mb-[3vw] lg:text-[0.972vw] lg:leading-[1.389vw] lg:gap-[1.111vw] lg:mb-[1.389vw] flex items-center"
                 {{ block.shopify_attributes }}
               >
-                <span class="w-[1.667vw] h-[1.667vw] p-[0.347vw]">
+                <span class="w-[5.5vw] h-[5.5vw] p-[1vw] lg:w-[1.667vw] lg:h-[1.667vw] lg:p-[0.347vw]">
                   {% if block.settings.icon == 'calender-icon' %}
                     {% render 'calender-icon' %}
                   {% elsif block.settings.icon == 'globe-icon' %}
@@ -46,7 +46,7 @@
                 </span>
                 <div>
                   {% if block.settings.label != blank %}
-                    <span class="mr-[0.833vw] inline-block" style="color: {{ block.settings.label_color }};">{{ block.settings.label }}</span>
+                    <span class="mr-[2vw] lg:mr-[0.833vw] inline-block" style="color: {{ block.settings.label_color }};">{{ block.settings.label }}</span>
                   {% endif %}
                   {% if block.settings.description != blank %}
                     <span style="color: {{ block.settings.description_color }};">{{ block.settings.description }}</span>
@@ -64,7 +64,7 @@
       {% if section.settings.heading != blank %}
         <h2
           data-anim="split-words"
-          class="text-[1.889vw] mb-[0.556vw]"
+          class="text-[8vw] mb-[2vw] lg:text-[1.889vw] lg:mb-[0.556vw]"
           style="
             color: {{ section.settings.heading_color }};
             font-family: '{{ section.settings.font_family }}', sans-serif;
@@ -75,7 +75,7 @@
       {% endif %}
 
       {% if section.settings.subheading != blank %}
-        <p data-anim="fade-up" class="text-[0.813vw] uppercase tracking-[0.09vw] mb-[1.389vw]" style="color: {{ section.settings.subheading_color }};">
+        <p data-anim="fade-up" class="text-[2.6vw] tracking-[0.3vw] mb-[4vw] lg:text-[0.813vw] lg:tracking-[0.09vw] lg:mb-[1.389vw] uppercase" style="color: {{ section.settings.subheading_color }};">
           {{ section.settings.subheading }}
         </p>
       {% endif %}
@@ -83,7 +83,7 @@
       {% if section.settings.description != blank %}
         <p
           data-anim="fade-up"
-          class="text-[1.111vw] leading-[1.528vw] mb-[2.778vw] max-w-[30.069vw]"
+          class="text-[3.4vw] leading-[5vw] mb-[6vw] max-w-full lg:text-[1.111vw] lg:leading-[1.528vw] lg:mb-[2.778vw] lg:max-w-[30.069vw]"
           style="
             color: {{ section.settings.description_color }};
             font-family: '{{ section.settings.font_family }}', sans-serif;
@@ -96,7 +96,7 @@
       {% if section.settings.button_url != blank %}
         <a
           href="{{ section.settings.button_url }}"
-          class="{% if section.settings.button_label == blank %} w-[6.944vw] {% endif%} h-[2.5vw] px-[1.111vw] inline-flex items-center justify-center gap-[0.556vw] text-[0.833vw] font-medium"
+          class="{% if section.settings.button_label == blank %} w-[20vw] lg:w-[6.944vw] {% endif%} h-[10vw] px-[4vw] gap-[2vw] text-[3vw] lg:h-[2.5vw] lg:px-[1.111vw] lg:gap-[0.556vw] lg:text-[0.833vw] inline-flex items-center justify-center font-medium"
           style="
             background-color: {{ section.settings.button_bg_color }};
             color: {{ section.settings.button_text_color }};

@@ -1,25 +1,23 @@
-<div class="grid grid-cols-12 items-start px-[4.444vw] mb-[8.333vw]">
-  <!-- label + heading -->
+<div class="grid grid-cols-1 lg:grid-cols-12 items-start gap-[6vw] lg:gap-0 px-[6vw] lg:px-[4.444vw] mb-[12vw] lg:mb-[8.333vw]">
   {% if label != blank %}
-    <div class="col-span-4">
-      <p data-anim="fade-up" class="text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">{{ label }}</p>
+    <div class="lg:col-span-4">
+      <p data-anim="fade-up" class="text-[2.6vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[4vw] lg:text-[0.833vw] lg:mb-[5.764vw]">{{ label }}</p>
     </div>
   {% endif %}
 
-  <!-- tabs + description -->
-  <div class="col-span-8">
+  <div class="lg:col-span-8">
     {% if heading != blank %}
-      <h2 data-anim="split-words" class="text-[4.167vw] font-normal leading-[4.722vw] tracking-tight text-gray-900 mb-[1.667vw]">{{ heading }}</h2>
+      <h2 data-anim="split-words" class="text-[12vw] leading-[1.05] mb-[4vw] lg:text-[4.167vw] lg:leading-[4.722vw] lg:mb-[1.667vw] font-normal tracking-tight text-gray-900">{{ heading }}</h2>
     {% endif %}
 
     {% if description != blank %}
-      <p data-anim="fade-up" class="text-[1.111vw] leading-[1.528vw] text-[#5A5A5A] mb-[2.222vw] max-w-[30.069vw]">
+      <p data-anim="fade-up" class="text-[3.4vw] leading-[5vw] mb-[6vw] max-w-full lg:text-[1.111vw] lg:leading-[1.528vw] lg:mb-[2.222vw] lg:max-w-[30.069vw] text-[#5A5A5A]">
         {{ description }}
       </p>
     {% endif %}
 
     {% if link != blank and link_text != blank %}
-      <a data-anim="fade-up" href="{{ link | default: "#" }}" class="btn-primary mt-[1.667vw]">
+      <a data-anim="fade-up" href="{{ link | default: "#" }}" class="btn-primary mt-[4vw] lg:mt-[1.667vw]">
         {{ link_text | default: 'Explore full collection' }}
       </a>
     {% endif %}

@@ -18,25 +18,22 @@
     open(i) { this.active = i; },
     isActive(i) { return this.active === i; }
   }"
-  class="w-full bg-white"
-  style="padding: 4.44vw 3.61vw 5.56vw;"
+  class="w-full bg-white pt-[12vw] pr-[6vw] pb-[14vw] pl-[6vw] lg:pt-[4.44vw] lg:pr-[3.61vw] lg:pb-[5.56vw] lg:pl-[3.61vw]"
 >
 
   {%- comment -%} ── Header Row ──────────────────────────────────────────── {%- endcomment -%}
-  <div class="flex items-start justify-between" style="margin-bottom: 3.47vw;">
+  <div class="flex flex-col lg:flex-row items-start justify-between gap-[6vw] lg:gap-0 mb-[8vw] lg:mb-[3.47vw]">
 
     <h2
       data-anim="split-words"
-      class="font-light text-[#111111] leading-[1.05] tracking-[-0.02em]"
-      style="font-size: 5.56vw; max-width: 22vw;"
+      class="font-light text-[#111111] leading-[1.05] tracking-[-0.02em] text-[12vw] max-w-full lg:text-[5.56vw] lg:max-w-[22vw]"
     >
-      {{ section.settings.heading | default: 'Everything you need' }}
+      {{ section.settings.heading | default: 'The electrolytes' }}
     </h2>
 
     <p
       data-anim="fade-up"
-      class="text-[#555555] leading-[1.55]"
-      style="font-size: 1.04vw; max-width: 26vw; padding-top: 0.69vw;"
+      class="text-[#555555] leading-[1.55] text-[3.4vw] max-w-full pt-0 lg:text-[1.04vw] lg:max-w-[26vw] lg:pt-[0.69vw]"
     >
       {{ section.settings.description | default: 'Pre-configured bundies that simplify your hydration setup. Performance without complexity.' }}
     </p>
@@ -44,7 +41,7 @@
   </div>
 
   {%- comment -%} ── Cards Row ───────────────────────────────────────────── {%- endcomment -%}
-  <div data-anim="stagger-children" class="flex items-stretch gap-[0.833vw] h-[36.944vw]">
+  <div data-anim="stagger-children" class="flex flex-col lg:flex-row items-stretch gap-[4vw] h-auto lg:gap-[0.833vw] lg:h-[36.944vw]">
 
     {%- for block in section.blocks -%}
       {% render 'bundle-card', block: block, idx: forloop.index0 %}

@@ -1,25 +1,25 @@
-<div class="pt-[5.556vw] pb-[1.667vw] flex items-end justify-between max-w-[88.889vw] mx-auto">
-  <div class="w-[40%]">
-    <p data-anim="fade-up" class="text-black text-[1.389vw] leading-[1.667vw] mb-[1.667vw]">
+<div class="pt-[12vw] pb-[4vw] lg:pt-[5.556vw] lg:pb-[1.667vw] flex flex-col lg:flex-row items-start lg:items-end justify-between gap-[6vw] lg:gap-0 max-w-[92vw] lg:max-w-[88.889vw] mx-auto">
+  <div class="w-full lg:w-[40%]">
+    <p data-anim="fade-up" class="text-black text-[4vw] leading-[5.4vw] mb-[4vw] lg:text-[1.389vw] lg:leading-[1.667vw] lg:mb-[1.667vw]">
       {{ section.settings.description }}
     </p>
 
     <a
       href="{{ section.settings.link }}"
       data-anim="fade-up"
-      class="text-[#222222] uppercase text-[0.694vw] leading-[0.694vw] flex items-center gap-[1.111vw]"
+      class="text-[#222222] uppercase text-[2.6vw] leading-[2.6vw] gap-[3vw] lg:text-[0.694vw] lg:leading-[0.694vw] lg:gap-[1.111vw] flex items-center"
     >
       view more
-      <span class="w-[0.833vw] h-[0.833vw]">
+      <span class="w-[3vw] h-[3vw] lg:w-[0.833vw] lg:h-[0.833vw]">
         {% render 'black-arrow-icon' %}
       </span>
     </a>
   </div>
-  <div class="w-[60%]">
-    <p data-anim="fade-up" class="text-[#222222] font-medium text-[0.903vw] leading-[1.181vw] text-right">
+  <div class="w-full lg:w-[60%]">
+    <p data-anim="fade-up" class="text-[#222222] font-medium text-[2.8vw] leading-[3.6vw] lg:text-[0.903vw] lg:leading-[1.181vw] text-left lg:text-right">
       {{ section.settings.second_text }}
     </p>
-    <ul data-anim="stagger-children" class="flex gap-[0.417vw] flex-wrap justify-end mt-[1.667vw]">
+    <ul data-anim="stagger-children" class="flex gap-[1.5vw] lg:gap-[0.417vw] flex-wrap justify-start lg:justify-end mt-[4vw] lg:mt-[1.667vw]">
       {% for block in section.blocks %}
         {% render 'text-box', block: block %}
       {% endfor %}

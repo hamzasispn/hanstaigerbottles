@@ -1,6 +1,6 @@
-<div class="mx-auto max-w-[88.889vw]">
+<div class="mx-auto max-w-[92vw] lg:max-w-[88.889vw]">
   {%- comment -%} Image Grid {%- endcomment -%}
-  <div class="grid grid-cols-3 gap-[1.111vw] py-[5.556vw]">
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-[3vw] py-[12vw] lg:gap-[1.111vw] lg:py-[5.556vw]">
     {% for block in section.blocks %}
       {% if block.type == 'image-card' %}
         {% if block.settings.img != blank %}
@@ -18,23 +18,23 @@
   </div>
 
   {%- comment -%} Detail Lists {%- endcomment -%}
-  <div class="grid grid-cols-12 pb-[3.75vw] items-start">
-    <div class="col-span-4">
-      <p class="text-[0.903vw] text-black leading-[1.181vw]">{{ section.settings.subtitle }}</p>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-[6vw] lg:gap-0 pb-[10vw] lg:pb-[3.75vw] items-start">
+    <div class="lg:col-span-4">
+      <p class="text-[3vw] leading-[4vw] lg:text-[0.903vw] lg:leading-[1.181vw] text-black">{{ section.settings.subtitle }}</p>
     </div>
 
-    <div class="col-span-8 flex items-start gap-[1.111vw]">
+    <div class="lg:col-span-8 flex flex-wrap lg:flex-nowrap items-start gap-[6vw] lg:gap-[1.111vw]">
       {% assign detail_index = 0 %}
       {% for block in section.blocks %}
         {% if block.type == 'detail-list' %}
           {% assign detail_index = detail_index | plus: 1 %}
-          <div class="w-[8.75vw]" {{ block.shopify_attributes }}>
-            <h3 class="mb-[1.736vw] text-[1.111vw] leading-[1.528vw] px-[0.347vw] text-black font-medium">
+          <div class="w-[40vw] lg:w-[8.75vw]" {{ block.shopify_attributes }}>
+            <h3 class="mb-[5vw] text-[4vw] leading-[5.4vw] px-[1vw] lg:mb-[1.736vw] lg:text-[1.111vw] lg:leading-[1.528vw] lg:px-[0.347vw] text-black font-medium">
               <span class="text-[#E53D00]">[</span> {{ block.settings.heading -}}
               <sup>{{ detail_index }}</sup> <span class="text-[#E53D00]">]</span>
             </h3>
             {% if block.settings.list != blank %}
-              <div class="text-[0.833vw] leading-[1.111vw] text-black">
+              <div class="text-[3vw] leading-[4vw] lg:text-[0.833vw] lg:leading-[1.111vw] text-black">
                 {{ block.settings.list }}
               </div>
             {% endif %}

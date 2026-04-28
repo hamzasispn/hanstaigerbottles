@@ -28,10 +28,14 @@
 
 {% stylesheet %}
   header {
-    height: 5rem;
+    height: 4rem;
+    padding: 0 5vw;
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  @media (min-width: 1024px) {
+    header { height: 5rem; padding: 0 2vw; }
   }
   header a {
     position: relative;
@@ -47,14 +51,12 @@
     overflow: hidden;
     max-width: var(--page-margin);
   }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
-    display: flex;
-    gap: 1rem;
-  }
+  header svg { width: 1.5rem; }
+  @media (min-width: 1024px) { header svg { width: 2rem; } }
+  header .header__menu { display: none; }
+  @media (min-width: 1024px) { header .header__menu { display: flex; gap: 1rem; } }
+  header .header__icons { display: flex; gap: 0.75rem; }
+  @media (min-width: 1024px) { header .header__icons { gap: 1rem; } }
 {% endstylesheet %}
 
 {% schema %}

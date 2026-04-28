@@ -28,7 +28,7 @@
 
 <section
   id="section-{{ section.id }}"
-  class="bg-white overflow-hidden pt-[4vw] pb-[3vw]"
+  class="bg-white overflow-hidden pt-[10vw] pb-[8vw] lg:pt-[4vw] lg:pb-[3vw]"
   x-data="
     {
       collections: window['collectionsData_{{ section.id }}'] || [],
@@ -37,11 +37,11 @@
       isAnimating: false,
       autoplayTimer: null,
 
-      SLIDE_W:  22.222,
-      SLIDE_H: 26.389,
-      ACTIVE_W: 30.889,
-      ACTIVE_H: 34.278,
-      GAP:      1.25,
+      SLIDE_W:  window.innerWidth < 1024 ? 60 : 22.222,
+      SLIDE_H:  window.innerWidth < 1024 ? 75 : 26.389,
+      ACTIVE_W: window.innerWidth < 1024 ? 80 : 30.889,
+      ACTIVE_H: window.innerWidth < 1024 ? 100 : 34.278,
+      GAP:      window.innerWidth < 1024 ? 4 : 1.25,
       BEFORE:   2,
 
       get products() { return this.collections[this.activeTab]?.products || []; },
@@ -123,23 +123,40 @@
   "
   x-init="init()"
 >
-  <div class="grid grid-cols-12 items-center px-[4.444vw] mb-[8.333vw]">
-    <!-- label + heading -->
-    <div class="col-span-4">
-      <p data-anim="fade-up" class="text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">
+  <div class="flex flex-col lg:grid lg:grid-cols-12 items-start lg:items-center gap-[6vw] lg:gap-0 px-[6vw] lg:px-[4.444vw] mb-[10vw] lg:mb-[8.333vw]">
+    <!-- tabs + description -->
+    <div class="order-1 lg:order-2 col-span-8 w-full">
+      <p data-anim="fade-up" class="text-[2.6vw] lg:text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[4vw] lg:hidden">
         {{ section.settings.label | default: 'Core Products' }}
       </p>
-      <div class="flex items-center gap-[1.667vw]">
+      <h2 data-anim="split-words" class="text-[12vw] lg:text-[4.167vw] font-normal leading-[1.05] lg:leading-none tracking-tight text-gray-900 mb-[4vw] lg:mb-[1.667vw]">
+        {{ section.settings.heading | default: 'Essential Hydration' }}
+      </h2>
+
+      <p data-anim="fade-up" class="text-[3.2vw] leading-[4.4vw] lg:text-[0.833vw] lg:leading-relaxed text-gray-500">
+        {{
+          section.settings.description
+          | default: 'Designed to be used together. Engineered to perform independently.'
+        }}
+      </p>
+    </div>
+
+    <!-- label + tabs -->
+    <div class="order-2 lg:order-1 col-span-4 w-full">
+      <p data-anim="fade-up" class="hidden lg:block text-[0.833vw] tracking-[0.18em] uppercase text-[#989BA2] font-medium leading-none mb-[5.764vw]">
+        {{ section.settings.label | default: 'Core Products' }}
+      </p>
+      <div class="flex items-center gap-[5vw] lg:gap-[1.667vw]">
         {% for block in section.blocks %}
           {% if block.type == 'collection_tab' %}
             <button
-              class="flex items-center gap-[0.5vw] text-[0.872vw] font-normal transition-colors duration-200"
+              class="flex items-center gap-[1.6vw] lg:gap-[0.5vw] text-[3vw] lg:text-[0.872vw] font-normal transition-colors duration-200"
               :class="activeTab === {{ forloop.index0 }} ? 'text-black' : 'text-gray-400 hover:text-gray-600'"
               @click="switchTab({{ forloop.index0 }})"
               {{ block.shopify_attributes }}
             >
               <span
-                class="w-[0.5vw] h-[0.5vw] rounded-sm inline-block transition-colors duration-200 flex-shrink-0"
+                class="w-[1.6vw] h-[1.6vw] lg:w-[0.5vw] lg:h-[0.5vw] rounded-sm inline-block transition-colors duration-200 flex-shrink-0"
                 :class="activeTab === {{ forloop.index0 }} ? 'bg-black' : 'bg-transparent border border-gray-300'"
               ></span>
               {{ block.settings.tab_label | default: 'Tab' }}
@@ -148,25 +165,11 @@
         {% endfor %}
       </div>
     </div>
-
-    <!-- tabs + description -->
-    <div class="col-span-8">
-      <h2 data-anim="split-words" class="text-[4.167vw] font-normal leading-none tracking-tight text-gray-900 mb-[1.667vw]">
-        {{ section.settings.heading | default: 'Essential Hydration' }}
-      </h2>
-
-      <p data-anim="fade-up" class="text-[0.833vw] text-gray-500 leading-relaxed">
-        {{
-          section.settings.description
-          | default: 'Designed to be used together. Engineered to perform independently.'
-        }}
-      </p>
-    </div>
   </div>
 
   <!-- Row 4: slider + overlay card -->
   <div
-    class="relative cursor-grab active:cursor-grabbing select-none max-w-[95vw] ml-auto overflow-hidden h-[35.278vw] flex items-end"
+    class="relative cursor-grab active:cursor-grabbing select-none max-w-[95vw] ml-auto overflow-hidden h-[105vw] lg:h-[35.278vw] flex items-end"
     @mousedown="onDragStart"
     @mouseup="onDragEnd"
     @touchstart.passive="onDragStart"
@@ -198,13 +201,13 @@
           <!-- active product title + price -->
           <div
             :class="isActive(i) ? 'flex' : 'hidden'"
-            class="items-center justify-between mb-[1.2vw]"
+            class="items-center justify-between mb-[3vw] lg:mb-[1.2vw]"
           >
-            <p class="text-[1.1vw] font-normal text-gray-900 leading-snug" x-text="activeProduct?.title || ''"></p>
-            <p class="text-[1.1vw] text-gray-900" x-text="isSoldOut ? 'Sold out' : (activeProduct?.price || '')"></p>
+            <p class="text-[3.4vw] lg:text-[1.1vw] font-normal text-gray-900 leading-snug" x-text="activeProduct?.title || ''"></p>
+            <p class="text-[3.4vw] lg:text-[1.1vw] text-gray-900" x-text="isSoldOut ? 'Sold out' : (activeProduct?.price || '')"></p>
           </div>
 
-          <div class="bg-[#e1e1e1] p-[2vw] w-full h-full relative">
+          <div class="bg-[#e1e1e1] p-[5vw] lg:p-[2vw] w-full h-full relative">
             <img
               :src="product.image || ''"
               :alt="product.alt || ''"
@@ -214,7 +217,7 @@
             <!-- Buy now — active slide only -->
             <a
               :href="product.url || '#'"
-              class="absolute bottom-[1.2vw] right-[1.2vw] flex items-center gap-[0.35vw] text-[0.75vw] text-gray-900 transition-opacity duration-300"
+              class="absolute bottom-[3vw] right-[3vw] gap-[1vw] text-[2.6vw] lg:bottom-[1.2vw] lg:right-[1.2vw] lg:gap-[0.35vw] lg:text-[0.75vw] flex items-center text-gray-900 transition-opacity duration-300"
               :class="isActive(i) ? 'opacity-100' : 'opacity-0 pointer-events-none'"
               @click.stop
             >
@@ -230,19 +233,18 @@
 
     <!-- ATC overlay card — top-left of slider -->
     <div
-      class="absolute top-0 left-0 z-10 bg-[#1D1D1D]/40 backdrop-blur-sm"
-      style="width:18vw; padding:0.9vw 1.1vw;"
+      class="absolute top-0 left-0 z-10 bg-[#1D1D1D]/40 backdrop-blur-sm w-[55vw] py-[2.5vw] px-[3vw] lg:w-[18vw] lg:py-[0.9vw] lg:px-[1.1vw]"
     >
       <!-- product info row -->
-      <div class="flex items-center justify-between mb-[0.8vw]">
-        <span class="text-[0.694vw] text-white font-normal" x-text="activeProduct?.title || ''"></span>
-        <div class="flex items-center gap-[0.8vw]">
+      <div class="flex items-center justify-between mb-[2vw] lg:mb-[0.8vw]">
+        <span class="text-[2.2vw] lg:text-[0.694vw] text-white font-normal" x-text="activeProduct?.title || ''"></span>
+        <div class="flex items-center gap-[2vw] lg:gap-[0.8vw]">
           <span
-            class="text-[0.625vw] text-white"
+            class="text-[2vw] lg:text-[0.625vw] text-white"
             x-text="activeProduct?.variantTitle && activeProduct.variantTitle !== 'Default Title' ? activeProduct.variantTitle : ''"
           ></span>
           <span
-            class="text-[0.694vw] text-white"
+            class="text-[2.2vw] lg:text-[0.694vw] text-white"
             x-text="isSoldOut ? 'Sold out' : (activeProduct?.price || '')"
           ></span>
         </div>
@@ -250,9 +252,9 @@
 
       <!-- ATC row -->
       <div class="flex items-center justify-between">
-        <span class="text-[0.625vw] text-white">Add items to your cart</span>
+        <span class="text-[2vw] lg:text-[0.625vw] text-white">Add items to your cart</span>
         <button
-          class="w-[4vw] h-[2vw] flex items-center justify-center bg-white text-gray-900 text-[1vw] font-light transition-colors duration-200 disabled:opacity-40"
+          class="w-[12vw] h-[6vw] lg:w-[4vw] lg:h-[2vw] flex items-center justify-center bg-white text-gray-900 text-[3vw] lg:text-[1vw] font-light transition-colors duration-200 disabled:opacity-40"
           :disabled="isSoldOut || atcBusy"
           @click.stop="addToCart()"
           :title="atcLabel"
@@ -264,7 +266,7 @@
   </div>
 
   <!-- Row 5: pagination ticks — centered -->
-  <div class="flex items-center justify-center gap-[12px] mt-[2vw]">
+  <div class="flex items-center justify-center gap-[8px] lg:gap-[12px] mt-[6vw] lg:mt-[2vw]">
     <template x-for="(p, i) in products" :key="i">
       <span
         class="inline-block cursor-pointer transition-all duration-200 w-[1px] bg-[#6C6F77] overflow-visible relative"
