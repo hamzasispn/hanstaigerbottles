@@ -1,6 +1,5 @@
 {%- comment -%}
   Snippet: product-card.liquid
-  Restyled to match bundle-card.liquid design language.
   Usage: {% render 'product-card', product: product, lazy: true %}
   Params:
     - product      {Object}  Shopify product object (required)
@@ -18,8 +17,7 @@
 -%}
 
 <article
-  class="product-card group relative flex flex-col overflow-hidden rounded-[0.56vw] bg-[#F4F4F5]"
-  style="min-width: 0;"
+  class="product-card group relative flex flex-col bg-white"
   x-data="{
     activeColor: {{ current_var.id | json }},
     addedToCart: false,
@@ -43,172 +41,141 @@
     }
   }"
 >
-  <div class="flex flex-col flex-1 p-[1.11vw]">
 
-    {%- comment -%} ── Top zone: image block ──────────────────────────── {%- endcomment -%}
-    <div class="relative flex-shrink-0 mb-[3.194vw] h-[15.139vw]">
-      <a
-        href="{{ product_url }}"
-        class="absolute top-0 left-0 overflow-hidden w-[15.139vw] h-full rounded-[0.187vw] block bg-[#E4E4E6]"
-        aria-label="{{ product.title | escape }}"
-      >
-        {%- if product.featured_media -%}
-          {{
-            product.featured_media
-            | image_url: width: 560
-            | image_tag:
-              class: 'w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]',
-              loading: lazy | ternary: 'lazy', 'eager',
-              alt: product.featured_media.alt | escape | default: product.title,
-              widths: '280,400,560',
-              sizes: '15vw'
-          }}
-        {%- else -%}
-          <div class="w-full h-full flex items-center justify-center">
-            {{ 'product-1' | placeholder_svg_tag: 'w-12 h-12 opacity-30' }}
-          </div>
-        {%- endif -%}
-      </a>
+  {%- comment -%} ── Image wrapper ──────────────────────────────────── {%- endcomment -%}
+  <a
+    href="{{ product_url }}"
+    class="{{ aspect }} relative block overflow-hidden bg-[#e8e8e8]"
+    aria-label="{{ product.title | escape }}"
+  >
+    {%- if product.featured_media -%}
+      {{
+        product.featured_media
+        | image_url: width: 800
+        | image_tag:
+          class: 'absolute inset-0 h-full w-full object-contain p-[5%] transition-transform duration-500 ease-out group-hover:scale-[1.04]',
+          loading: lazy | ternary: 'lazy', 'eager',
+          alt: product.featured_media.alt | escape | default: product.title,
+          widths: '300,400,600,800',
+          sizes: '(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 28vw'
+      }}
+    {%- else -%}
+      <span class="absolute inset-0 flex items-center justify-center text-[#aaa]">
+        {{ 'image' | placeholder_svg_tag: 'w-16 h-16 opacity-20' }}
+      </span>
+    {%- endif -%}
 
-      {%- comment -%} Sale badge — top-left of image {%- endcomment -%}
-      {%- if product.compare_at_price > product.price -%}
-        <span
-          class="absolute top-0 left-0 z-10 bg-black text-white uppercase tracking-[0.08em] font-medium"
-          style="font-size: 0.56vw; padding: 0.14vw 0.42vw;"
-        >
-          Sale
-        </span>
+    {%- if product.compare_at_price > product.price -%}
+      <span class="absolute left-[3%] top-[3%] bg-black px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-widest text-white">
+        Sale
+      </span>
+    {%- endif -%}
+  </a>
+
+  {%- comment -%} ── Card body ──────────────────────────────────────── {%- endcomment -%}
+  <div class="flex flex-col gap-y-2 px-0 pb-0 pt-3">
+
+    {%- if show_vendor and product.vendor != blank -%}
+      <p class="text-[0.6rem] uppercase tracking-[0.18em] text-[#888]">
+        {{ product.vendor }}
+      </p>
+    {%- endif -%}
+
+    {%- comment -%} Product type / label {%- endcomment -%}
+    <p class="text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-[#555]">
+      {%- if product.type != blank -%}
+        {{ product.type }}
+      {%- else -%}
+        {{ 'products.product.product' | t | default: 'Product' }}
       {%- endif -%}
-    </div>
+    </p>
 
-    {%- comment -%} ── Content area ───────────────────────────────────── {%- endcomment -%}
-    <div class="flex flex-col flex-1 justify-between">
-      <div class="p-[1.389vw]">
+    {%- comment -%} ── Color swatches ──────────────────────────────── {%- endcomment -%}
+    {%- assign color_option = nil -%}
+    {%- for option in product.options_with_values -%}
+      {%- assign option_name_lower = option.name | downcase -%}
+      {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
+        {%- assign color_option = option -%}
+        {%- assign color_option_index = forloop.index0 -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
 
-        {%- if show_vendor and product.vendor != blank -%}
-          <p class="uppercase tracking-[0.18em] text-[#888] mb-[0.28vw]"
-             style="font-size: 0.56vw;">
-            {{ product.vendor }}
-          </p>
-        {%- endif -%}
+    {%- comment -%} ── ADD TO CART row ─────────────────────────────── {%- endcomment -%}
+    <div class="flex items-center gap-x-3">
 
-        {%- comment -%} Title {%- endcomment -%}
-        <h3
-          class="font-medium text-[#222222] leading-[1.528vw] text-[1.111vw] tracking-[0.014vw] mb-[0.694vw]"
-        >
-          <a href="{{ product_url }}" class="hover:opacity-70 transition-opacity duration-150">
-            {{ product.title | default: 'Product Name' }}
-          </a>
-        </h3>
+      <button
+        type="button"
+        @click="addToCart()"
+        :disabled="addingToCart"
+        class="shrink-0 text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity duration-150 hover:opacity-50 disabled:cursor-wait disabled:opacity-40"
+        aria-label="{{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}"
+      >
+        <span x-show="!addedToCart && !addingToCart">
+          {{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}
+        </span>
+        <span x-show="addingToCart" x-cloak>…</span>
+        <span x-show="addedToCart" x-cloak class="text-green-600">✓ Added</span>
+      </button>
 
-        {%- comment -%} Product type subtitle {%- endcomment -%}
-        {%- if product.type != blank -%}
-          <p class="text-[#83868E] text-[0.972vw] leading-[1.389vw] mb-[0.556vw] font-normal">
-            {{ product.type }}
-          </p>
-        {%- endif -%}
+      {%- if color_option != nil -%}
+        <div class="flex items-center gap-x-1.5" role="group" aria-label="Color options">
+          {%- for value in color_option.values -%}
+            {%- assign swatch_variant = nil -%}
+            {%- for variant in product.variants -%}
+              {%- assign v_color = variant.options[color_option_index] -%}
+              {%- if v_color == value and variant.available -%}
+                {%- assign swatch_variant = variant -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
 
-        {%- comment -%} ── Color swatches ──────────────────────────────── {%- endcomment -%}
-        {%- assign color_option = nil -%}
-        {%- for option in product.options_with_values -%}
-          {%- assign option_name_lower = option.name | downcase -%}
-          {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
-            {%- assign color_option = option -%}
-            {%- assign color_option_index = forloop.index0 -%}
-            {%- break -%}
-          {%- endif -%}
-        {%- endfor -%}
-
-        {%- if color_option != nil -%}
-          <div class="flex flex-col" style="gap: 0.42vw;">
-            {%- for value in color_option.values -%}
-              {%- assign swatch_variant = nil -%}
+            {%- if swatch_variant == nil -%}
               {%- for variant in product.variants -%}
                 {%- assign v_color = variant.options[color_option_index] -%}
-                {%- if v_color == value and variant.available -%}
+                {%- if v_color == value -%}
                   {%- assign swatch_variant = variant -%}
                   {%- break -%}
                 {%- endif -%}
               {%- endfor -%}
-              {%- if swatch_variant == nil -%}
-                {%- for variant in product.variants -%}
-                  {%- assign v_color = variant.options[color_option_index] -%}
-                  {%- if v_color == value -%}
-                    {%- assign swatch_variant = variant -%}
-                    {%- break -%}
-                  {%- endif -%}
-                {%- endfor -%}
-              {%- endif -%}
+            {%- endif -%}
 
-              {%- if swatch_variant -%}
-                {%- assign value_handle = value | handleize -%}
-                {%- assign css_color = value_handle
-                  | replace: 'orange', '#e86012'
-                  | replace: 'rust',   '#c0510e'
-                  | replace: 'blue',   '#2d3fcf'
-                  | replace: 'navy',   '#0a1a4a'
-                  | replace: 'black',  '#1a1a1a'
-                  | replace: 'white',  '#f5f5f5'
-                  | replace: 'red',    '#d62828'
-                  | replace: 'green',  '#2d6a4f'
-                  | replace: 'grey',   '#888888'
-                  | replace: 'gray',   '#888888'
-                  | replace: 'pink',   '#e879a0'
-                  | replace: 'yellow', '#f5c400'
-                -%}
-                <label
-                  class="flex items-center cursor-pointer gap-[0.556vw]"
-                  :class="activeColor === {{ swatch_variant.id }} ? 'opacity-100' : 'opacity-20'"
-                  @click="activeColor = {{ swatch_variant.id }}"
-                >
-                  <span
-                    class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150"
-                    style="background-color: {{ css_color }};"
-                  ></span>
-                  <span class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]">
-                    {{- value | escape -}}
-                  </span>
-                </label>
-              {%- endif -%}
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
+            {%- if swatch_variant -%}
+              {%- assign value_handle = value | handleize -%}
+              {%- comment -%}
+                Map common colour names → CSS colours.
+                Extend this list for your store's palette.
+              {%- endcomment -%}
+              {%- assign css_color = value_handle
+                | replace: 'orange', '#e86012'
+                | replace: 'rust',   '#c0510e'
+                | replace: 'blue',   '#2d3fcf'
+                | replace: 'navy',   '#0a1a4a'
+                | replace: 'black',  '#1a1a1a'
+                | replace: 'white',  '#f5f5f5'
+                | replace: 'red',    '#d62828'
+                | replace: 'green',  '#2d6a4f'
+                | replace: 'grey',   '#888888'
+                | replace: 'gray',   '#888888'
+                | replace: 'pink',   '#e879a0'
+                | replace: 'yellow', '#f5c400'
+              -%}
 
-      </div>
-
-      {%- comment -%} ── Bottom: divider + price + CTA ─────────────────── {%- endcomment -%}
-      <div>
-        <div class="w-full bg-[#DDDDDD] h-px" style="margin: 1.11vw 0;"></div>
-
-        <div class="flex items-center justify-between p-[1.389vw]">
-          <span class="font-medium text-[#4F5257] text-[1.11vw]">
-            {{ current_var.price | money }}
-          </span>
-          {%- if product.compare_at_price > product.price -%}
-            <span
-              class="text-[#83868E] font-medium uppercase tracking-[0.08em] leading-[1.181vw]"
-              style="font-size: 0.833vw;"
-            >
-              Save {{ product.compare_at_price | minus: product.price | money }}
-            </span>
-          {%- endif -%}
+              <button
+                type="button"
+                @click="activeColor = {{ swatch_variant.id }}"
+                :class="activeColor === {{ swatch_variant.id }}
+                  ? 'ring-2 ring-black ring-offset-1 scale-110'
+                  : 'ring-1 ring-transparent hover:ring-[#bbb] hover:ring-offset-1'"
+                class="h-[0.9vw] min-h-[10px] w-[0.9vw] min-w-[10px] rounded-full transition-all duration-150"
+                style="background-color: {{ css_color }};"
+                aria-label="{{ value | escape }}"
+                title="{{ value | escape }}"
+              ></button>
+            {%- endif -%}
+          {%- endfor -%}
         </div>
-
-        <button
-          type="button"
-          @click="addToCart()"
-          :disabled="addingToCart"
-          class="flex items-center justify-center ml-auto bg-[#EBEBEB] text-[#111111] leading-[1.389vw] gap-[1.111vw] transition-opacity duration-150 hover:opacity-70 disabled:cursor-wait disabled:opacity-40"
-          style="font-size: 0.972vw; width: 8.958vw; padding: 0.556vw 0.833vw;"
-          aria-label="{{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}"
-        >
-          <span x-show="!addedToCart && !addingToCart">
-            Add to cart <span>{% render 'button-arrow' %}</span>
-          </span>
-          <span x-show="addingToCart" x-cloak>…</span>
-          <span x-show="addedToCart" x-cloak>✓ Added</span>
-        </button>
-      </div>
+      {%- endif -%}
     </div>
 
   </div>

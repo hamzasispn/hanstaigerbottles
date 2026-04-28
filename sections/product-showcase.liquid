@@ -25,6 +25,7 @@
       {%- assign card_title = product.title | default: 'Product' -%}
       {%- assign card_image = product.featured_image -%}
       {%- assign card_price = product.price_min | money -%}
+      {%- assign card_compare = product.compare_at_price_min -%}
       {%- assign card_variant = product.first_available_variant -%}
       {%- assign card_url = product.url -%}
 
@@ -32,8 +33,8 @@
         x-bind:style="isActive({{ i }})
           ? 'flex: 3.5; min-width: 0;'
           : 'flex: 1; min-width: 0;'"
-        class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-        style="border-radius: 0.56vw; flex: 1;"
+        class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-[0.56vw]"
+        style="flex: 1;"
         {{ block.shopify_attributes }}
       >
 
@@ -62,7 +63,7 @@
             {%- endif -%}
             <div
               class="absolute inset-0"
-              style="background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.70) 100%);"
+              style="background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.20) 45%, rgba(0,0,0,0.75) 100%);"
             ></div>
           </div>
 
@@ -79,35 +80,44 @@
           </button>
 
           {%- comment -%} Content — pinned to bottom {%- endcomment -%}
-          <div class="absolute inset-x-0 bottom-0 z-10" style="padding: 1.39vw 1.39vw 1.25vw;">
+          <div class="absolute inset-x-0 bottom-0 z-10 p-[0.833vw]">
+            <div class="flex justify-between p-[1.389vw]">
+              <div>
+                <h3 class="font-medium text-white leading-[1.528vw] text-[1.111vw] mb-[0.694vw]">
+                  {{ card_title }}
+                </h3>
 
-            {%- comment -%} Title + Price {%- endcomment -%}
-            <div class="flex items-start justify-between" style="margin-bottom: 0.56vw;">
-              <h3 class="font-medium text-white leading-tight" style="font-size: 1.53vw;">
-                {{ card_title }}
-              </h3>
-              <span class="font-medium text-white" style="font-size: 1.25vw;">
-                {{ card_price }}
-              </span>
+                {%- comment -%} Option value badges {%- endcomment -%}
+                {%- if product != blank and product.options_with_values.size > 0 -%}
+                  <div class="flex items-center flex-wrap gap-[0.556vw]">
+                    {%- for option in product.options_with_values limit: 2 -%}
+                      {%- assign first_val = option.values | first -%}
+                      {%- if forloop.first -%}
+                        <span class="text-[#DFE0E3] text-[0.972vw] leading-[1.389vw]">
+                          {{ first_val }}
+                        </span>
+                      {%- else -%}
+                        <span
+                          class="text-white border border-white"
+                          style="font-size: 0.83vw; padding: 0.14vw 0.56vw; border-radius: 0.21vw;"
+                        >
+                          {{ first_val }}
+                        </span>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+              </div>
+
+              <div class="flex flex-col items-end justify-end">
+                <span class="font-medium text-white" style="font-size: 1.25vw;">
+                  {{ card_price }}
+                </span>
+              </div>
             </div>
 
-            {%- comment -%} Option value badges from product options {%- endcomment -%}
-            {%- if product != blank and product.options_with_values.size > 0 -%}
-              <div class="flex items-center flex-wrap" style="gap: 0.42vw; margin-bottom: 1.11vw;">
-                {%- for option in product.options_with_values limit: 2 -%}
-                  {%- assign first_val = option.values | first -%}
-                  <span
-                    class="flex items-center text-white rounded-sm"
-                    style="font-size: 0.83vw; padding: 0.21vw 0.56vw; border: 1px solid rgba(255,255,255,{% if forloop.first %}0.9{% else %}0.45{% endif %});"
-                  >
-                    {{ first_val }}
-                  </span>
-                {%- endfor -%}
-              </div>
-            {%- endif -%}
-
             {%- comment -%} Divider {%- endcomment -%}
-            <div class="w-full bg-white bg-opacity-25" style="height: 1px; margin-bottom: 1.11vw;"></div>
+            <div class="w-full bg-white bg-opacity-25 h-px mb-[1.11vw]"></div>
 
             {%- comment -%} Add to cart {%- endcomment -%}
             {%- if card_variant != blank -%}
@@ -116,28 +126,23 @@
                 <input type="hidden" name="quantity" value="1">
                 <button
                   type="submit"
-                  class="flex items-center justify-between bg-white bg-opacity-15 backdrop-blur-sm text-white font-medium border border-white border-opacity-30 hover:bg-opacity-28 transition-all duration-200 w-full"
-                  style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw;"
+                  class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#F4F4F5]/40 backdrop-blur-sm text-white px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
                 >
-                  <span>Add to cart</span>
-                  <span>→</span>
+                  Add to cart <span>{% render 'button-arrow' %}</span>
                 </button>
               </form>
             {%- else -%}
               <a
                 href="{{ card_url }}"
-                class="flex items-center justify-between bg-white bg-opacity-15 text-white font-medium border border-white border-opacity-30 w-full"
-                style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw;"
+                class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#F4F4F5]/40 backdrop-blur-sm text-white px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
               >
-                <span>View product</span>
-                <span>→</span>
+                View product <span>{% render 'button-arrow' %}</span>
               </a>
             {%- endif -%}
-
           </div>
         </div>
 
-        {%- comment -%} ═══ COLLAPSED STATE ═══ {%- endcomment -%}
+        {%- comment -%} ═══ COLLAPSED STATE — matches bundle-card.liquid ═══ {%- endcomment -%}
         <div
           x-show="!isActive({{ i }})"
           x-transition:enter="transition-opacity duration-300 delay-100"
@@ -146,30 +151,33 @@
           x-transition:leave="transition-opacity duration-100"
           x-transition:leave-start="opacity-100"
           x-transition:leave-end="opacity-0"
-          class="absolute inset-0 flex flex-col bg-white"
-          style="padding: 1.11vw;"
+          class="absolute inset-0 flex flex-col bg-[#F4F4F5] p-[1.11vw]"
         >
 
-          {%- comment -%} Image + plus button {%- endcomment -%}
-          <div class="relative flex-1 overflow-hidden" style="margin-bottom: 1.11vw; border-radius: 0.28vw;">
+          {%- comment -%} Top zone: image + plus button {%- endcomment -%}
+          <div class="relative flex-shrink-0 mb-[3.194vw] h-[15.139vw]">
 
-            {%- if card_image != blank -%}
-              <img
-                src="{{ card_image | image_url: width: 500 }}"
-                alt="{{ card_image.alt | escape | default: card_title }}"
-                class="w-full h-full object-cover"
-                loading="lazy"
-              >
-            {%- else -%}
-              <div class="w-full h-full bg-[#E8E8E8] flex items-center justify-center">
-                {{ 'product-1' | placeholder_svg_tag: 'w-12 h-12 opacity-30' }}
-              </div>
-            {%- endif -%}
+            {%- comment -%} Product image — top-left {%- endcomment -%}
+            <div class="absolute top-0 left-0 overflow-hidden w-[15.139vw] h-full rounded-[0.187vw]">
+              {%- if card_image != blank -%}
+                <img
+                  src="{{ card_image | image_url: width: 280 }}"
+                  alt="{{ card_image.alt | escape | default: card_title }}"
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                >
+              {%- else -%}
+                <div class="w-full h-full bg-[#E4E4E6] flex items-center justify-center">
+                  {{ 'product-1' | placeholder_svg_tag: 'w-12 h-12 opacity-30' }}
+                </div>
+              {%- endif -%}
+            </div>
 
+            {%- comment -%} Plus button — top-right {%- endcomment -%}
             <button
               @click="open({{ i }})"
-              class="absolute top-0 right-0 flex items-center justify-center bg-[#111111] rounded-full text-white"
-              style="width: 1.67vw; height: 1.67vw; margin: 0.56vw;"
+              class="absolute top-0 right-0 flex items-center justify-center bg-white rounded-full text-[#111111] hover:bg-[#111111] hover:text-white transition-colors duration-200"
+              style="width: 1.67vw; height: 1.67vw;"
               aria-label="Open {{ card_title }}"
             >
               <svg style="width: 0.69vw; height: 0.69vw;" viewBox="0 0 12 12" fill="none">
@@ -180,43 +188,76 @@
 
           </div>
 
-          {%- comment -%} Title + price + button {%- endcomment -%}
-          <div class="flex-shrink-0">
+          {%- comment -%} Content — fills remaining height {%- endcomment -%}
+          <div class="flex flex-col flex-1 justify-between">
+            <div class="p-[1.389vw]">
 
-            <div class="flex items-center justify-between" style="margin-bottom: 0.97vw;">
-              <h3 class="font-medium text-[#111111] leading-tight" style="font-size: 1.11vw;">
+              {%- comment -%} Title {%- endcomment -%}
+              <h3 class="font-medium text-[#222222] leading-[1.528vw] text-[1.111vw] tracking-[0.014vw] mb-[0.694vw]">
                 {{ card_title }}
               </h3>
-              <span class="font-medium text-[#111111]" style="font-size: 1.11vw;">
-                {{ card_price }}
-              </span>
+
+              {%- comment -%} Product type as subtitle {%- endcomment -%}
+              {%- if product.type != blank -%}
+                <p class="text-[#83868E] text-[0.972vw] leading-[1.389vw] mb-[0.556vw] font-normal">
+                  {{ product.type }}
+                </p>
+              {%- endif -%}
+
+              {%- comment -%} Option value rows — dot + label, like bundle card variant rows {%- endcomment -%}
+              {%- if product != blank and product.options_with_values.size > 0 -%}
+                <div class="flex flex-col" style="gap: 0.42vw;">
+                  {%- for option in product.options_with_values limit: 2 -%}
+                    {%- assign first_val = option.values | first -%}
+                    <div class="flex items-center gap-[0.556vw]">
+                      <span class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] bg-[#303236]"></span>
+                      <span class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]">
+                        {{- first_val -}}
+                      </span>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+
             </div>
 
-            {%- if card_variant != blank -%}
-              <form action="/cart/add" method="post">
-                <input type="hidden" name="id" value="{{ card_variant.id }}">
-                <input type="hidden" name="quantity" value="1">
-                <button
-                  type="submit"
-                  class="flex items-center justify-between bg-[#EBEBEB] text-[#111111] font-medium border border-[#CCCCCC] hover:bg-[#111111] hover:text-white hover:border-[#111111] transition-all duration-200 w-full"
-                  style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw;"
-                >
-                  <span>Add to cart</span>
-                  <span>→</span>
-                </button>
-              </form>
-            {%- else -%}
-              <a
-                href="{{ card_url }}"
-                class="flex items-center justify-between bg-[#EBEBEB] text-[#111111] font-medium border border-[#CCCCCC] w-full"
-                style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw;"
-              >
-                <span>View product</span>
-                <span>→</span>
-              </a>
-            {%- endif -%}
+            {%- comment -%} Bottom: divider + price + CTA {%- endcomment -%}
+            <div>
+              <div class="w-full bg-[#DDDDDD] h-px" style="margin: 1.11vw 0;"></div>
 
+              <div class="flex items-center justify-between p-[1.389vw]">
+                <span class="font-medium text-[#4F5257] text-[1.11vw]">
+                  {{ card_price }}
+                </span>
+                {%- if card_compare > product.price_min -%}
+                  <span class="text-[#83868E] font-medium uppercase text-[0.833vw] leading-[1.181vw] tracking-[0.08em]">
+                    Save {{ card_compare | minus: product.price_min | money }}
+                  </span>
+                {%- endif -%}
+              </div>
+
+              {%- if card_variant != blank -%}
+                <form action="/cart/add" method="post">
+                  <input type="hidden" name="id" value="{{ card_variant.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button
+                    type="submit"
+                    class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
+                  >
+                    Add to cart <span>{% render 'button-arrow' %}</span>
+                  </button>
+                </form>
+              {%- else -%}
+                <a
+                  href="{{ card_url }}"
+                  class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
+                >
+                  View product <span>{% render 'button-arrow' %}</span>
+                </a>
+              {%- endif -%}
+            </div>
           </div>
+
         </div>
 
       </div>
