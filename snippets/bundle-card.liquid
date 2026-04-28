@@ -163,10 +163,9 @@
       {%- comment -%} Add bundle button {%- endcomment -%}
       <a
         href="{{ block.settings.url | default: '#' }}"
-        class="flex items-center justify-end bg-white bg-opacity-15 backdrop-blur-sm text-white font-medium border border-white border-opacity-30 hover:bg-opacity-28 transition-all duration-200 w-full"
-        style="font-size: 0.97vw; padding: 0.69vw 1.25vw; border-radius: 0.28vw; gap: 0.42vw;"
+        class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#F4F4F5]/40 backdrop-blur-sm text-white px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
       >
-        Add bundle <span>→</span>
+        Add bundle <span> {% render 'button-arrow' %} </span>
       </a>
     </div>
   </div>
