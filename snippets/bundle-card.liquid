@@ -67,45 +67,36 @@
 
     {%- comment -%} Content — pinned to bottom {%- endcomment -%}
     <div class="absolute inset-x-0 bottom-0 z-10" style="padding: 1.39vw 1.39vw 1.25vw;">
-      {%- comment -%} Title {%- endcomment -%}
-      <h3
-        class="font-medium text-white leading-tight"
-        style="font-size: 1.53vw; margin-bottom: 0.56vw;"
-      >
-        {{ block.settings.title | default: 'Bundle Name' }}
-      </h3>
+      <div class="flex items-center justify-between">
+        {%- comment -%} Title {%- endcomment -%}
+        <div>
+          <h3
+            class="font-medium text-white leading-tight text-[1.53vw] mb-[0.56vw]"
+          >
+            {{ block.settings.title | default: 'Bundle Name' }}
+          </h3>
 
-      {%- comment -%} Tags row {%- endcomment -%}
-      {%- if block.settings.tag_1 != blank or block.settings.tag_2 != blank -%}
-        <div class="flex items-center flex-wrap" style="gap: 0.56vw; margin-bottom: 1.25vw;">
-          {%- if block.settings.tag_1 != blank -%}
-            <span class="text-white" style="font-size: 0.97vw;">
-              {{ block.settings.tag_1 }}
-            </span>
-          {%- endif -%}
-          {%- if block.settings.tag_2 != blank -%}
-            <span
-              class="text-white border border-white"
-              style="font-size: 0.83vw; padding: 0.14vw 0.56vw; border-radius: 0.21vw;"
-            >
-              {{- block.settings.tag_2 -}}
-            </span>
+          {%- comment -%} Tags row {%- endcomment -%}
+          {%- if block.settings.tag_1 != blank or block.settings.tag_2 != blank -%}
+            <div class="flex items-center flex-wrap" style="gap: 0.56vw; margin-bottom: 1.25vw;">
+              {%- if block.settings.tag_1 != blank -%}
+                <span class="text-white" style="font-size: 0.97vw;">
+                  {{ block.settings.tag_1 }}
+                </span>
+              {%- endif -%}
+              {%- if block.settings.tag_2 != blank -%}
+                <span
+                  class="text-white border border-white"
+                  style="font-size: 0.83vw; padding: 0.14vw 0.56vw; border-radius: 0.21vw;"
+                >
+                  {{- block.settings.tag_2 -}}
+                </span>
+              {%- endif -%}
+            </div>
           {%- endif -%}
         </div>
-      {%- endif -%}
 
-      {%- comment -%} Divider {%- endcomment -%}
-      <div class="w-full bg-white bg-opacity-25 h-px mb-[1.11vw]"></div>
-
-      {%- comment -%} Bottom row: price left — subscription + variants + save right {%- endcomment -%}
-      <div class="flex items-end justify-between mb-[1.11vw]">
-        {%- comment -%} Price {%- endcomment -%}
-        <span class="font-medium text-white text-[1.25vw]">
-          {{ block.settings.price | default: '€00' }}
-        </span>
-
-        {%- comment -%} Right column {%- endcomment -%}
-        <div class="flex flex-col items-end gap-[0.42vw]">
+        <div>
           {%- if block.settings.subscription_label != blank -%}
             <span
               class="uppercase text-white"
@@ -115,7 +106,6 @@
             </span>
           {%- endif -%}
 
-          {%- comment -%} Variant toggles — right-aligned, radio on right {%- endcomment -%}
           {%- if block.settings.variant_1 != blank -%}
             <label class="flex items-center cursor-pointer" style="gap: 0.56vw;">
               <span
@@ -151,13 +141,22 @@
               ></span>
             </label>
           {%- endif -%}
-
-          {%- if block.settings.save_text != blank -%}
-            <span class="text-white uppercase" style="font-size: 0.69vw; letter-spacing: 0.08em; opacity: 0.80;">
-              {{ block.settings.save_text }}
-            </span>
-          {%- endif -%}
         </div>
+      </div>
+
+      {%- comment -%} Divider {%- endcomment -%}
+      <div class="w-full bg-white bg-opacity-25 h-px mb-[1.11vw]"></div>
+
+      <div class="flex items-end justify-between mb-[1.11vw]">
+        <span class="font-medium text-white text-[1.25vw]">
+          {{ block.settings.price | default: '€00' }}
+        </span>
+
+        {%- if block.settings.save_text != blank -%}
+          <span class="text-white uppercase" style="font-size: 0.69vw; letter-spacing: 0.08em; opacity: 0.80;">
+            {{ block.settings.save_text }}
+          </span>
+        {%- endif -%}
       </div>
 
       {%- comment -%} Add bundle button {%- endcomment -%}
