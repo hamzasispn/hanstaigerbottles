@@ -17,7 +17,7 @@
   class="w-full bg-[#F4F4F5]"
   style="padding: 4.44vw 3.61vw 5.56vw;"
 >
-  <div data-anim="stagger-children" class="flex items-stretch" style="gap: 1.11vw; height: 25.69vw;">
+  <div data-anim="stagger-children" class="flex items-stretch h-[26.69vw]" style="gap: 1.11vw;">
     {%- for block in section.blocks -%}
       {%- assign i = forloop.index0 -%}
       {%- assign product = block.settings.product -%}
@@ -152,7 +152,7 @@
           x-transition:leave="transition-opacity duration-100"
           x-transition:leave-start="opacity-100"
           x-transition:leave-end="opacity-0"
-          class="absolute inset-0 flex flex-col bg-white p-[1.11vw]"
+          class="absolute inset-0 flex flex-col bg-white p-[0.833vw]"
         >
           {%- comment -%} Top zone: image + plus button {%- endcomment -%}
           <div class="relative flex-shrink-0 mb-[3.194vw] h-[11.319vw]">
