@@ -244,7 +244,7 @@
           {%- if block.settings.variant_1 != blank -%}
             <label
               class="flex items-center cursor-pointer gap-[0.556vw]"
-              :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-70'"
+              :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-50'"
               @click="variants[{{ i }}] = 'v1'"
             >
               <span
@@ -259,21 +259,16 @@
           {%- endif -%}
 
           {%- if block.settings.variant_2 != blank -%}
-            <label class="flex items-center cursor-pointer gap-[0.833vw]">
+            <label
+              class="flex items-center cursor-pointer gap-[0.556vw]"
+              :class="variants[{{ i }}] === 'v2' ? 'opacity-100' : 'opacity-50'"
+              @click="variants[{{ i }}] = 'v2'"
+            >
               <span
-                class="flex-shrink-0 rounded-full border transition-colors duration-150"
-                style="width: 0.97vw; height: 0.97vw;"
-                :class="
-                  variants[{{ i }}] === 'v2'
-                  ? 'bg-[#111111] border-[#111111]'
-                  : 'bg-white border-[#CCCCCC]'
-                "
-                @click="variants[{{ i }}] = 'v2'"
+                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 bg-[#303236]"
               ></span>
               <span
-                class="text-[#111111]"
-                style="font-size: 0.97vw;"
-                :class="variants[{{ i }}] === 'v2' ? 'font-medium' : 'font-normal'"
+                class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
               >
                 {{- block.settings.variant_2 -}}
               </span>
