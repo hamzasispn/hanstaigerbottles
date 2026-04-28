@@ -98,7 +98,7 @@
         <div>
           {%- if block.settings.subscription_label != blank -%}
             <span
-              class="uppercase text-[#DFE0E3] text-[0.833vw] tracking-[0.028vw] mb-[1.389vw]"
+              class="uppercase text-[#DFE0E3] text-[0.833vw] tracking-[0.028vw] mb-[1.389vw] inline-block"
             >
               {{- block.settings.subscription_label -}}
             </span>
@@ -107,7 +107,7 @@
           {%- if block.settings.variant_1 != blank -%}
             <label
               class="flex items-center justify-end cursor-pointer gap-[0.56vw] mb-[0.694vw]"
-              :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-20'"
+              :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-80'"
               @click="variants[{{ i }}] = 'v1'"
             >
               <span
@@ -115,7 +115,7 @@
                 :class="variants[{{ i }}] === 'v1' ? 'bg-[#303236]' : 'bg-white'"
               ></span>
               <span
-                class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
+                class="text-white font-normal text-[0.833vw] leading-[1.111vw]"
               >
                 {{- block.settings.variant_1 -}}
               </span>
@@ -125,7 +125,7 @@
           {%- if block.settings.variant_2 != blank -%}
             <label
               class="flex items-center justify-end  cursor-pointer gap-[0.56vw]"
-              :class="variants[{{ i }}] === 'v2' ? 'opacity-100' : 'opacity-20'"
+              :class="variants[{{ i }}] === 'v2' ? 'opacity-100' : 'opacity-80'"
               @click="variants[{{ i }}] = 'v2'"
             >
               <span
@@ -133,7 +133,7 @@
                 :class="variants[{{ i }}] === 'v2' ? 'bg-[#303236]' : 'bg-white'"
               ></span>
               <span
-                class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
+                class="text-white font-normal text-[0.833vw] leading-[1.111vw]"
               >
                 {{- block.settings.variant_2 -}}
               </span>
