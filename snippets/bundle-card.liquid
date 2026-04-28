@@ -68,7 +68,6 @@
     {%- comment -%} Content — pinned to bottom {%- endcomment -%}
     <div class="absolute inset-x-0 bottom-0 z-10 p-[0.833vw]">
       <div class="flex justify-between p-[1.389vw]">
-
         <div>
           <h3
             class="font-medium text-white leading-[1.528vw] text-[1.111vw] mb-[0.694vw]"
@@ -78,9 +77,9 @@
 
           {%- comment -%} Tags row {%- endcomment -%}
           {%- if block.settings.tag_1 != blank or block.settings.tag_2 != blank -%}
-            <div class="flex items-center flex-wrap" style="gap: 0.56vw; margin-bottom: 1.25vw;">
+            <div class="flex items-center flex-wrap gap-[0.556vw]">
               {%- if block.settings.tag_1 != blank -%}
-                <span class="text-white" style="font-size: 0.97vw;">
+                <span class="text-[#DFE0E3] text-[0.972vw] leading-[1.389vw]">
                   {{ block.settings.tag_1 }}
                 </span>
               {%- endif -%}
@@ -106,38 +105,28 @@
           {%- endif -%}
 
           {%- if block.settings.variant_1 != blank -%}
-            <label class="flex items-center cursor-pointer" style="gap: 0.56vw;">
+            <label class="flex items-center justify-end cursor-pointer gap-[0.56vw]">
               <span
-                class="text-white transition-opacity duration-150"
-                style="font-size: 0.97vw;"
-                :class="variants[{{ i }}] === 'v1' ? 'opacity-100 font-medium' : 'opacity-60 font-normal'"
+                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 bg-[#303236]"
+              ></span>
+              <span
+                class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
               >
                 {{- block.settings.variant_1 -}}
               </span>
-              <span
-                class="flex-shrink-0 rounded-full border border-white transition-colors duration-150"
-                style="width: 0.97vw; height: 0.97vw;"
-                :class="variants[{{ i }}] === 'v1' ? 'bg-white' : 'bg-transparent'"
-                @click="variants[{{ i }}] = 'v1'"
-              ></span>
             </label>
           {%- endif -%}
 
           {%- if block.settings.variant_2 != blank -%}
-            <label class="flex items-center cursor-pointer" style="gap: 0.56vw;">
+            <label class="flex items-center justify-end  cursor-pointer gap-[0.56vw]">
               <span
-                class="text-white transition-opacity duration-150"
-                style="font-size: 0.97vw;"
-                :class="variants[{{ i }}] === 'v2' ? 'opacity-100 font-medium' : 'opacity-60 font-normal'"
+                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 bg-[#303236]"
+              ></span>
+              <span
+                class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
               >
                 {{- block.settings.variant_2 -}}
               </span>
-              <span
-                class="flex-shrink-0 rounded-full border border-white transition-colors duration-150"
-                style="width: 0.97vw; height: 0.97vw;"
-                :class="variants[{{ i }}] === 'v2' ? 'bg-white' : 'bg-transparent'"
-                @click="variants[{{ i }}] = 'v2'"
-              ></span>
             </label>
           {%- endif -%}
         </div>
@@ -146,7 +135,7 @@
       {%- comment -%} Divider {%- endcomment -%}
       <div class="w-full bg-white bg-opacity-25 h-px mb-[1.11vw]"></div>
 
-      <div class="flex items-end justify-between mb-[1.11vw]">
+      <div class="flex items-end justify-between mb-[1.11vw] p-[0.833vw]">
         <span class="font-medium text-white text-[1.25vw]">
           {{ block.settings.price | default: '€00' }}
         </span>
