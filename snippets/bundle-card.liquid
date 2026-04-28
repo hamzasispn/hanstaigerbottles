@@ -98,16 +98,21 @@
         <div>
           {%- if block.settings.subscription_label != blank -%}
             <span
-              class="uppercase text-[#DFE0E3] text-[0.833vw] tracking-[0.028vw]"
+              class="uppercase text-[#DFE0E3] text-[0.833vw] tracking-[0.028vw] mb-[1.389vw]"
             >
               {{- block.settings.subscription_label -}}
             </span>
           {%- endif -%}
 
           {%- if block.settings.variant_1 != blank -%}
-            <label class="flex items-center justify-end cursor-pointer gap-[0.56vw]">
+            <label
+              class="flex items-center justify-end cursor-pointer gap-[0.56vw] mb-[0.694vw]"
+              :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-20'"
+              @click="variants[{{ i }}] = 'v1'"
+            >
               <span
-                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 bg-[#303236]"
+                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 border-2 border-solid border-white"
+                :class="variants[{{ i }}] === 'v1' ? 'bg-[#303236]' : 'bg-white'"
               ></span>
               <span
                 class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
@@ -118,9 +123,14 @@
           {%- endif -%}
 
           {%- if block.settings.variant_2 != blank -%}
-            <label class="flex items-center justify-end  cursor-pointer gap-[0.56vw]">
+            <label
+              class="flex items-center justify-end  cursor-pointer gap-[0.56vw]"
+              :class="variants[{{ i }}] === 'v2' ? 'opacity-100' : 'opacity-20'"
+              @click="variants[{{ i }}] = 'v2'"
+            >
               <span
-                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 bg-[#303236]"
+                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 border-2 border-solid border-white"
+                :class="variants[{{ i }}] === 'v2' ? 'bg-[#303236]' : 'bg-white'"
               ></span>
               <span
                 class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
