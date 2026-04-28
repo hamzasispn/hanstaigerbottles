@@ -178,17 +178,15 @@
     x-transition:leave="transition-opacity duration-100"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
-    class="absolute inset-0 flex flex-col bg-[#F0F0F0]"
-    style="padding: 1.11vw;"
+    class="absolute inset-0 flex flex-col bg-[#F4F4F5] p-[1.11vw]"
   >
 
     {%- comment -%} Top zone: image + plus button {%- endcomment -%}
-    <div class="relative flex-shrink-0" style="margin-bottom: 1.11vw; height: 13.19vw;">
+    <div class="relative flex-shrink-0 mb-[1.11vw] h-[13.19vw]">
 
       {%- comment -%} Product image — top-left {%- endcomment -%}
       <div
-        class="absolute top-0 left-0 overflow-hidden"
-        style="width: 9.72vw; height: 9.03vw; border-radius: 0.28vw;"
+        class="absolute top-0 left-0 overflow-hidden w-[9.72vw] h-[9.03vw] rounded-[0.28vw]"
       >
         {%- if block.settings.image != blank -%}
           <img
@@ -198,7 +196,7 @@
             loading="lazy"
           >
         {%- else -%}
-          <div class="w-full h-full bg-[#D8D8D8] flex items-center justify-center">
+          <div class="w-full h-full bg-[#F4F4F5] flex items-center justify-center">
             {{ 'product-1' | placeholder_svg_tag: 'w-12 h-12 opacity-30' }}
           </div>
         {%- endif -%}
