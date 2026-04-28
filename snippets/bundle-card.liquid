@@ -11,17 +11,20 @@
 {%- assign i = idx -%}
 
 <div
-  x-bind:style="isActive({{ i }})
+  x-bind:style="
+    isActive({{ i }})
     ? 'flex: 2; min-width: 0;'
-    : 'flex: 1; min-width: 0;'"
+    : 'flex: 1; min-width: 0;'
+  "
   class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-[0.56vw]"
   style="flex: 1;"
   {{ block.shopify_attributes }}
 >
-
-  {%- comment -%} ═══════════════════════════════════════════════════════════
-      EXPANDED STATE — full-bleed image, dark overlay, rich content bottom
-  ═══════════════════════════════════════════════════════════════════════ {%- endcomment -%}
+  {%- comment -%}
+    ═══════════════════════════════════════════════════════════
+        EXPANDED STATE — full-bleed image, dark overlay, rich content bottom
+    ═══════════════════════════════════════════════════════════════════════
+  {%- endcomment -%}
   <div
     x-show="isActive({{ i }})"
     x-transition:enter="transition-opacity duration-300 delay-150"
@@ -32,7 +35,6 @@
     x-transition:leave-end="opacity-0"
     class="absolute inset-0 flex flex-col"
   >
-
     {%- comment -%} Background image {%- endcomment -%}
     <div class="absolute inset-0">
       {%- if block.settings.image != blank -%}
@@ -65,7 +67,6 @@
 
     {%- comment -%} Content — pinned to bottom {%- endcomment -%}
     <div class="absolute inset-x-0 bottom-0 z-10" style="padding: 1.39vw 1.39vw 1.25vw;">
-
       {%- comment -%} Title {%- endcomment -%}
       <h3
         class="font-medium text-white leading-tight"
@@ -86,7 +87,9 @@
             <span
               class="text-white border border-white"
               style="font-size: 0.83vw; padding: 0.14vw 0.56vw; border-radius: 0.21vw;"
-            >{{ block.settings.tag_2 }}</span>
+            >
+              {{- block.settings.tag_2 -}}
+            </span>
           {%- endif -%}
         </div>
       {%- endif -%}
@@ -96,7 +99,6 @@
 
       {%- comment -%} Bottom row: price left — subscription + variants + save right {%- endcomment -%}
       <div class="flex items-end justify-between" style="margin-bottom: 1.11vw;">
-
         {%- comment -%} Price {%- endcomment -%}
         <span class="font-medium text-white" style="font-size: 1.25vw;">
           {{ block.settings.price | default: '€00' }}
@@ -104,12 +106,13 @@
 
         {%- comment -%} Right column {%- endcomment -%}
         <div class="flex flex-col items-end" style="gap: 0.42vw;">
-
           {%- if block.settings.subscription_label != blank -%}
             <span
               class="uppercase text-white"
               style="font-size: 0.64vw; letter-spacing: 0.10em; opacity: 0.75;"
-            >{{ block.settings.subscription_label }}</span>
+            >
+              {{- block.settings.subscription_label -}}
+            </span>
           {%- endif -%}
 
           {%- comment -%} Variant toggles — right-aligned, radio on right {%- endcomment -%}
@@ -119,7 +122,9 @@
                 class="text-white transition-opacity duration-150"
                 style="font-size: 0.97vw;"
                 :class="variants[{{ i }}] === 'v1' ? 'opacity-100 font-medium' : 'opacity-60 font-normal'"
-              >{{ block.settings.variant_1 }}</span>
+              >
+                {{- block.settings.variant_1 -}}
+              </span>
               <span
                 class="flex-shrink-0 rounded-full border border-white transition-colors duration-150"
                 style="width: 0.97vw; height: 0.97vw;"
@@ -135,7 +140,9 @@
                 class="text-white transition-opacity duration-150"
                 style="font-size: 0.97vw;"
                 :class="variants[{{ i }}] === 'v2' ? 'opacity-100 font-medium' : 'opacity-60 font-normal'"
-              >{{ block.settings.variant_2 }}</span>
+              >
+                {{- block.settings.variant_2 -}}
+              </span>
               <span
                 class="flex-shrink-0 rounded-full border border-white transition-colors duration-150"
                 style="width: 0.97vw; height: 0.97vw;"
@@ -150,7 +157,6 @@
               {{ block.settings.save_text }}
             </span>
           {%- endif -%}
-
         </div>
       </div>
 
@@ -162,14 +168,14 @@
       >
         Add bundle <span>→</span>
       </a>
-
     </div>
   </div>
 
-
-  {%- comment -%} ═══════════════════════════════════════════════════════════
-      COLLAPSED STATE — light card, small image top-left, + icon top-right
-  ═══════════════════════════════════════════════════════════════════════ {%- endcomment -%}
+  {%- comment -%}
+    ═══════════════════════════════════════════════════════════
+        COLLAPSED STATE — light card, small image top-left, + icon top-right
+    ═══════════════════════════════════════════════════════════════════════
+  {%- endcomment -%}
   <div
     x-show="!isActive({{ i }})"
     x-transition:enter="transition-opacity duration-300 delay-100"
@@ -180,10 +186,8 @@
     x-transition:leave-end="opacity-0"
     class="absolute inset-0 flex flex-col bg-[#F4F4F5] p-[1.11vw]"
   >
-
     {%- comment -%} Top zone: image + plus button {%- endcomment -%}
     <div class="relative flex-shrink-0 mb-[3.194vw] h-[15.139vw]">
-
       {%- comment -%} Product image — top-left {%- endcomment -%}
       <div
         class="absolute top-0 left-0 overflow-hidden w-[15.139vw] h-full rounded-[0.187vw]"
@@ -214,12 +218,10 @@
           <line x1="0.5" y1="6" x2="11.5" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
-
     </div>
 
     {%- comment -%} Content — flexible, fills remaining height {%- endcomment -%}
     <div class="flex flex-col flex-1 justify-between p-[1.389vw]">
-
       <div>
         {%- comment -%} Title {%- endcomment -%}
         <h3
@@ -231,49 +233,52 @@
         {%- comment -%} Subtitle {%- endcomment -%}
         {%- if block.settings.subtitle != blank -%}
           <p
-            class="text-[#83868E] text-[0.972vw] leading-[1.389vw] mb-[0.556vw]"
-          >{{ block.settings.subtitle }}</p>
+            class="text-[#83868E] text-[0.972vw] leading-[1.389vw] mb-[0.556vw] font-normal"
+          >
+            {{ block.settings.subtitle }}
+          </p>
         {%- endif -%}
 
         {%- comment -%} Variant toggles — dot left of label {%- endcomment -%}
         <div class="flex flex-col" style="gap: 0.42vw;">
-
           {%- if block.settings.variant_1 != blank -%}
-            <label class="flex items-center cursor-pointer" style="gap: 0.56vw;">
+            <label
+              class="flex items-center cursor-pointer gap-[0.556vw]"
+              :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-70'"
+              @click="variants[{{ i }}] = 'v1'"
+            >
               <span
-                class="flex-shrink-0 rounded-full border transition-colors duration-150"
-                style="width: 0.97vw; height: 0.97vw;"
-                :class="variants[{{ i }}] === 'v1'
-                  ? 'bg-[#111111] border-[#111111]'
-                  : 'bg-white border-[#CCCCCC]'"
-                @click="variants[{{ i }}] = 'v1'"
+                class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] transition-colors duration-150 bg-[#303236]"
               ></span>
               <span
-                class="text-[#111111]"
-                style="font-size: 0.97vw;"
-                :class="variants[{{ i }}] === 'v1' ? 'font-medium' : 'font-normal'"
-              >{{ block.settings.variant_1 }}</span>
+                class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]"
+              >
+                {{- block.settings.variant_1 -}}
+              </span>
             </label>
           {%- endif -%}
 
           {%- if block.settings.variant_2 != blank -%}
-            <label class="flex items-center cursor-pointer" style="gap: 0.56vw;">
+            <label class="flex items-center cursor-pointer gap-[0.833vw]">
               <span
                 class="flex-shrink-0 rounded-full border transition-colors duration-150"
                 style="width: 0.97vw; height: 0.97vw;"
-                :class="variants[{{ i }}] === 'v2'
+                :class="
+                  variants[{{ i }}] === 'v2'
                   ? 'bg-[#111111] border-[#111111]'
-                  : 'bg-white border-[#CCCCCC]'"
+                  : 'bg-white border-[#CCCCCC]'
+                "
                 @click="variants[{{ i }}] = 'v2'"
               ></span>
               <span
                 class="text-[#111111]"
                 style="font-size: 0.97vw;"
                 :class="variants[{{ i }}] === 'v2' ? 'font-medium' : 'font-normal'"
-              >{{ block.settings.variant_2 }}</span>
+              >
+                {{- block.settings.variant_2 -}}
+              </span>
             </label>
           {%- endif -%}
-
         </div>
       </div>
 
@@ -300,8 +305,6 @@
           Add bundle <span>→</span>
         </a>
       </div>
-
     </div>
   </div>
-
 </div>
