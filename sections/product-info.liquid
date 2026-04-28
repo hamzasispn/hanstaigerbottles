@@ -39,10 +39,10 @@
       </p>
     </div>
     <div class="w-full lg:w-[65%]">
-      <p data-anim="fade-up" class="text-[#222222] font-medium text-[2.8vw] leading-[3.6vw] lg:text-[0.903vw] lg:leading-[1.181vw] text-left lg:text-right">
+      <p data-anim="fade-up" class="text-[#222222] font-medium text-[2.8vw] leading-[3.6vw] lg:text-[0.903vw] lg:leading-[1.181vw] text-right">
         {{ section.settings.second_text }}
       </p>
-      <ul data-anim="stagger-children" class="flex gap-[1.5vw] lg:gap-[0.417vw] flex-wrap justify-start lg:justify-end mt-[3vw] lg:mt-[1.667vw]">
+      <ul data-anim="stagger-children" class="flex gap-[1.5vw] lg:gap-[0.417vw] flex-wrap justify-end mt-[3vw] lg:mt-[1.667vw]">
         {% for block in section.blocks %}
           {% render 'text-box', block: block %}
         {% endfor %}
