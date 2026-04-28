@@ -111,7 +111,7 @@
               @click="variants[{{ i }}] = 'v1'"
             >
               <span
-                class="flex-shrink-0 rounded-full w-[0.833vw] h-[0.833vw] transition-colors duration-150 border-2 border-solid border-white"
+                class="flex-shrink-0 rounded-full w-[0.972vw] h-[0.972vw] transition-colors duration-150 border-2 border-solid border-white"
                 :class="variants[{{ i }}] === 'v1' ? 'bg-[#303236]' : 'bg-white'"
               ></span>
               <span
@@ -129,7 +129,7 @@
               @click="variants[{{ i }}] = 'v2'"
             >
               <span
-                class="flex-shrink-0 rounded-full w-[0.833vw] h-[0.833vw] transition-colors duration-150 border-2 border-solid border-white"
+                class="flex-shrink-0 rounded-full w-[0.972vw] h-[0.972vw] transition-colors duration-150 border-2 border-solid border-white"
                 :class="variants[{{ i }}] === 'v2' ? 'bg-[#303236]' : 'bg-white'"
               ></span>
               <span
@@ -145,13 +145,13 @@
       {%- comment -%} Divider {%- endcomment -%}
       <div class="w-full bg-white bg-opacity-25 h-px mb-[1.11vw]"></div>
 
-      <div class="flex items-end justify-between mb-[1.11vw] p-[0.833vw]">
+      <div class="flex items-center justify-between mb-[1.11vw] p-[0.833vw]">
         <span class="font-medium text-white text-[1.25vw]">
           {{ block.settings.price | default: '€00' }}
         </span>
 
         {%- if block.settings.save_text != blank -%}
-          <span class="text-white uppercase" style="font-size: 0.69vw; letter-spacing: 0.08em; opacity: 0.80;">
+          <span class="text-[#83868E] font-medium uppercase text-[0.833vw] leading-[1.181vw] tracking-[0.08em]">
             {{ block.settings.save_text }}
           </span>
         {%- endif -%}
