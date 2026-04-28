@@ -12,10 +12,10 @@
 
 <div
   x-bind:style="isActive({{ i }})
-    ? 'flex: 3.5; min-width: 0;'
+    ? 'flex: 2; min-width: 0;'
     : 'flex: 1; min-width: 0;'"
-  class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-  style="border-radius: 0.56vw; flex: 1;"
+  class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-[0.56vw]"
+  style="flex: 1;"
   {{ block.shopify_attributes }}
 >
 

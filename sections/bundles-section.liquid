@@ -44,7 +44,7 @@
   </div>
 
   {%- comment -%} ── Cards Row ───────────────────────────────────────────── {%- endcomment -%}
-  <div data-anim="stagger-children" class="flex items-stretch" style="gap: 1.11vw; height: 34.03vw;">
+  <div data-anim="stagger-children" class="flex items-stretch gap-[0.833vw] h-[34.03vw]">
 
     {%- for block in section.blocks -%}
       {% render 'bundle-card', block: block, idx: forloop.index0 %}
