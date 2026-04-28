@@ -218,13 +218,12 @@
     </div>
 
     {%- comment -%} Content — flexible, fills remaining height {%- endcomment -%}
-    <div class="flex flex-col flex-1 justify-between">
+    <div class="flex flex-col flex-1 justify-between p-[1.389vw]">
 
       <div>
         {%- comment -%} Title {%- endcomment -%}
         <h3
-          class="font-medium text-[#111111] leading-tight"
-          style="font-size: 1.25vw; margin-bottom: 0.28vw;"
+          class="font-medium text-[#222222] leading-[1.528vw] text-[1.111vw] tracking-[0.014vw] mb-[0.694vw]"
         >
           {{ block.settings.title | default: 'Bundle Name' }}
         </h3>
@@ -232,8 +231,7 @@
         {%- comment -%} Subtitle {%- endcomment -%}
         {%- if block.settings.subtitle != blank -%}
           <p
-            class="text-[#888888]"
-            style="font-size: 0.97vw; margin-bottom: 0.83vw;"
+            class="text-[#83868E] text-[0.972vw] leading-[1.389vw] mb-[0.556vw]"
           >{{ block.settings.subtitle }}</p>
         {%- endif -%}
 
