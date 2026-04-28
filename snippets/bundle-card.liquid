@@ -8,11 +8,7 @@
 {%- assign i = idx -%}
 
 <div
-  x-bind:style="
-    isActive({{ i }})
-    ? 'flex: 2; min-width: 0;'
-    : 'flex: 1; min-width: 0;'
-  "
+  :class="isActive({{ i }}) ? 'lg:flex-2 flex-1 min-w-0' : 'flex-1 min-w-0'"
   class="relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-[2vw] lg:rounded-[0.56vw] h-[110vw] lg:h-auto"
   {{ block.shopify_attributes }}
 >
@@ -205,7 +201,9 @@
               :class="variants[{{ i }}] === 'v1' ? 'opacity-100' : 'opacity-20'"
               @click="variants[{{ i }}] = 'v1'"
             >
-              <span class="flex-shrink-0 rounded-full w-[2.4vw] h-[2.4vw] lg:w-[0.694vw] lg:h-[0.694vw] bg-[#303236]"></span>
+              <span
+                class="flex-shrink-0 rounded-full w-[2.4vw] h-[2.4vw] lg:w-[0.694vw] lg:h-[0.694vw] bg-[#303236]"
+              ></span>
               <span class="text-[#303236] font-normal text-[3vw] leading-[4vw] lg:text-[0.833vw] lg:leading-[1.111vw]">
                 {{- block.settings.variant_1 -}}
               </span>
@@ -218,7 +216,9 @@
               :class="variants[{{ i }}] === 'v2' ? 'opacity-100' : 'opacity-20'"
               @click="variants[{{ i }}] = 'v2'"
             >
-              <span class="flex-shrink-0 rounded-full w-[2.4vw] h-[2.4vw] lg:w-[0.694vw] lg:h-[0.694vw] bg-[#303236]"></span>
+              <span
+                class="flex-shrink-0 rounded-full w-[2.4vw] h-[2.4vw] lg:w-[0.694vw] lg:h-[0.694vw] bg-[#303236]"
+              ></span>
               <span class="text-[#303236] font-normal text-[3vw] leading-[4vw] lg:text-[0.833vw] lg:leading-[1.111vw]">
                 {{- block.settings.variant_2 -}}
               </span>
