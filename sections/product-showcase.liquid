@@ -16,7 +16,7 @@
   "
   class="w-full bg-[#F4F4F5] pt-[10vw] pb-[12vw] px-[5vw] lg:pt-[4.44vw] lg:pb-[5.56vw] lg:px-[3.61vw]"
 >
-  <div data-anim="stagger-children" class="flex flex-col lg:flex-row items-stretch h-auto lg:h-[26.69vw] gap-[4vw] lg:gap-[1.11vw]">
+  <div data-anim="stagger-children" class="product-showcase__track flex flex-row items-stretch h-auto lg:h-[26.69vw] gap-[3vw] lg:gap-[1.11vw] overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory lg:snap-none -mx-[5vw] px-[5vw] lg:mx-0 lg:px-0">
     {%- for block in section.blocks -%}
       {%- assign i = forloop.index0 -%}
       {%- assign product = block.settings.product -%}
@@ -32,10 +32,10 @@
         x-bind:style="
           window.innerWidth >= 1024
             ? (isActive({{ i }}) ? 'flex: 2; min-width: 0;' : 'flex: 1; min-width: 0;')
-            : ''
+            : (isActive({{ i }}) ? 'flex: 0 0 70vw;' : 'flex: 0 0 38vw;')
         "
         x-bind:class="isActive({{ i }}) ? 'h-[120vw] lg:h-auto' : 'h-[110vw] lg:h-auto'"
-        class="relative w-full overflow-hidden transition-all duration-500 ease-in-out rounded-[2vw] lg:rounded-[0.56vw]"
+        class="relative overflow-hidden transition-all duration-500 ease-in-out rounded-[3vw] lg:rounded-[0.56vw] snap-start lg:snap-align-none"
         {{ block.shopify_attributes }}
       >
         {%- comment -%} ═══ EXPANDED STATE ═══ {%- endcomment -%}
@@ -152,9 +152,9 @@
           class="absolute inset-0 flex flex-col bg-white p-[3vw] lg:p-[0.833vw]"
         >
           {%- comment -%} Top zone: image + plus button {%- endcomment -%}
-          <div class="relative flex-shrink-0 mb-[8vw] h-[60vw] lg:mb-[3.194vw] lg:h-[11.319vw]">
+          <div class="relative flex-shrink-0 mb-[4vw] h-[28vw] lg:mb-[3.194vw] lg:h-[11.319vw]">
             {%- comment -%} Product image — top-left {%- endcomment -%}
-            <div class="absolute top-0 left-0 overflow-hidden w-[60vw] h-[60vw] p-[3vw] rounded-[1vw] lg:w-[11.319vw] lg:h-[11.319vw] lg:rounded-[0.187vw] lg:p-[1vw] bg-[#F4F4F5]">
+            <div class="absolute top-0 left-0 overflow-hidden w-[28vw] h-[28vw] p-[2vw] rounded-[2vw] lg:w-[11.319vw] lg:h-[11.319vw] lg:rounded-[0.187vw] lg:p-[1vw] bg-[#F4F4F5]">
               {%- if card_image != blank -%}
                 <img
                   src="{{ card_image | image_url: width: 280 }}"
@@ -172,11 +172,10 @@
             {%- comment -%} Plus button — top-right {%- endcomment -%}
             <button
               @click="open({{ i }})"
-              class="absolute top-0 right-0 flex items-center justify-center bg-white rounded-full text-[#111111] hover:bg-[#111111] hover:text-white transition-colors duration-200"
-              style="width: 1.67vw; height: 1.67vw;"
+              class="absolute top-0 right-0 flex items-center justify-center bg-black text-white lg:bg-white lg:text-[#111111] rounded-full hover:bg-[#111111] hover:text-white transition-colors duration-200 w-[8vw] h-[8vw] lg:w-[1.67vw] lg:h-[1.67vw]"
               aria-label="Open {{ card_title }}"
             >
-              <svg style="width: 0.69vw; height: 0.69vw;" viewBox="0 0 12 12" fill="none">
+              <svg class="w-[3vw] h-[3vw] lg:w-[0.69vw] lg:h-[0.69vw]" viewBox="0 0 12 12" fill="none">
                 <line x1="6" y1="0.5" x2="6" y2="11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 <line x1="0.5" y1="6" x2="11.5" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
@@ -187,28 +186,28 @@
           <div class="flex flex-col flex-1 justify-between">
             <div>
               {%- comment -%} Title {%- endcomment -%}
-              <div class="flex items-center justify-between gap-[1.111vw] mb-[1.11vw]">
-                <h3 class="font-medium text-black leading-[1.528vw] text-[0.972vw] tracking-[0.014vw] line-clamp-1">
+              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-[1vw] lg:gap-[1.111vw] mb-[2vw] lg:mb-[1.11vw]">
+                <h3 class="font-medium text-black leading-[5vw] text-[4vw] lg:leading-[1.528vw] lg:text-[0.972vw] lg:tracking-[0.014vw] line-clamp-1">
                   {{ card_title }}
                 </h3>
-                <span class="text-[#83868E] text-[0.972vw]">{{ card_price }}</span>
+                <span class="text-[#83868E] text-[3.5vw] lg:text-[0.972vw]">{{ card_price }}</span>
               </div>
 
               {%- comment -%} Product type as subtitle {%- endcomment -%}
               {%- if product.type != blank -%}
-                <p class="text-[#83868E] text-[0.972vw] leading-[1.389vw] mb-[0.556vw] font-normal">
+                <p class="text-[#83868E] text-[3.4vw] leading-[5vw] mb-[2vw] lg:text-[0.972vw] lg:leading-[1.389vw] lg:mb-[0.556vw] font-normal">
                   {{ product.type }}
                 </p>
               {%- endif -%}
 
               {%- comment -%} Option value rows — dot + label, like bundle card variant rows {%- endcomment -%}
               {%- if product != blank and product.options_with_values.size > 0 -%}
-                <div class="flex flex-col" style="gap: 0.42vw;">
+                <div class="flex flex-col gap-[1.5vw] lg:gap-[0.42vw]">
                   {%- for option in product.options_with_values limit: 2 -%}
                     {%- assign first_val = option.values | first -%}
-                    <div class="flex items-center gap-[0.556vw]">
-                      <span class="flex-shrink-0 rounded-full w-[0.694vw] h-[0.694vw] bg-[#303236]"></span>
-                      <span class="text-[#303236] font-normal text-[0.833vw] leading-[1.111vw]">
+                    <div class="flex items-center gap-[2vw] lg:gap-[0.556vw]">
+                      <span class="flex-shrink-0 rounded-full w-[2vw] h-[2vw] lg:w-[0.694vw] lg:h-[0.694vw] bg-[#303236]"></span>
+                      <span class="text-[#303236] font-normal text-[3.4vw] leading-[5vw] lg:text-[0.833vw] lg:leading-[1.111vw]">
                         {{- first_val -}}
                       </span>
                     </div>
@@ -225,17 +224,20 @@
                   <input type="hidden" name="quantity" value="1">
                   <button
                     type="submit"
-                    class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
+                    class="flex items-center justify-center ml-auto text-[3.4vw] w-full lg:w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[3vw] py-[2.5vw] leading-[5vw] gap-[3vw] lg:text-[0.972vw] lg:px-[0.833vw] lg:py-[0.556vw] lg:leading-[1.389vw] lg:gap-[1.111vw] rounded-[1vw] lg:rounded-none"
                   >
-                    Add to cart <span>{% render 'button-arrow' %}</span>
+                    <span class="lg:inline hidden">Add to cart</span>
+                    <span class="lg:hidden">{% render 'button-arrow' %}</span>
+                    <span class="hidden lg:inline">{% render 'button-arrow' %}</span>
                   </button>
                 </form>
               {%- else -%}
                 <a
                   href="{{ card_url }}"
-                  class="flex items-center justify-center ml-auto text-[0.972vw] w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[0.833vw] py-[0.556vw] leading-[1.389vw] gap-[1.111vw]"
+                  class="flex items-center justify-center ml-auto text-[3.4vw] w-full lg:w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[3vw] py-[2.5vw] leading-[5vw] gap-[3vw] lg:text-[0.972vw] lg:px-[0.833vw] lg:py-[0.556vw] lg:leading-[1.389vw] lg:gap-[1.111vw] rounded-[1vw] lg:rounded-none"
                 >
-                  View product <span>{% render 'button-arrow' %}</span>
+                  <span class="lg:inline hidden">View product</span>
+                  <span>{% render 'button-arrow' %}</span>
                 </a>
               {%- endif -%}
             </div>
@@ -245,6 +247,16 @@
     {%- endfor -%}
   </div>
 </section>
+
+{% stylesheet %}
+  .product-showcase__track {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .product-showcase__track::-webkit-scrollbar {
+    display: none;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
