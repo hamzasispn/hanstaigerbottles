@@ -9,7 +9,7 @@
 
 <div
   x-bind:class="isActive({{ i }}) ? 'lg:flex-2 flex-1 min-w-0' : 'flex-1 min-w-0'"
-  class="relative overflow-hidden transition-all duration-500 ease-in-out rounded-[2vw] lg:rounded-[0.56vw] h-[110vw] lg:h-auto"
+  class="relative overflow-hidden transition-all duration-500 ease-in-out rounded-[2vw] lg:rounded-[0.56vw] h-[110vw] lg:h-auto !opacity-100"
   {{ block.shopify_attributes }}
 >
   {%- comment -%} EXPANDED STATE {%- endcomment -%}
