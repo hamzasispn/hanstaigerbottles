@@ -140,7 +140,6 @@
           </div>
         </div>
 
-        {%- comment -%} ═══ COLLAPSED STATE — matches bundle-card.liquid ═══ {%- endcomment -%}
         <div
           x-show="!isActive({{ i }})"
           x-transition:enter="transition-opacity duration-300 delay-100"
@@ -151,9 +150,7 @@
           x-transition:leave-end="opacity-0"
           class="absolute inset-0 flex flex-col bg-white p-[3vw] lg:p-[0.833vw]"
         >
-          {%- comment -%} Top zone: image + plus button {%- endcomment -%}
           <div class="relative flex-shrink-0 mb-[4vw] h-[28vw] lg:mb-[3.194vw] lg:h-[11.319vw]">
-            {%- comment -%} Product image — top-left {%- endcomment -%}
             <div class="absolute top-0 left-0 overflow-hidden w-[28vw] h-[28vw] p-[2vw] rounded-[2vw] lg:w-[11.319vw] lg:h-[11.319vw] lg:rounded-[0.187vw] lg:p-[1vw] bg-[#F4F4F5]">
               {%- if card_image != blank -%}
                 <img
@@ -185,7 +182,6 @@
           {%- comment -%} Content — fills remaining height {%- endcomment -%}
           <div class="flex flex-col flex-1 justify-items-end gap-[5vw] lg:gap-0 lg:justify-between">
             <div>
-              {%- comment -%} Title {%- endcomment -%}
               <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-[1vw] lg:gap-[1.111vw] mb-[2vw] lg:mb-[1.11vw]">
                 <h3 class="font-medium text-black leading-[5vw] text-[4vw] lg:leading-[1.528vw] lg:text-[0.972vw] lg:tracking-[0.014vw] line-clamp-1">
                   {{ card_title }}
@@ -193,14 +189,12 @@
                 <span class="text-[#83868E] text-[3.5vw] lg:text-[0.972vw]">{{ card_price }}</span>
               </div>
 
-              {%- comment -%} Product type as subtitle {%- endcomment -%}
               {%- if product.type != blank -%}
                 <p class="text-[#83868E] text-[3.4vw] leading-[5vw] mb-[2vw] lg:text-[0.972vw] lg:leading-[1.389vw] lg:mb-[0.556vw] font-normal">
                   {{ product.type }}
                 </p>
               {%- endif -%}
 
-              {%- comment -%} Option value rows — dot + label, like bundle card variant rows {%- endcomment -%}
               {%- if product != blank and product.options_with_values.size > 0 -%}
                 <div class="flex flex-col gap-[1.5vw] lg:gap-[0.42vw]">
                   {%- for option in product.options_with_values limit: 2 -%}
@@ -216,7 +210,6 @@
               {%- endif -%}
             </div>
 
-            {%- comment -%} Bottom: divider + price + CTA {%- endcomment -%}
             <div>
               {%- if card_variant != blank -%}
                 <form action="/cart/add" method="post">
