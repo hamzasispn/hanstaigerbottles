@@ -15,12 +15,6 @@
   {%- comment -%} EXPANDED STATE {%- endcomment -%}
   <div
     x-show="isActive({{ i }})"
-    x-transition:enter="transition-opacity duration-300 delay-150"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition-opacity duration-150"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
     class="absolute inset-0 flex flex-col"
   >
     <div class="absolute inset-0">
@@ -142,12 +136,6 @@
   {%- comment -%} COLLAPSED STATE {%- endcomment -%}
   <div
     x-show="!isActive({{ i }})"
-    x-transition:enter="transition-opacity duration-300 delay-100"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition-opacity duration-100"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
     class="absolute inset-0 flex flex-col bg-[#F4F4F5] p-[4vw] lg:p-[1.11vw]"
   >
     <div class="relative flex-shrink-0 mb-[8vw] h-[40vw] lg:mb-[3.194vw] lg:h-[15.139vw]">
