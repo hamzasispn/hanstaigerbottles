@@ -1,4 +1,4 @@
-<div class="bg-[#F4F4F5] pt-[5.556vw] pb-[3.889vw]" x-data>
+<div class="bg-[#F4F4F5] pt-[10vw] pb-[8vw] lg:pt-[5.556vw] lg:pb-[3.889vw]" x-data>
   {% render 'section-header',
     label: section.settings.label,
     heading: section.settings.heading,
@@ -7,16 +7,16 @@
     link_text: section.settings.link_text
   %}
 
-  <div class="pt-[8.333vw] relative max-w-[95vw] ml-auto">
+  <div class="pt-[6vw] lg:pt-[8.333vw] relative max-w-full lg:max-w-[95vw] lg:ml-auto">
     <!-- Swiper -->
-    <div class="swiper blocks-slider overflow-hidden pl-[5.556vw]">
+    <div class="swiper blocks-slider overflow-hidden pl-[6vw] lg:pl-[5.556vw]">
       <div class="swiper-wrapper items-stretch">
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
-            <div class="swiper-slide !w-[56.944vw] !h-auto" {{ block.shopify_attributes }}>
+            <div class="swiper-slide !w-[80vw] lg:!w-[56.944vw] !h-auto" {{ block.shopify_attributes }}>
               <div class="flex lg:flex-row flex-col h-full bg-[#F4F4F5]">
                 <!-- Image -->
-                <div class="w-[28.889vw] flex-shrink-0 overflow-hidden">
+                <div class="w-full lg:w-[28.889vw] aspect-[4/3] lg:aspect-auto flex-shrink-0 overflow-hidden">
                   {% if block.settings.image %}
                     <img
                       src="{{ block.settings.image | img_url: '1000x800', crop: 'center' }}"
@@ -27,22 +27,22 @@
                       loading="lazy"
                     >
                   {% else %}
-                    <div class="w-full h-full bg-[#E0E0E0] flex items-center justify-center text-[#999] text-[0.972vw]">
+                    <div class="w-full h-full bg-[#E0E0E0] flex items-center justify-center text-[#999] text-[3.4vw] lg:text-[0.972vw]">
                       No image
                     </div>
                   {% endif %}
                 </div>
 
                 <!-- Text Content -->
-                <div class="flex flex-col justify-center px-[3.472vw] py-[3.472vw]">
+                <div class="flex flex-col justify-center px-[5vw] py-[6vw] lg:px-[3.472vw] lg:py-[3.472vw]">
                   {% if block.settings.heading != blank %}
-                    <h3 class="text-[2.222vw] leading-[2.639vw] font-light tracking-[-0.02em] text-[#1A1A1A] mb-[1.667vw]">
+                    <h3 class="text-[7.5vw] leading-[8.5vw] lg:text-[2.222vw] lg:leading-[2.639vw] font-light tracking-[-0.02em] text-[#1A1A1A] mb-[4vw] lg:mb-[1.667vw]">
                       {{ block.settings.heading }}
                     </h3>
                   {% endif %}
 
                   {% if block.settings.description != blank %}
-                    <p class="text-[0.972vw] leading-[1.528vw] text-[#5A5A5A] mb-[2.222vw] max-w-[18.056vw]">
+                    <p class="text-[3.4vw] leading-[5vw] lg:text-[0.972vw] lg:leading-[1.528vw] text-[#5A5A5A] mb-[6vw] lg:mb-[2.222vw] max-w-full lg:max-w-[18.056vw]">
                       {{ block.settings.description }}
                     </p>
                   {% endif %}
@@ -50,16 +50,14 @@
                   {% if block.settings.button_label != blank and block.settings.button_url != blank %}
                     <a
                       href="{{ block.settings.button_url }}"
-                      class="inline-flex items-center gap-[0.694vw] border border-[#D0D0D0] bg-[#EBEBEC] text-[#1A1A1A] text-[0.833vw] tracking-[0.02em] px-[1.111vw] h-[2.778vw] w-fit hover:bg-[#1A1A1A] hover:text-white hover:border-[#1A1A1A] transition-colors duration-300"
+                      class="inline-flex items-center gap-[2vw] lg:gap-[0.694vw] border border-[#D0D0D0] bg-[#EBEBEC] text-[#1A1A1A] text-[3vw] lg:text-[0.833vw] tracking-[0.02em] px-[4vw] lg:px-[1.111vw] h-[10vw] lg:h-[2.778vw] w-fit hover:bg-[#1A1A1A] hover:text-white hover:border-[#1A1A1A] transition-colors duration-300"
                     >
                       {{ block.settings.button_label }}
                       <svg
-                        width="1.111vw"
-                        height="0.694vw"
                         viewBox="0 0 16 10"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        class="w-[1.111vw] h-[0.694vw]"
+                        class="w-[4vw] h-[2.5vw] lg:w-[1.111vw] lg:h-[0.694vw]"
                       >
                         <path d="M1 5H15M15 5L11 1M15 5L11 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
@@ -74,15 +72,15 @@
     </div>
 
     <!-- Navigation Arrows -->
-    <div class="flex justify-end items-center gap-[0.694vw] mt-[3.889vw] pr-[5.556vw]">
+    <div class="flex justify-end items-center gap-[2vw] lg:gap-[0.694vw] mt-[8vw] lg:mt-[3.889vw] pr-[6vw] lg:pr-[5.556vw]">
       <button
-        class="blocks-slider-prev w-[6.944vw] h-[2.5vw] rotate-180 flex items-center justify-center bg-[#D1D1D1] disabled:opacity-30 disabled:cursor-not-allowed"
+        class="blocks-slider-prev w-[20vw] h-[8vw] lg:w-[6.944vw] lg:h-[2.5vw] rotate-180 flex items-center justify-center bg-[#D1D1D1] disabled:opacity-30 disabled:cursor-not-allowed"
         aria-label="Previous slide"
       >
         {% render 'button-arrow' %}
       </button>
       <button
-        class="blocks-slider-next w-[6.944vw] h-[2.5vw] flex items-center justify-center bg-[#D1D1D1] disabled:opacity-30 disabled:cursor-not-allowed"
+        class="blocks-slider-next w-[20vw] h-[8vw] lg:w-[6.944vw] lg:h-[2.5vw] flex items-center justify-center bg-[#D1D1D1] disabled:opacity-30 disabled:cursor-not-allowed"
         aria-label="Next slide"
       >
         {% render 'button-arrow' %}
