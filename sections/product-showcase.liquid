@@ -16,7 +16,7 @@
   "
   class="w-full bg-[#F4F4F5] pt-[10vw] pb-[12vw] px-[5vw] lg:pt-[4.44vw] lg:pb-[5.56vw] lg:px-[3.61vw]"
 >
-  <div data-anim="stagger-children" class="product-showcase__track flex flex-row items-stretch h-auto lg:h-[26.69vw] gap-[3vw] lg:gap-[1.11vw] overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory lg:snap-none -mx-[5vw] px-[5vw] lg:mx-0 lg:px-0">
+  <div data-anim="stagger-children" class="product-showcase__track flex flex-row items-stretch h-auto lg:h-[26.69vw] gap-[3vw] lg:gap-[1.11vw] overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory lg:snap-none -mx-[5vw] space-x-[5vw] lg:mx-0 lg:px-0">
     {%- for block in section.blocks -%}
       {%- assign i = forloop.index0 -%}
       {%- assign product = block.settings.product -%}
@@ -32,10 +32,10 @@
         x-bind:style="
           window.innerWidth >= 1024
             ? (isActive({{ i }}) ? 'flex: 2; min-width: 0;' : 'flex: 1; min-width: 0;')
-            : (isActive({{ i }}) ? 'flex: 0 0 70vw;' : 'flex: 0 0 38vw;')
+            : (isActive({{ i }}) ? 'flex: 0 0 55vw;' : 'flex: 0 0 38vw;')
         "
-        x-bind:class="isActive({{ i }}) ? 'h-[120vw] lg:h-auto' : 'h-[110vw] lg:h-auto'"
-        class="relative overflow-hidden transition-all duration-500 ease-in-out rounded-[3vw] lg:rounded-[0.56vw] snap-start lg:snap-align-none"
+        x-bind:class="isActive({{ i }}) ? 'h-[100vw] lg:h-auto' : 'h-[100vw] lg:h-auto'"
+        class="relative overflow-hidden transition-all duration-500 ease-in-out rounded-[1.053vw] lg:rounded-[0.56vw] snap-start lg:snap-align-none"
         {{ block.shopify_attributes }}
       >
         {%- comment -%} ═══ EXPANDED STATE ═══ {%- endcomment -%}
@@ -80,7 +80,7 @@
 
           {%- comment -%} Content — pinned to bottom {%- endcomment -%}
           <div class="absolute inset-x-0 bottom-0 z-10 p-[3vw] lg:p-[0.833vw]">
-            <div class="flex justify-between p-[4vw] lg:p-[1.389vw]">
+            <div class="flex justify-end gap-[5vw] lg:gap-0 lg:justify-between p-[4vw] lg:p-[1.389vw]">
               <div>
                 <h3 class="font-medium text-white leading-[6vw] text-[5vw] mb-[2vw] lg:leading-[1.528vw] lg:text-[1.111vw] lg:mb-[0.694vw]">
                   {{ card_title }}
