@@ -1,119 +1,87 @@
 {% doc %}
-  Renders the slide-in cart drawer. Reads state from the global Alpine cart store.
+  Cart dropdown anchored under the cart button. Same glass-pill style as the
+  Overview menu. State comes from the global Alpine cart store.
+
+  @param {string} [heading] - Optional heading text shown at the top of the drawer.
 
   @example
-  {% render 'cart-drawer' %}
+  {% render 'cart-drawer', heading: section.settings.cart_heading %}
 {% enddoc %}
 
 <div
   x-cloak
   x-show="$store.cart.open"
+  @click.outside="$store.cart.close()"
   @keydown.escape.window="$store.cart.close()"
-  class="fixed inset-0 z-[100]"
+  x-transition:enter="transition ease-out duration-300"
+  x-transition:enter-start="opacity-0 -translate-y-[2vw] scale-95"
+  x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+  x-transition:leave="transition ease-in duration-200"
+  x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+  x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
+  class="absolute right-0 top-full mt-[2vw] lg:mt-[0.6vw] w-[90vw] sm:w-[70vw] lg:w-[24vw] origin-top-right bg-black/40 backdrop-blur-[30px] rounded-[1.5vw] lg:rounded-[0.4vw] flex flex-col text-white max-h-[80vh] overflow-hidden"
 >
-  {%- comment -%} Backdrop {%- endcomment -%}
-  <div
-    x-show="$store.cart.open"
-    x-transition.opacity
-    @click="$store.cart.close()"
-    class="absolute inset-0 bg-black/50"
-  ></div>
+  <div class="flex items-center justify-between px-[3vw] lg:px-[0.9vw] pt-[3vw] lg:pt-[0.8vw] pb-[2vw] lg:pb-[0.5vw]">
+    <h2 class="text-[3.5vw] lg:text-[0.9vw] uppercase tracking-[0.08em]">
+      {{ heading | default: 'Cart' }}
+      <span class="opacity-60" x-text="'(' + $store.cart.count + ')'"></span>
+    </h2>
+    <button
+      type="button"
+      @click="$store.cart.close()"
+      class="text-[5vw] lg:text-[1.2vw] leading-none opacity-70 hover:opacity-100"
+      aria-label="Close cart"
+    >&times;</button>
+  </div>
 
-  {%- comment -%} Drawer {%- endcomment -%}
-  <aside
-    x-show="$store.cart.open"
-    x-transition:enter="transition transform duration-300 ease-out"
-    x-transition:enter-start="translate-x-full"
-    x-transition:enter-end="translate-x-0"
-    x-transition:leave="transition transform duration-200 ease-in"
-    x-transition:leave-start="translate-x-0"
-    x-transition:leave-end="translate-x-full"
-    class="absolute right-0 top-0 h-full w-full max-w-[100vw] lg:max-w-[28vw] bg-white flex flex-col shadow-2xl"
-  >
-    <header class="flex items-center justify-between px-[5vw] lg:px-[1.5vw] py-[5vw] lg:py-[1.5vw] border-b border-black/10">
-      <h2 class="text-[4vw] lg:text-[1.1vw] font-medium tracking-[0.04em] uppercase">
-        {{ 'cart.title' | t | default: 'Your cart' }}
-        <span class="opacity-60" x-text="'(' + $store.cart.count + ')'"></span>
-      </h2>
-      <button
-        type="button"
-        @click="$store.cart.close()"
-        class="text-[5vw] lg:text-[1.4vw] leading-none hover:opacity-60"
-        aria-label="Close cart"
-      >&times;</button>
-    </header>
+  <div class="flex-1 overflow-y-auto px-[3vw] lg:px-[0.8vw]">
+    <template x-if="$store.cart.count === 0">
+      <p class="text-center py-[8vw] lg:py-[2vw] text-[3.2vw] lg:text-[0.85vw] opacity-70">
+        {{ 'cart.empty' | t | default: 'Your cart is empty.' }}
+      </p>
+    </template>
 
-    {%- comment -%} Items {%- endcomment -%}
-    <div class="flex-1 overflow-y-auto px-[5vw] lg:px-[1.5vw] py-[4vw] lg:py-[1vw]">
-      <template x-if="$store.cart.count === 0">
-        <p class="text-center py-[10vw] lg:py-[3vw] text-[3.5vw] lg:text-[1vw] opacity-70">
-          {{ 'cart.empty' | t | default: 'Your cart is empty.' }}
-        </p>
-      </template>
-
-      <ul class="divide-y divide-black/10">
-        <template x-for="item in $store.cart.items" :key="item.key">
-          <li class="flex gap-[3vw] lg:gap-[1vw] py-[4vw] lg:py-[1vw]">
-            <a :href="item.url" class="block w-[22vw] h-[22vw] lg:w-[6vw] lg:h-[6vw] shrink-0 bg-[#f3f3f3] overflow-hidden">
-              <img :src="item.image" :alt="item.title" class="w-full h-full object-contain" loading="lazy">
-            </a>
-            <div class="flex-1 flex flex-col justify-between min-w-0">
-              <div class="flex justify-between gap-[2vw]">
-                <div class="min-w-0">
-                  <a :href="item.url" class="block text-[3.5vw] lg:text-[0.95vw] font-medium leading-tight truncate" x-text="item.product_title"></a>
-                  <p
-                    class="text-[3vw] lg:text-[0.8vw] opacity-60 mt-[1vw] lg:mt-[0.2vw]"
-                    x-text="item.variant_title"
-                    x-show="item.variant_title"
-                  ></p>
-                </div>
-                <p class="text-[3.5vw] lg:text-[0.95vw] font-medium shrink-0" x-text="$store.cart.money(item.final_line_price)"></p>
+    <ul class="divide-y divide-white/10">
+      <template x-for="item in $store.cart.items" :key="item.key">
+        <li class="flex gap-[2.5vw] lg:gap-[0.7vw] py-[3vw] lg:py-[0.7vw]">
+          <a :href="item.url" class="block w-[18vw] h-[18vw] lg:w-[4.5vw] lg:h-[4.5vw] shrink-0 bg-white/10 rounded-[0.8vw] lg:rounded-[0.2vw] overflow-hidden">
+            <img :src="item.image" :alt="item.title" class="w-full h-full object-contain" loading="lazy">
+          </a>
+          <div class="flex-1 flex flex-col justify-between min-w-0">
+            <div class="flex justify-between gap-[2vw]">
+              <div class="min-w-0">
+                <a :href="item.url" class="block text-[3.2vw] lg:text-[0.85vw] font-medium leading-tight truncate" x-text="item.product_title"></a>
+                <p class="text-[2.8vw] lg:text-[0.75vw] opacity-60 mt-[0.5vw] lg:mt-[0.15vw]" x-text="item.variant_title" x-show="item.variant_title"></p>
               </div>
-              <div class="flex items-center justify-between mt-[3vw] lg:mt-[0.6vw]">
-                <div class="flex items-center border border-black/20">
-                  <button
-                    type="button"
-                    @click="$store.cart.update(item.key, item.quantity - 1)"
-                    class="w-[8vw] h-[8vw] lg:w-[2vw] lg:h-[2vw] flex items-center justify-center text-[4vw] lg:text-[1vw] hover:bg-black/5"
-                    aria-label="Decrease"
-                  >&minus;</button>
-                  <span class="w-[8vw] lg:w-[2vw] text-center text-[3.5vw] lg:text-[0.9vw]" x-text="item.quantity"></span>
-                  <button
-                    type="button"
-                    @click="$store.cart.update(item.key, item.quantity + 1)"
-                    class="w-[8vw] h-[8vw] lg:w-[2vw] lg:h-[2vw] flex items-center justify-center text-[4vw] lg:text-[1vw] hover:bg-black/5"
-                    aria-label="Increase"
-                  >+</button>
-                </div>
-                <button
-                  type="button"
-                  @click="$store.cart.update(item.key, 0)"
-                  class="text-[3vw] lg:text-[0.8vw] uppercase tracking-[0.1em] underline opacity-60 hover:opacity-100"
-                >{{ 'cart.remove' | t | default: 'Remove' }}</button>
-              </div>
+              <p class="text-[3.2vw] lg:text-[0.85vw] font-medium shrink-0" x-text="$store.cart.money(item.final_line_price)"></p>
             </div>
-          </li>
-        </template>
-      </ul>
-    </div>
+            <div class="flex items-center justify-between mt-[2vw] lg:mt-[0.4vw]">
+              <div class="flex items-center border border-white/20 rounded-[0.5vw] lg:rounded-[0.15vw]">
+                <button type="button" @click="$store.cart.update(item.key, item.quantity - 1)" class="w-[7vw] h-[7vw] lg:w-[1.6vw] lg:h-[1.6vw] flex items-center justify-center text-[3.5vw] lg:text-[0.85vw] hover:bg-white/10" aria-label="Decrease">&minus;</button>
+                <span class="w-[7vw] lg:w-[1.6vw] text-center text-[3vw] lg:text-[0.8vw]" x-text="item.quantity"></span>
+                <button type="button" @click="$store.cart.update(item.key, item.quantity + 1)" class="w-[7vw] h-[7vw] lg:w-[1.6vw] lg:h-[1.6vw] flex items-center justify-center text-[3.5vw] lg:text-[0.85vw] hover:bg-white/10" aria-label="Increase">+</button>
+              </div>
+              <button type="button" @click="$store.cart.update(item.key, 0)" class="text-[2.8vw] lg:text-[0.7vw] uppercase tracking-[0.1em] underline opacity-60 hover:opacity-100">{{ 'cart.remove' | t | default: 'Remove' }}</button>
+            </div>
+          </div>
+        </li>
+      </template>
+    </ul>
+  </div>
 
-    {%- comment -%} Footer {%- endcomment -%}
-    <footer
-      class="border-t border-black/10 px-[5vw] lg:px-[1.5vw] py-[4vw] lg:py-[1.2vw] flex flex-col gap-[3vw] lg:gap-[0.8vw]"
-      x-show="$store.cart.count > 0"
-    >
-      <div class="flex justify-between text-[3.8vw] lg:text-[1vw] font-medium">
-        <span>{{ 'cart.subtotal' | t | default: 'Subtotal' }}</span>
-        <span x-text="$store.cart.money($store.cart.total)"></span>
-      </div>
-      <a
-        href="{{ routes.cart_url }}"
-        class="block text-center border border-black py-[3.5vw] lg:py-[0.9vw] text-[3.5vw] lg:text-[0.9vw] uppercase tracking-[0.15em] hover:bg-black hover:text-white transition-colors"
-      >{{ 'cart.view_cart' | t | default: 'View cart' }}</a>
-      <a
-        href="/checkout"
-        class="block text-center bg-black text-white py-[3.5vw] lg:py-[0.9vw] text-[3.5vw] lg:text-[0.9vw] uppercase tracking-[0.15em] hover:opacity-80 transition-opacity"
-      >{{ 'cart.checkout' | t | default: 'Checkout' }}</a>
-    </footer>
-  </aside>
+  <div
+    x-show="$store.cart.count > 0"
+    class="px-[3vw] lg:px-[0.9vw] py-[3vw] lg:py-[0.8vw] border-t border-white/10 flex flex-col gap-[2vw] lg:gap-[0.5vw]"
+  >
+    <div class="flex justify-between text-[3.2vw] lg:text-[0.9vw] font-medium">
+      <span>{{ 'cart.subtotal' | t | default: 'Subtotal' }}</span>
+      <span x-text="$store.cart.money($store.cart.total)"></span>
+    </div>
+    <a href="{{ routes.cart_url }}" class="block text-center border border-white/40 py-[2.5vw] lg:py-[0.6vw] text-[3vw] lg:text-[0.8vw] uppercase tracking-[0.15em] rounded-[0.6vw] lg:rounded-[0.2vw] hover:bg-white/10 transition-colors">
+      {{ 'cart.view_cart' | t | default: 'View cart' }}
+    </a>
+    <a href="/checkout" class="block text-center bg-white text-black py-[2.5vw] lg:py-[0.6vw] text-[3vw] lg:text-[0.8vw] uppercase tracking-[0.15em] rounded-[0.6vw] lg:rounded-[0.2vw] hover:opacity-80 transition-opacity">
+      {{ 'cart.checkout' | t | default: 'Checkout' }}
+    </a>
+  </div>
 </div>
