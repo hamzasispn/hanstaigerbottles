@@ -10,6 +10,8 @@
   document.addEventListener('alpine:init', () => {
     Alpine.store('cart', {
       open: false,
+      loading: false,
+      busyKey: null,
       count: {{ cart.item_count | json }},
       total: {{ cart.total_price | json }},
       currency: {{ cart.currency.symbol | json }},
@@ -17,31 +19,41 @@
       money(cents) {
         return this.currency + (cents / 100).toFixed(2);
       },
-      openDrawer() { this.open = true; document.documentElement.style.overflow = 'hidden'; },
-      close() { this.open = false; document.documentElement.style.overflow = ''; },
+      openDrawer() { this.open = true; },
+      close() { this.open = false; },
       async refresh() {
-        const res = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
-        const data = await res.json();
-        this.count = data.item_count;
-        this.total = data.total_price;
-        this.items = data.items.map(i => ({
-          key: i.key,
-          product_title: i.product_title,
-          variant_title: i.variant_title,
-          title: i.title,
-          url: i.url,
-          image: i.image || '',
-          quantity: i.quantity,
-          final_line_price: i.final_line_price,
-        }));
+        this.loading = true;
+        try {
+          const res = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
+          const data = await res.json();
+          this.count = data.item_count;
+          this.total = data.total_price;
+          this.items = data.items.map(i => ({
+            key: i.key,
+            product_title: i.product_title,
+            variant_title: i.variant_title,
+            title: i.title,
+            url: i.url,
+            image: i.image || '',
+            quantity: i.quantity,
+            final_line_price: i.final_line_price,
+          }));
+        } finally {
+          this.loading = false;
+        }
       },
       async update(key, quantity) {
-        await fetch('/cart/change.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: key, quantity })
-        });
-        await this.refresh();
+        this.busyKey = key;
+        try {
+          await fetch('/cart/change.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: key, quantity })
+          });
+          await this.refresh();
+        } finally {
+          this.busyKey = null;
+        }
       },
     });
 
@@ -49,9 +61,11 @@
 
     window.addEventListener('cart:refresh', async () => {
       await Alpine.store('cart').refresh();
-      Alpine.store('cart').openDrawer();
+      setTimeout(() => Alpine.store('cart').openDrawer(), 0);
     });
-    window.addEventListener('cart:open', () => Alpine.store('cart').openDrawer());
+    window.addEventListener('cart:open', () => {
+      setTimeout(() => Alpine.store('cart').openDrawer(), 0);
+    });
   });
 </script>
 
@@ -124,8 +138,9 @@
     <div class="flex items-center justify-end gap-[2vw] lg:gap-[0.6vw] bg-black/40 backdrop-blur-[30px] rounded-[1.5vw] lg:rounded-[0.4vw] px-[3vw] lg:px-[0.9vw] py-[1.5vw] lg:py-[0.5vw] text-white">
 
       {%- comment -%} Language {%- endcomment -%}
-      {%- if localization.available_languages.size > 1 -%}
-        <div class="relative" @click.outside="openLang = false">
+      {%- assign langs = localization.available_languages -%}
+      {%- if langs.size == 0 -%}{%- assign langs = shop.published_locales -%}{%- endif -%}
+      <div class="relative" @click.outside="openLang = false">
           <button
             type="button"
             @click="openLang = !openLang"
@@ -149,7 +164,7 @@
           >
             {%- form 'localization' -%}
               <input type="hidden" name="_method" value="put">
-              {%- for language in localization.available_languages -%}
+              {%- for language in langs -%}
                 <button
                   type="submit"
                   name="locale_code"
@@ -162,7 +177,6 @@
             {%- endform -%}
           </div>
         </div>
-      {%- endif -%}
 
       {%- comment -%} Sign in {%- endcomment -%}
       <a
@@ -177,7 +191,7 @@
       </a>
 
       {%- comment -%} Cart {%- endcomment -%}
-      <div class="relative">
+      <div class="relative" @click.outside="$store.cart.close()">
         <button
           type="button"
           @click="$store.cart.open ? $store.cart.close() : $store.cart.openDrawer()"
@@ -185,7 +199,13 @@
           aria-label="Open cart"
         >
           <span>{{ 'cart.title' | t | default: 'Cart' }}</span>
-          <span x-text="$store.cart.count" class="min-w-[3vw] lg:min-w-[0.85vw] text-center"></span>
+          <span class="relative min-w-[3vw] lg:min-w-[0.85vw] text-center">
+            <span x-show="!$store.cart.loading" x-text="$store.cart.count"></span>
+            <svg x-show="$store.cart.loading" x-cloak class="inline-block w-[3vw] h-[3vw] lg:w-[0.85vw] lg:h-[0.85vw] animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"/>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </span>
         </button>
 
         {% render 'cart-drawer', heading: cart_heading %}
