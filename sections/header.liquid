@@ -85,7 +85,7 @@
       <button
         type="button"
         @click="openMenu = !openMenu"
-        class="flex items-center gap-[2.5vw] lg:gap-[0.7vw] bg-black/40 backdrop-blur-2xl text-white rounded-[1.5vw] lg:rounded-[0.4vw] px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em]"
+        class="flex items-center gap-[2.5vw] lg:gap-[0.7vw] bg-black/40 backdrop-blur-3xl text-white rounded-[1.5vw] lg:rounded-[0.4vw] px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em]"
         :aria-expanded="openMenu"
       >
         <span x-text="openMenu ? '{{ 'general.close' | t | default: 'Close' }}' : '{{ overview_label | escape }}'">
@@ -109,7 +109,7 @@
           x-transition:leave="transition ease-in duration-200"
           x-transition:leave-start="opacity-100 translate-y-0 scale-100"
           x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-          class="absolute left-0 top-full mt-[2vw] lg:mt-[0.6vw] w-[80vw] lg:w-[16vw] origin-top-left bg-black/40 backdrop-blur-2xl rounded-[1.5vw] lg:rounded-[0.4vw] p-[3vw] lg:p-[0.8vw] flex flex-col gap-[2vw] lg:gap-[0.5vw]"
+          class="absolute left-0 top-full mt-[2vw] lg:mt-[0.6vw] w-[80vw] lg:w-[16vw] origin-top-left bg-black/40 backdrop-blur-3xl rounded-[1.5vw] lg:rounded-[0.4vw] p-[3vw] lg:p-[0.8vw] flex flex-col gap-[2vw] lg:gap-[0.5vw]"
         >
           {%- for block in menu_items -%}
             <a
@@ -158,7 +158,7 @@
 
     {%- comment -%} ── Right cluster ───────────────────────────── {%- endcomment -%}
     <div>
-      <div class="ml-auto w-fit flex items-center justify-end gap-[2vw] lg:gap-[0.6vw] bg-black/40 backdrop-blur-2xl rounded-[1.5vw] lg:rounded-[0.4vw] px-[3vw] lg:px-[0.9vw] py-[1.5vw] lg:py-[0.5vw] text-white">
+      <div class="ml-auto w-fit flex items-center justify-end gap-[2vw] lg:gap-[0.6vw] bg-black/40 backdrop-blur-3xl rounded-[1.5vw] lg:rounded-[0.4vw] px-[3vw] lg:px-[0.9vw] py-[1.5vw] lg:py-[0.5vw] text-white">
         {%- comment -%} Language {%- endcomment -%}
         {%- assign langs = localization.available_languages -%}
         {%- if langs.size == 0 -%}{%- assign langs = shop.published_locales -%}{%- endif -%}
@@ -193,7 +193,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-            class="absolute right-0 top-full mt-[1.5vw] lg:mt-[0.4vw] min-w-[28vw] lg:min-w-[8vw] font-(--font-primary--family) origin-top-right bg-black/60 backdrop-blur-2xl rounded-[1vw] lg:rounded-[0.3vw] p-[2vw] lg:p-[0.5vw] flex flex-col"
+            class="absolute right-0 top-full mt-[1.5vw] lg:mt-[0.4vw] min-w-[28vw] lg:min-w-[8vw] font-(--font-primary--family) origin-top-right bg-black/60 backdrop-blur-3xl rounded-[1vw] lg:rounded-[0.3vw] p-[2vw] lg:p-[0.5vw] flex flex-col"
           >
             {%- form 'localization' -%}
               <input type="hidden" name="_method" value="put">
