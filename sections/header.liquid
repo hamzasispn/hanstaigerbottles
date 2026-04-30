@@ -165,7 +165,7 @@
         <button
           type="button"
           @click="openLang = !openLang"
-          class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em] px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.4vw]"
+          class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em] px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.4vw]"
           :aria-expanded="openLang"
         >
           <span>{{ localization.language.endonym_name | default: localization.language.name }}</span>
@@ -192,7 +192,7 @@
           x-transition:leave="transition ease-in duration-200"
           x-transition:leave-start="opacity-100 translate-y-0 scale-100"
           x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-          class="absolute right-0 top-full mt-[1.5vw] lg:mt-[0.4vw] min-w-[28vw] lg:min-w-[8vw] origin-top-right bg-black/60 backdrop-blur-[30px] rounded-[1vw] lg:rounded-[0.3vw] p-[2vw] lg:p-[0.5vw] flex flex-col"
+          class="absolute right-0 top-full mt-[1.5vw] lg:mt-[0.4vw] min-w-[28vw] lg:min-w-[8vw] font-(--font-primary--family) origin-top-right bg-black/60 backdrop-blur-[30px] rounded-[1vw] lg:rounded-[0.3vw] p-[2vw] lg:p-[0.5vw] flex flex-col"
         >
           {%- form 'localization' -%}
             <input type="hidden" name="_method" value="put">
@@ -213,7 +213,7 @@
       {%- comment -%} Sign in {%- endcomment -%}
       <a
         href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
-        class="text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em] px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.4vw] hidden sm:inline-block"
+        class="text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em] px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.4vw] hidden sm:inline-block"
       >
         {%- if customer -%}
           {{ 'customer.account' | t | default: 'Account' }}
@@ -227,7 +227,7 @@
         <button
           type="button"
           @click="$store.cart.open ? $store.cart.close() : $store.cart.openDrawer()"
-          class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] bg-white/15 rounded-[0.7vw] lg:rounded-[0.2vw] px-[2.5vw] lg:px-[0.6vw] py-[1.5vw] lg:py-[0.4vw] text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em] hover:bg-white/25 transition-colors"
+          class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] bg-white/15 rounded-[0.7vw] lg:rounded-[0.2vw] px-[2.5vw] lg:px-[0.6vw] py-[1.5vw] lg:py-[0.4vw] text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em] hover:bg-white/25 transition-colors"
           aria-label="Open cart"
         >
           <span>{{ 'cart.title' | t | default: 'Cart' }}</span>
