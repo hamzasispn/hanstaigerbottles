@@ -142,13 +142,12 @@
       class="hidden lg:flex items-center justify-self-center mix-blend-difference"
     >
       {%- if section.settings.logo != blank -%}
+        {%- assign logo_style = 'width:' | append: section.settings.logo_width | append: 'vw;' -%}
+        {%- assign logo_alt = header_text | default: shop.name -%}
         {{
           section.settings.logo
           | image_url: width: 600
-          | image_tag: class: 'block object-contain', style: 'width:'
-          | append: section.settings.logo_width
-          | append: 'vw;', alt: header_text
-          | default: shop.name
+          | image_tag: class: 'block object-contain', style: logo_style, alt: logo_alt
         }}
       {%- else -%}
         <span class="text-[1.4vw] tracking-[0.5em] font-medium text-white/80 uppercase">
