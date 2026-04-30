@@ -1,33 +1,89 @@
 {% comment %}
-  This section is used in the cart template to render /cart page with an
-  overview of the items in customer's cart.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
+  Cart page – live updates via the global Alpine cart store. No page reloads.
 {% endcomment %}
 
-<h1>{{ 'cart.title' | t }}</h1>
+<section class="pt-[28vw] lg:pt-[8vw] pb-[10vw] lg:pb-[4vw] px-[5vw] lg:px-[6vw] min-h-screen">
+  <h1 class="text-[7vw] lg:text-[2.5vw] font-medium tracking-[0.02em] uppercase mb-[6vw] lg:mb-[2vw]">
+    {{ 'cart.title' | t | default: 'Your cart' }}
+    <span class="opacity-60" x-data x-text="'(' + $store.cart.count + ')'"></span>
+  </h1>
 
-<form action="{{ routes.cart_url }}" method="post">
-  <table>
-    {% for item in cart.items %}
-      <tr>
-        <td>
-          {% render 'image', image: item.image, url: item.url %}
-        </td>
-        <td>
-          <p>{{ item.product.title }}</p>
-          {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-        </td>
-        <td>
-          <input type="text" name="updates[]" value="{{ item.quantity }}">
-          <input type="submit" value="{{ 'cart.update' | t }}">
-        </td>
-      </tr>
-    {% endfor %}
-  </table>
+  <div x-data class="grid grid-cols-1 lg:grid-cols-[1fr_22vw] gap-[6vw] lg:gap-[3vw]">
 
-  <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
-</form>
+    <div>
+      <template x-if="$store.cart.count === 0">
+        <p class="py-[10vw] lg:py-[4vw] text-[4vw] lg:text-[1.1vw] opacity-70">
+          {{ 'cart.empty' | t | default: 'Your cart is empty.' }}
+          <a href="{{ routes.root_url }}" class="underline ml-[2vw] lg:ml-[0.5vw]">{{ 'cart.continue_shopping' | t | default: 'Continue shopping' }}</a>
+        </p>
+      </template>
+
+      <ul class="divide-y divide-black/10 border-y border-black/10">
+        <template x-for="item in $store.cart.items" :key="item.key">
+          <li class="grid grid-cols-[22vw_1fr] lg:grid-cols-[8vw_1fr_auto] gap-[3vw] lg:gap-[1.5vw] py-[5vw] lg:py-[1.5vw] items-center">
+            <a :href="item.url" class="block w-[22vw] h-[22vw] lg:w-[8vw] lg:h-[8vw] bg-[#f3f3f3] overflow-hidden">
+              <img :src="item.image" :alt="item.title" class="w-full h-full object-contain" loading="lazy">
+            </a>
+
+            <div class="min-w-0">
+              <a :href="item.url" class="block text-[4vw] lg:text-[1.1vw] font-medium" x-text="item.product_title"></a>
+              <p class="text-[3.2vw] lg:text-[0.9vw] opacity-60 mt-[1vw] lg:mt-[0.2vw]" x-text="item.variant_title" x-show="item.variant_title"></p>
+
+              <div class="flex items-center gap-[4vw] lg:gap-[1.5vw] mt-[3vw] lg:mt-[0.8vw]">
+                <div class="flex items-center border border-black/20">
+                  <button
+                    type="button"
+                    @click="$store.cart.update(item.key, item.quantity - 1)"
+                    class="w-[9vw] h-[9vw] lg:w-[2.2vw] lg:h-[2.2vw] flex items-center justify-center text-[4vw] lg:text-[1vw] hover:bg-black/5"
+                    aria-label="Decrease"
+                  >&minus;</button>
+                  <span class="w-[9vw] lg:w-[2.2vw] text-center text-[3.6vw] lg:text-[0.95vw]" x-text="item.quantity"></span>
+                  <button
+                    type="button"
+                    @click="$store.cart.update(item.key, item.quantity + 1)"
+                    class="w-[9vw] h-[9vw] lg:w-[2.2vw] lg:h-[2.2vw] flex items-center justify-center text-[4vw] lg:text-[1vw] hover:bg-black/5"
+                    aria-label="Increase"
+                  >+</button>
+                </div>
+                <button
+                  type="button"
+                  @click="$store.cart.update(item.key, 0)"
+                  class="text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.1em] underline opacity-60 hover:opacity-100"
+                >{{ 'cart.remove' | t | default: 'Remove' }}</button>
+              </div>
+            </div>
+
+            <p class="col-span-2 lg:col-auto text-[4vw] lg:text-[1.1vw] font-medium lg:text-right" x-text="$store.cart.money(item.final_line_price)"></p>
+          </li>
+        </template>
+      </ul>
+    </div>
+
+    <aside
+      class="h-fit border border-black/10 p-[5vw] lg:p-[1.5vw] flex flex-col gap-[3vw] lg:gap-[0.8vw]"
+      x-show="$store.cart.count > 0"
+    >
+      <h2 class="text-[4.5vw] lg:text-[1.2vw] font-medium uppercase tracking-[0.05em]">
+        {{ 'cart.summary' | t | default: 'Summary' }}
+      </h2>
+      <div class="flex justify-between text-[3.8vw] lg:text-[1vw]">
+        <span>{{ 'cart.subtotal' | t | default: 'Subtotal' }}</span>
+        <span x-text="$store.cart.money($store.cart.total)"></span>
+      </div>
+      <p class="text-[3vw] lg:text-[0.8vw] opacity-60">
+        {{ 'cart.taxes_and_shipping' | t | default: 'Taxes and shipping calculated at checkout.' }}
+      </p>
+      <a
+        href="/checkout"
+        class="block text-center bg-black text-white py-[3.5vw] lg:py-[0.9vw] text-[3.5vw] lg:text-[0.9vw] uppercase tracking-[0.15em] hover:opacity-80 transition-opacity"
+      >{{ 'cart.checkout' | t | default: 'Checkout' }}</a>
+      <a
+        href="{{ routes.root_url }}"
+        class="block text-center text-[3.2vw] lg:text-[0.85vw] underline opacity-70 hover:opacity-100"
+      >{{ 'cart.continue_shopping' | t | default: 'Continue shopping' }}</a>
+    </aside>
+  </div>
+</section>
 
 {% schema %}
 {

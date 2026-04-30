@@ -1,78 +1,230 @@
-<header>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
+{%- liquid
+  assign menu_items = section.blocks | where: 'type', 'menu_item'
+  assign overview_label = section.settings.overview_label | default: 'Overview'
+-%}
 
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+<style>[x-cloak]{display:none !important}</style>
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.store('cart', {
+      open: false,
+      count: {{ cart.item_count | json }},
+      total: {{ cart.total_price | json }},
+      currency: {{ cart.currency.symbol | json }},
+      items: [],
+      money(cents) {
+        return this.currency + (cents / 100).toFixed(2);
+      },
+      openDrawer() { this.open = true; document.documentElement.style.overflow = 'hidden'; },
+      close() { this.open = false; document.documentElement.style.overflow = ''; },
+      async refresh() {
+        const res = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
+        const data = await res.json();
+        this.count = data.item_count;
+        this.total = data.total_price;
+        this.items = data.items.map(i => ({
+          key: i.key,
+          product_title: i.product_title,
+          variant_title: i.variant_title,
+          title: i.title,
+          url: i.url,
+          image: i.image || '',
+          quantity: i.quantity,
+          final_line_price: i.final_line_price,
+        }));
+      },
+      async update(key, quantity) {
+        await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: key, quantity })
+        });
+        await this.refresh();
+      },
+    });
 
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ section.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
-    {% endif %}
+    Alpine.store('cart').refresh();
 
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
+    window.addEventListener('cart:refresh', async () => {
+      await Alpine.store('cart').refresh();
+      Alpine.store('cart').openDrawer();
+    });
+    window.addEventListener('cart:open', () => Alpine.store('cart').openDrawer());
+  });
+</script>
 
-      {{ 'icon-cart.svg' | inline_asset_content }}
+<header
+  x-data="{ openMenu: false, openLang: false }"
+  class="absolute top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] px-[5vw] lg:px-[1.4vw]"
+>
+  <div class="grid grid-cols-2 lg:grid-cols-3 items-start gap-[3vw] lg:gap-[1vw]">
+
+    {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
+    <div class="relative justify-self-start" @click.outside="openMenu = false">
+      <button
+        type="button"
+        @click="openMenu = !openMenu"
+        class="flex items-center gap-[2.5vw] lg:gap-[0.7vw] bg-black/40 backdrop-blur-[30px] text-white rounded-[1.5vw] lg:rounded-[0.4vw] px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em]"
+        :aria-expanded="openMenu"
+      >
+        <span x-text="openMenu ? '{{ 'general.close' | t | default: 'Close' }}' : '{{ overview_label | escape }}'">{{ overview_label }}</span>
+        <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
+        </span>
+      </button>
+
+      {%- if menu_items.size > 0 -%}
+        <div
+          x-cloak
+          x-show="openMenu"
+          x-transition.opacity
+          class="absolute left-0 top-full mt-[2vw] lg:mt-[0.6vw] w-[80vw] lg:w-[16vw] bg-black/40 backdrop-blur-[30px] rounded-[1.5vw] lg:rounded-[0.4vw] p-[3vw] lg:p-[0.8vw] flex flex-col gap-[2vw] lg:gap-[0.5vw]"
+        >
+          {%- for block in menu_items -%}
+            <a
+              href="{{ block.settings.link | default: '#' }}"
+              class="flex items-center gap-[3vw] lg:gap-[0.8vw] text-white text-[3.5vw] lg:text-[0.9vw] hover:bg-white/10 rounded-[1vw] lg:rounded-[0.25vw] p-[1.5vw] lg:p-[0.4vw] transition-colors"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.image -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 120
+                  | image_tag: class: 'w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] object-cover rounded-[0.8vw] lg:rounded-[0.2vw] bg-white/10'
+                }}
+              {%- else -%}
+                <span class="w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] bg-white/10 rounded-[0.8vw] lg:rounded-[0.2vw]"></span>
+              {%- endif -%}
+              <span>{{ block.settings.label }}</span>
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ── Wordmark ─────────────────────────────────── {%- endcomment -%}
+    <a
+      href="{{ routes.root_url }}"
+      class="hidden lg:block justify-self-center text-[1.4vw] tracking-[0.5em] font-medium text-white/80 mix-blend-difference uppercase"
+    >
+      {{ shop.name }}
     </a>
+
+    {%- comment -%} ── Right cluster ───────────────────────────── {%- endcomment -%}
+    <div class="flex items-center justify-end gap-[2vw] lg:gap-[0.6vw] bg-black/40 backdrop-blur-[30px] rounded-[1.5vw] lg:rounded-[0.4vw] px-[3vw] lg:px-[0.9vw] py-[1.5vw] lg:py-[0.5vw] text-white">
+
+      {%- comment -%} Language {%- endcomment -%}
+      {%- if localization.available_languages.size > 1 -%}
+        <div class="relative" @click.outside="openLang = false">
+          <button
+            type="button"
+            @click="openLang = !openLang"
+            class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em] px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.4vw]"
+            :aria-expanded="openLang"
+          >
+            <span>{{ localization.language.endonym_name | default: localization.language.name }}</span>
+            <svg class="w-[3vw] h-[3vw] lg:w-[0.85vw] lg:h-[0.85vw] transition-transform" :class="openLang && '-rotate-180'" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+
+          <div
+            x-cloak
+            x-show="openLang"
+            x-transition.opacity
+            class="absolute right-0 top-full mt-[1.5vw] lg:mt-[0.4vw] min-w-[28vw] lg:min-w-[8vw] bg-black/60 backdrop-blur-[30px] rounded-[1vw] lg:rounded-[0.3vw] p-[2vw] lg:p-[0.5vw] flex flex-col"
+          >
+            {%- form 'localization' -%}
+              <input type="hidden" name="_method" value="put">
+              {%- for language in localization.available_languages -%}
+                <button
+                  type="submit"
+                  name="locale_code"
+                  value="{{ language.iso_code }}"
+                  class="text-left px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.35vw] text-[3vw] lg:text-[0.85vw] hover:bg-white/10 rounded-[0.5vw] lg:rounded-[0.2vw] {% if language.iso_code == localization.language.iso_code %}opacity-60{% endif %}"
+                >
+                  {{ language.endonym_name | default: language.name }}
+                </button>
+              {%- endfor -%}
+            {%- endform -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Sign in {%- endcomment -%}
+      <a
+        href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+        class="text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em] px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.4vw] hidden sm:inline-block"
+      >
+        {%- if customer -%}
+          {{ 'customer.account' | t | default: 'Account' }}
+        {%- else -%}
+          {{ 'customer.sign_in' | t | default: 'Sign in' }}
+        {%- endif -%}
+      </a>
+
+      {%- comment -%} Cart {%- endcomment -%}
+      <button
+        type="button"
+        @click="$store.cart.openDrawer()"
+        class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] bg-white/15 rounded-[0.7vw] lg:rounded-[0.2vw] px-[2.5vw] lg:px-[0.6vw] py-[1.5vw] lg:py-[0.4vw] text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em] hover:bg-white/25 transition-colors"
+        aria-label="Open cart"
+      >
+        <span>{{ 'cart.title' | t | default: 'Cart' }}</span>
+        <span x-text="$store.cart.count" class="min-w-[3vw] lg:min-w-[0.85vw] text-center"></span>
+      </button>
+    </div>
   </div>
 </header>
 
-{% stylesheet %}
-  header {
-    height: 4rem;
-    padding: 0 5vw;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  @media (min-width: 1024px) {
-    header { height: 5rem; padding: 0 2vw; }
-  }
-  header a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-foreground);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg { width: 1.5rem; }
-  @media (min-width: 1024px) { header svg { width: 2rem; } }
-  header .header__menu { display: none; }
-  @media (min-width: 1024px) { header .header__menu { display: flex; gap: 1rem; } }
-  header .header__icons { display: flex; gap: 0.75rem; }
-  @media (min-width: 1024px) { header .header__icons { gap: 1rem; } }
-{% endstylesheet %}
+{% render 'cart-drawer' %}
 
 {% schema %}
 {
   "name": "t:general.header",
   "settings": [
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
-    },
+      "type": "text",
+      "id": "overview_label",
+      "label": "Overview button label",
+      "default": "Overview"
+    }
+  ],
+  "blocks": [
     {
-      "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
+      "type": "menu_item",
+      "name": "Menu item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Item"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.header",
+      "blocks": [
+        { "type": "menu_item", "settings": { "label": "Bottles" } },
+        { "type": "menu_item", "settings": { "label": "Electrolytes" } },
+        { "type": "menu_item", "settings": { "label": "Gear" } },
+        { "type": "menu_item", "settings": { "label": "The X1" } },
+        { "type": "menu_item", "settings": { "label": "B2B" } }
+      ]
     }
   ]
 }

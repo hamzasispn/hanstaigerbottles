@@ -17,7 +17,20 @@
     "checkout": "Checkout",
     "title": "Cart",
     "update": "Update",
-    "remove": "Remove"
+    "remove": "Remove",
+    "empty": "Your cart is empty.",
+    "subtotal": "Subtotal",
+    "view_cart": "View cart",
+    "summary": "Summary",
+    "continue_shopping": "Continue shopping",
+    "taxes_and_shipping": "Taxes and shipping calculated at checkout."
+  },
+  "customer": {
+    "account": "Account",
+    "sign_in": "Sign in"
+  },
+  "general": {
+    "close": "Close"
   },
   "customers": {
     "login": {
