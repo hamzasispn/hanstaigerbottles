@@ -114,6 +114,7 @@
         })
           .then(r => r.json())
           .then(() => {
+            window.dispatchEvent(new CustomEvent('cart:refresh'));
             this.atcLabel = 'Added!';
             setTimeout(() => { this.atcLabel = 'Add to cart'; this.atcBusy = false; }, 1500);
           })

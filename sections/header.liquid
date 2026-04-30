@@ -71,7 +71,7 @@
 
 <header
   x-data="{ openMenu: false, openLang: false }"
-  class="absolute top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] px-[5vw] lg:px-[1.4vw]"
+  class="sticky top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] px-[5vw] lg:px-[1.4vw]"
 >
   <div class="grid grid-cols-2 lg:grid-cols-3 items-start gap-[3vw] lg:gap-[1vw]">
 
@@ -129,9 +129,22 @@
     {%- comment -%} ── Wordmark ─────────────────────────────────── {%- endcomment -%}
     <a
       href="{{ routes.root_url }}"
-      class="hidden lg:block justify-self-center text-[1.4vw] tracking-[0.5em] font-medium text-white/80 mix-blend-difference uppercase"
+      class="hidden lg:flex items-center justify-self-center mix-blend-difference"
     >
-      {{ header_text | default: shop.name }}
+      {%- if section.settings.logo != blank -%}
+        {{
+          section.settings.logo
+          | image_url: width: 600
+          | image_tag:
+            class: 'block object-contain',
+            style: 'width:' | append: section.settings.logo_width | append: 'vw;',
+            alt: header_text | default: shop.name
+        }}
+      {%- else -%}
+        <span class="text-[1.4vw] tracking-[0.5em] font-medium text-white/80 uppercase">
+          {{ header_text | default: shop.name }}
+        </span>
+      {%- endif -%}
     </a>
 
     {%- comment -%} ── Right cluster ───────────────────────────── {%- endcomment -%}
@@ -218,6 +231,22 @@
 {
   "name": "t:general.header",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "If set, replaces the centered wordmark."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 4,
+      "max": 30,
+      "step": 1,
+      "unit": "vw",
+      "default": 12
+    },
     {
       "type": "text",
       "id": "header_text",

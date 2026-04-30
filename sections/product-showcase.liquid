@@ -119,14 +119,21 @@
 
             {%- comment -%} Add to cart {%- endcomment -%}
             {%- if card_variant != blank -%}
-              <form action="/cart/add" method="post">
+              <form
+                action="/cart/add"
+                method="post"
+                x-data="{ busy: false }"
+                @submit.prevent="busy = true; fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: {{ card_variant.id }}, quantity: 1 }) }).then(r => r.json()).then(() => window.dispatchEvent(new CustomEvent('cart:refresh'))).finally(() => busy = false)"
+              >
                 <input type="hidden" name="id" value="{{ card_variant.id }}">
                 <input type="hidden" name="quantity" value="1">
                 <button
                   type="submit"
-                  class="flex items-center justify-center ml-auto text-[3.4vw] w-[35vw] px-[3vw] py-[2vw] leading-[5vw] gap-[3vw] lg:text-[0.972vw] lg:w-[8.958vw] lg:px-[0.833vw] lg:py-[0.556vw] lg:leading-[1.389vw] lg:gap-[1.111vw] bg-[#F4F4F5]/40 backdrop-blur-sm text-white"
+                  :disabled="busy"
+                  class="flex items-center justify-center ml-auto text-[3.4vw] w-[35vw] px-[3vw] py-[2vw] leading-[5vw] gap-[3vw] lg:text-[0.972vw] lg:w-[8.958vw] lg:px-[0.833vw] lg:py-[0.556vw] lg:leading-[1.389vw] lg:gap-[1.111vw] bg-[#F4F4F5]/40 backdrop-blur-sm text-white disabled:opacity-60"
                 >
-                  Add to cart <span>{% render 'button-arrow' %}</span>
+                  <span x-text="busy ? 'Adding...' : 'Add to cart'">Add to cart</span>
+                  <span x-show="!busy">{% render 'button-arrow' %}</span>
                 </button>
               </form>
             {%- else -%}
@@ -212,16 +219,22 @@
 
             <div>
               {%- if card_variant != blank -%}
-                <form action="/cart/add" method="post">
+                <form
+                  action="/cart/add"
+                  method="post"
+                  x-data="{ busy: false }"
+                  @submit.prevent="busy = true; fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: {{ card_variant.id }}, quantity: 1 }) }).then(r => r.json()).then(() => window.dispatchEvent(new CustomEvent('cart:refresh'))).finally(() => busy = false)"
+                >
                   <input type="hidden" name="id" value="{{ card_variant.id }}">
                   <input type="hidden" name="quantity" value="1">
                   <button
                     type="submit"
-                    class="flex items-center justify-center ml-auto text-[3.4vw] w-full lg:w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[3vw] py-[2.5vw] leading-[5vw] gap-[3vw] lg:text-[0.972vw] lg:px-[0.833vw] lg:py-[0.556vw] lg:leading-[1.389vw] lg:gap-[1.111vw] rounded-[1vw] lg:rounded-none"
+                    :disabled="busy"
+                    class="flex items-center justify-center ml-auto text-[3.4vw] w-full lg:w-[8.958vw] bg-[#EBEBEB] text-[#111111] px-[3vw] py-[2.5vw] leading-[5vw] gap-[3vw] lg:text-[0.972vw] lg:px-[0.833vw] lg:py-[0.556vw] lg:leading-[1.389vw] lg:gap-[1.111vw] rounded-[1vw] lg:rounded-none disabled:opacity-60"
                   >
-                    <span class="lg:inline hidden">Add to cart</span>
-                    <span class="lg:hidden">{% render 'button-arrow' %}</span>
-                    <span class="hidden lg:inline">{% render 'button-arrow' %}</span>
+                    <span class="lg:inline hidden" x-text="busy ? 'Adding...' : 'Add to cart'">Add to cart</span>
+                    <span class="lg:hidden" x-show="!busy">{% render 'button-arrow' %}</span>
+                    <span class="hidden lg:inline" x-show="!busy">{% render 'button-arrow' %}</span>
                   </button>
                 </form>
               {%- else -%}
