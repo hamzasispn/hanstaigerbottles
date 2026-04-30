@@ -3,8 +3,8 @@
   Requirements: Tailwind CSS + Alpine.js loaded in theme layout
 {% endcomment %}
 
-<footer class="bg-[#ebebeb] w-full font-light" x-data="{ open: false }">
-  <div class="max-w-[1440px] mx-auto px-6 lg:px-16 pt-14 pb-8">
+<footer class="bg-[#ebebeb] w-full font-(--font-primary--family)" x-data="{ open: false }">
+  <div class="max-w-[88.889vw] mx-auto px-6 lg:px-16 pt-14 pb-8">
 
     <div class="mb-12">
       <a href="{{ routes.root_url }}" class="text-[#3a3a3a] text-sm tracking-[0.25em] uppercase font-normal">
@@ -47,21 +47,21 @@
            rel="noopener noreferrer"
            class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-1 w-fit">
           LinkedIn
-          <span class="text-xs leading-none translate-y-[-1px]">↗</span>
+          <span class="text-xs leading-none translate-y-[-1px]">{% render 'link-icon' %}</span>
         </a>
         <a href="{{ settings.social_instagram_link }}"
            target="_blank"
            rel="noopener noreferrer"
            class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-1 w-fit">
           Instagram
-          <span class="text-xs leading-none translate-y-[-1px]">↗</span>
+          <span class="text-xs leading-none translate-y-[-1px]">{% render 'link-icon' %}</span>
         </a>
         <a href="{{ settings.social_twitter_link }}"
            target="_blank"
            rel="noopener noreferrer"
            class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-1 w-fit">
           X
-          <span class="text-xs leading-none translate-y-[-1px]">↗</span>
+          <span class="text-xs leading-none translate-y-[-1px]">{% render 'link-icon' %}</span>
         </a>
       </div>
 
