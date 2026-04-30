@@ -77,7 +77,7 @@
   x-data="{ openMenu: false, openLang: false, scrolled: false }"
   x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })"
   :class="scrolled ? 'fixed shadow-sm bg-white' : 'absolute'"
-  class="top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] max-w-[88.889vw] transition-all duration-300"
+  class="top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] max-w-[88.889vw] mx-auto transition-all duration-300"
 >
   <div class="grid grid-cols-2 lg:grid-cols-3 items-start gap-[3vw] lg:gap-[1vw]">
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
