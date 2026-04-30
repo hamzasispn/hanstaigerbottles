@@ -5,7 +5,11 @@
   assign cart_heading = section.settings.cart_heading | default: 'Cart'
 -%}
 
-<style>[x-cloak]{display:none !important}</style>
+<style>
+  [x-cloak] {
+    display: none !important;
+  }
+</style>
 <script>
   document.addEventListener('alpine:init', () => {
     Alpine.store('cart', {
@@ -70,11 +74,12 @@
 </script>
 
 <header
-  x-data="{ openMenu: false, openLang: false }"
-  class="sticky top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] px-[5vw] lg:px-[1.4vw]"
+  x-data="{ openMenu: false, openLang: false, scrolled: false }"
+  x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })"
+  :class="scrolled ? 'fixed shadow-sm bg-white' : 'absolute'"
+  class="top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] px-[5vw] lg:px-[1.4vw] transition-all duration-300"
 >
   <div class="grid grid-cols-2 lg:grid-cols-3 items-start gap-[3vw] lg:gap-[1vw]">
-
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
     <div class="relative justify-self-start" @click.outside="openMenu = false">
       <button
@@ -83,7 +88,9 @@
         class="flex items-center gap-[2.5vw] lg:gap-[0.7vw] bg-black/40 backdrop-blur-[30px] text-white rounded-[1.5vw] lg:rounded-[0.4vw] px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em]"
         :aria-expanded="openMenu"
       >
-        <span x-text="openMenu ? '{{ 'general.close' | t | default: 'Close' }}' : '{{ overview_label | escape }}'">{{ overview_label }}</span>
+        <span x-text="openMenu ? '{{ 'general.close' | t | default: 'Close' }}' : '{{ overview_label | escape }}'">
+          {{- overview_label -}}
+        </span>
         <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
           <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
           <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
@@ -114,10 +121,13 @@
                 {{
                   block.settings.image
                   | image_url: width: 120
-                  | image_tag: class: 'w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] object-cover rounded-[0.8vw] lg:rounded-[0.2vw] bg-white/10'
+                  | image_tag:
+                    class: 'w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] object-cover rounded-[0.8vw] lg:rounded-[0.2vw] bg-white/10'
                 }}
               {%- else -%}
-                <span class="w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] bg-white/10 rounded-[0.8vw] lg:rounded-[0.2vw]"></span>
+                <span
+                  class="w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] bg-white/10 rounded-[0.8vw] lg:rounded-[0.2vw]"
+                ></span>
               {%- endif -%}
               <span>{{ block.settings.label }}</span>
             </a>
@@ -135,10 +145,10 @@
         {{
           section.settings.logo
           | image_url: width: 600
-          | image_tag:
-            class: 'block object-contain',
-            style: 'width:' | append: section.settings.logo_width | append: 'vw;',
-            alt: header_text | default: shop.name
+          | image_tag: class: 'block object-contain', style: 'width:'
+          | append: section.settings.logo_width
+          | append: 'vw;', alt: header_text
+          | default: shop.name
         }}
       {%- else -%}
         <span class="text-[1.4vw] tracking-[0.5em] font-medium text-white/80 uppercase">
@@ -149,47 +159,57 @@
 
     {%- comment -%} ── Right cluster ───────────────────────────── {%- endcomment -%}
     <div class="flex items-center justify-end gap-[2vw] lg:gap-[0.6vw] bg-black/40 backdrop-blur-[30px] rounded-[1.5vw] lg:rounded-[0.4vw] px-[3vw] lg:px-[0.9vw] py-[1.5vw] lg:py-[0.5vw] text-white">
-
       {%- comment -%} Language {%- endcomment -%}
       {%- assign langs = localization.available_languages -%}
       {%- if langs.size == 0 -%}{%- assign langs = shop.published_locales -%}{%- endif -%}
       <div class="relative" @click.outside="openLang = false">
-          <button
-            type="button"
-            @click="openLang = !openLang"
-            class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em] px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.4vw]"
-            :aria-expanded="openLang"
+        <button
+          type="button"
+          @click="openLang = !openLang"
+          class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] text-[3vw] lg:text-[0.85vw] uppercase tracking-[0.05em] px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.4vw]"
+          :aria-expanded="openLang"
+        >
+          <span>{{ localization.language.endonym_name | default: localization.language.name }}</span>
+          <svg
+            class="w-[3vw] h-[3vw] lg:w-[0.85vw] lg:h-[0.85vw] transition-transform"
+            :class="openLang && '-rotate-180'"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <span>{{ localization.language.endonym_name | default: localization.language.name }}</span>
-            <svg class="w-[3vw] h-[3vw] lg:w-[0.85vw] lg:h-[0.85vw] transition-transform" :class="openLang && '-rotate-180'" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
-          </button>
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
 
-          <div
-            x-cloak
-            x-show="openLang"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 -translate-y-[2vw] scale-95"
-            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-            x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-            class="absolute right-0 top-full mt-[1.5vw] lg:mt-[0.4vw] min-w-[28vw] lg:min-w-[8vw] origin-top-right bg-black/60 backdrop-blur-[30px] rounded-[1vw] lg:rounded-[0.3vw] p-[2vw] lg:p-[0.5vw] flex flex-col"
-          >
-            {%- form 'localization' -%}
-              <input type="hidden" name="_method" value="put">
-              {%- for language in langs -%}
-                <button
-                  type="submit"
-                  name="locale_code"
-                  value="{{ language.iso_code }}"
-                  class="text-left px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.35vw] text-[3vw] lg:text-[0.85vw] hover:bg-white/10 rounded-[0.5vw] lg:rounded-[0.2vw] {% if language.iso_code == localization.language.iso_code %}opacity-60{% endif %}"
-                >
-                  {{ language.endonym_name | default: language.name }}
-                </button>
-              {%- endfor -%}
-            {%- endform -%}
-          </div>
+        <div
+          x-cloak
+          x-show="openLang"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="opacity-0 -translate-y-[2vw] scale-95"
+          x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+          x-transition:leave="transition ease-in duration-200"
+          x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+          x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
+          class="absolute right-0 top-full mt-[1.5vw] lg:mt-[0.4vw] min-w-[28vw] lg:min-w-[8vw] origin-top-right bg-black/60 backdrop-blur-[30px] rounded-[1vw] lg:rounded-[0.3vw] p-[2vw] lg:p-[0.5vw] flex flex-col"
+        >
+          {%- form 'localization' -%}
+            <input type="hidden" name="_method" value="put">
+            {%- for language in langs -%}
+              <button
+                type="submit"
+                name="locale_code"
+                value="{{ language.iso_code }}"
+                class="text-left px-[2vw] lg:px-[0.5vw] py-[1.5vw] lg:py-[0.35vw] text-[3vw] lg:text-[0.85vw] hover:bg-white/10 rounded-[0.5vw] lg:rounded-[0.2vw] {% if language.iso_code == localization.language.iso_code %}opacity-60{% endif %}"
+              >
+                {{ language.endonym_name | default: language.name }}
+              </button>
+            {%- endfor -%}
+          {%- endform -%}
         </div>
+      </div>
 
       {%- comment -%} Sign in {%- endcomment -%}
       <a
@@ -214,7 +234,13 @@
           <span>{{ 'cart.title' | t | default: 'Cart' }}</span>
           <span class="relative min-w-[3vw] lg:min-w-[0.85vw] text-center">
             <span x-show="!$store.cart.loading" x-text="$store.cart.count"></span>
-            <svg x-show="$store.cart.loading" x-cloak class="inline-block w-[3vw] h-[3vw] lg:w-[0.85vw] lg:h-[0.85vw] animate-spin" viewBox="0 0 24 24" fill="none">
+            <svg
+              x-show="$store.cart.loading"
+              x-cloak
+              class="inline-block w-[3vw] h-[3vw] lg:w-[0.85vw] lg:h-[0.85vw] animate-spin"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
               <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"/>
               <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
             </svg>
