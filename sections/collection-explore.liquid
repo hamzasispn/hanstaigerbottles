@@ -80,7 +80,7 @@
                         {% if filter_value.active %}checked{% endif %}
                         {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}
                         class="h-3 w-3 shrink-0 accent-black"
-                        @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                        @change="applyFilters()"
                       >
                       <span class="font-(--font-primary--family) text-[0.72rem] leading-none text-[#555] transition-colors group-hover:text-black">
                         {{ filter_value.label }}
@@ -115,7 +115,7 @@
                           :min="rangeMin" :max="maxVal - 1" step="1"
                           x-model.number="minVal"
                           :name="minName"
-                          @change="minVal = Math.min(minVal, maxVal - 1); applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                          @change="minVal = Math.min(minVal, maxVal - 1); applyFilters()"
                         >
                       </div>
                     </div>
@@ -130,7 +130,7 @@
                           :min="minVal + 1" :max="rangeMax" step="1"
                           x-model.number="maxVal"
                           :name="maxName"
-                          @change="maxVal = Math.max(maxVal, minVal + 1); applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                          @change="maxVal = Math.max(maxVal, minVal + 1); applyFilters()"
                         >
                       </div>
                     </div>
@@ -148,7 +148,7 @@
                       x-model.number="minVal"
                       :name="minName"
                       @input="minVal = Math.min(minVal, maxVal - 1)"
-                      @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                      @change="applyFilters()"
                     >
                     <input
                       type="range"
@@ -157,7 +157,7 @@
                       x-model.number="maxVal"
                       :name="maxName"
                       @input="maxVal = Math.max(maxVal, minVal + 1)"
-                      @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                      @change="applyFilters()"
                     >
                   </div>
                 </div>
@@ -181,7 +181,7 @@
                     <input
                       type="checkbox"
                       class="h-3 w-3 shrink-0 accent-black"
-                      @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                      @change="applyFilters()"
                     >
                     <span class="font-(--font-primary--family) text-[0.72rem] text-[#555] transition-colors group-hover:text-black">{{ val | strip }}</span>
                   </label>
@@ -266,23 +266,12 @@
         x-show="!loading"
         class="w-full"
       >
-        <form
-          id="collection-filter-form-{{ section.id }}"
-          method="get"
-          action="{{ collection_obj.url }}"
-          class="w-full"
-          @submit.prevent="applyFilters($el)"
-        >
-          <input type="hidden" name="sort_by" :value="sortBy">
-
           {%- if collection_obj.products.size > 0 -%}
 
             {%- comment -%}
               CSS columns masonry:
               — 2 columns on mobile, 3 on desktop
-              — Odd-indexed cards (0,2,4… = left/right col) get default tall image
-              — Even-indexed cards (1,3,5… = middle col on desktop, right col on mobile)
-                get class card--offset → shorter image via <style> below
+              — col_pos 1 (middle column on desktop) gets card--offset → shorter image
             {%- endcomment -%}
             <div class="columns-2 gap-x-3 md:columns-3 md:gap-x-5">
               {%- for product in collection_obj.products -%}
@@ -317,7 +306,6 @@
               {%- endif -%}
             </div>
           {%- endif -%}
-        </form>
 
         {%- comment -%} ── Pagination ──────────────────────────────── {%- endcomment -%}
         {%- if paginate.pages > 1 -%}
@@ -326,7 +314,7 @@
               <button
                 type="button"
                 class="px-5 py-2 font-(--font-primary--family) text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-40"
-                @click="fetchPage('{{ paginate.previous.url | escape }}', true)"
+                @click="fetchPage('{{ paginate.previous.url | escape }}')"
               >
                 ← Prev
               </button>
@@ -337,7 +325,7 @@
                 <button
                   type="button"
                   class="flex h-8 w-8 items-center justify-center font-(--font-primary--family) text-[0.65rem] font-semibold text-[#bbb] transition-colors hover:text-black"
-                  @click="fetchPage('{{ part.url | escape }}', true)"
+                  @click="fetchPage('{{ part.url | escape }}')"
                 >
                   {{ part.title }}
                 </button>
@@ -358,7 +346,7 @@
               <button
                 type="button"
                 class="px-5 py-2 font-(--font-primary--family) text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-40"
-                @click="fetchPage('{{ paginate.next.url | escape }}', true)"
+                @click="fetchPage('{{ paginate.next.url | escape }}')"
               >
                 Next →
               </button>
@@ -378,30 +366,49 @@
       mobileFiltersOpen: false,
       activeTab: 'all',
       loading: false,
+      root: rootEl,
       collectionUrl: rootEl.dataset.collectionUrl || '',
       sortBy: rootEl.dataset.sortBy || 'manual',
       sectionId: rootEl.id.replace('section-', ''),
 
       init() {
-        const params = new URLSearchParams(window.location.search);
-        const s = params.get('sort_by') || this.sortBy;
+        const s = new URLSearchParams(window.location.search).get('sort_by') || this.sortBy;
         if (s === 'best-selling')      this.activeTab = 'best';
         else if (s === 'created-desc') this.activeTab = 'new';
         else                           this.activeTab = 'all';
         this.sortBy = s;
       },
 
-      async fetchPage(url, scrollToTop = false) {
+      /* ── Core fetch: replaces results AND sidebar from server HTML ── */
+      async fetchPage(url, scrollToTop) {
         this.loading = true;
         if (scrollToTop) window.scrollTo({ top: 0, behavior: 'smooth' });
         try {
           const res  = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
           const html = await res.text();
           const doc  = new DOMParser().parseFromString(html, 'text/html');
-          const next = doc.getElementById('collection-results-' + this.sectionId);
-          if (next) {
-            document.getElementById('collection-results-' + this.sectionId).innerHTML = next.innerHTML;
+
+          /* Replace product results */
+          const nextResults = doc.getElementById('collection-results-' + this.sectionId);
+          const curResults  = document.getElementById('collection-results-' + this.sectionId);
+          if (nextResults && curResults) curResults.innerHTML = nextResults.innerHTML;
+
+          /* Replace sidebar so checkboxes reflect server-confirmed active state */
+          const nextSidebar = doc.querySelector('#section-' + this.sectionId + ' aside');
+          const curSidebar  = this.root.querySelector('aside');
+          if (nextSidebar && curSidebar) {
+            const wasOpen = this.mobileFiltersOpen;
+            curSidebar.innerHTML = nextSidebar.innerHTML;
+            /* Re-attach Alpine @change listeners after innerHTML swap */
+            curSidebar.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+              cb.addEventListener('change', () => this.applyFilters());
+            });
+            curSidebar.querySelectorAll('input[type="number"], input[type="range"]').forEach(inp => {
+              inp.addEventListener('change', () => this.applyFilters());
+            });
+            this.mobileFiltersOpen = wasOpen;
           }
+
           history.pushState({}, '', url);
         } catch (e) {
           console.error('[collection-explore] fetch failed:', e);
@@ -410,45 +417,56 @@
         }
       },
 
+      /* ── Build URL purely from current sidebar DOM state ── */
+      buildFilterUrl() {
+        const u       = new URL(this.collectionUrl, window.location.origin);
+        const sidebar = this.root.querySelector('aside');
+
+        if (sidebar) {
+          /* Checkboxes */
+          sidebar.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+            if (cb.name) u.searchParams.append(cb.name, cb.value);
+          });
+
+          /* Price range — number inputs take priority, range inputs fill gaps */
+          const seen = new Set();
+          sidebar.querySelectorAll('input[type="number"]').forEach(inp => {
+            if (inp.name && inp.value !== '') {
+              u.searchParams.set(inp.name, inp.value);
+              seen.add(inp.name);
+            }
+          });
+          sidebar.querySelectorAll('input[type="range"]').forEach(inp => {
+            if (inp.name && inp.value !== '' && !seen.has(inp.name)) {
+              u.searchParams.set(inp.name, inp.value);
+            }
+          });
+        }
+
+        if (this.sortBy && this.sortBy !== 'manual') {
+          u.searchParams.set('sort_by', this.sortBy);
+        }
+
+        return u.toString();
+      },
+
+      applyFilters() {
+        this.fetchPage(this.buildFilterUrl(), false);
+      },
+
       applySort(val) {
         this.sortBy = val;
-        const u = new URL(window.location.href);
-        u.searchParams.set('sort_by', val);
-        this.fetchPage(u.toString(), false);
+        this.fetchPage(this.buildFilterUrl(), false);
       },
 
-      applyFilters(form) {
-        if (!form) return;
-        const u = new URL(this.collectionUrl, window.location.origin);
-        // Carry over any existing filter params from the current URL
-        // (except sort_by which we set explicitly below)
-        const current = new URLSearchParams(window.location.search);
-        current.forEach((val, key) => {
-          if (key !== 'sort_by' && key !== 'page') {
-            u.searchParams.append(key, val);
-          }
-        });
-        // Now apply checked boxes — clear them first to avoid duplication
-        const filterNames = new Set();
-        form.querySelectorAll('input[type="checkbox"]')
-          .forEach(cb => filterNames.add(cb.name));
-        filterNames.forEach(name => u.searchParams.delete(name));
-        form.querySelectorAll('input[type="checkbox"]:checked')
-          .forEach(cb => u.searchParams.append(cb.name, cb.value));
-        // Price range inputs
-        form.querySelectorAll('input[type="range"], input[type="number"]')
-          .forEach(r => { if (r.name && r.value !== '') u.searchParams.set(r.name, r.value); });
-        if (this.sortBy) u.searchParams.set('sort_by', this.sortBy);
-        this.fetchPage(u.toString(), false);
-      },
-
+      /* Shopify gives us a ready-made URL with that filter already removed */
       removeFilter(urlToRemove) {
         this.fetchPage(urlToRemove, false);
       },
 
       clearAllFilters() {
         const u = new URL(this.collectionUrl, window.location.origin);
-        if (this.sortBy) u.searchParams.set('sort_by', this.sortBy);
+        if (this.sortBy && this.sortBy !== 'manual') u.searchParams.set('sort_by', this.sortBy);
         this.fetchPage(u.toString(), false);
       },
     }
