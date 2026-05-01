@@ -5,7 +5,7 @@
     - product      {Object}  Shopify product object (required)
     - lazy         {Boolean} Lazy-load image (default: true)
     - show_vendor  {Boolean} Show vendor label (default: false)
-    - aspect       {String}  Card image aspect ratio class (default: 'aspect-[3/4]')
+    - aspect       {String}  Card image aspect ratio (default: 'aspect-[3/4]')
 {%- endcomment -%}
 
 {%- liquid
@@ -17,9 +17,9 @@
 -%}
 
 <article
-  class="product-card group relative flex flex-col bg-white"
+  class="group relative flex flex-col"
   x-data="{
-    activeColor: {{ current_var.id | json }},
+    activeVariantId: {{ current_var.id | json }},
     addedToCart: false,
     addingToCart: false,
     async addToCart() {
@@ -28,12 +28,12 @@
         const res = await fetch('/cart/add.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: this.activeColor, quantity: 1 })
+          body: JSON.stringify({ id: this.activeVariantId, quantity: 1 })
         });
         if (res.ok) {
           this.addedToCart = true;
           window.dispatchEvent(new CustomEvent('cart:refresh'));
-          setTimeout(() => this.addedToCart = false, 2000);
+          setTimeout(() => this.addedToCart = false, 2200);
         }
       } finally {
         this.addingToCart = false;
@@ -42,98 +42,83 @@
   }"
 >
 
-  {%- comment -%} ── Image wrapper ──────────────────────────────────── {%- endcomment -%}
-  <a
+  {%- comment -%} ── Image ────────────────────────────────────────── {%- endcomment -%}
+  
     href="{{ product_url }}"
-    class="{{ aspect }} relative block overflow-hidden bg-[#e8e8e8]"
+    class="{{ aspect }} relative block overflow-hidden bg-[#efefef]"
     aria-label="{{ product.title | escape }}"
+    tabindex="0"
   >
     {%- if product.featured_media -%}
       {{
         product.featured_media
         | image_url: width: 800
         | image_tag:
-          class: 'absolute inset-0 h-full w-full object-contain p-[5%] transition-transform duration-500 ease-out group-hover:scale-[1.04]',
+          class: 'absolute inset-0 h-full w-full object-contain p-[6%] transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.05]',
           loading: lazy | ternary: 'lazy', 'eager',
           alt: product.featured_media.alt | escape | default: product.title,
           widths: '300,400,600,800',
           sizes: '(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 28vw'
       }}
     {%- else -%}
-      <span class="absolute inset-0 flex items-center justify-center text-[#aaa]">
-        {{ 'image' | placeholder_svg_tag: 'w-16 h-16 opacity-20' }}
+      <span class="absolute inset-0 flex items-center justify-center text-[#ccc]">
+        {{ 'image' | placeholder_svg_tag: 'w-14 h-14 opacity-20' }}
       </span>
     {%- endif -%}
 
     {%- if product.compare_at_price > product.price -%}
-      <span class="absolute left-[3%] top-[3%] bg-black px-2 py-0.5 text-[0.55rem] font-semibold uppercase tracking-widest text-white">
+      <span class="absolute left-3 top-3 bg-black px-2 py-0.5 font-[--font-primary--family] text-[0.5rem] font-semibold uppercase tracking-[0.2em] text-white">
         Sale
       </span>
     {%- endif -%}
   </a>
 
-  {%- comment -%} ── Card body ──────────────────────────────────────── {%- endcomment -%}
-  <div class="flex flex-col gap-y-2 px-0 pb-0 pt-3">
+  {%- comment -%} ── Card body ──────────────────────────────────── {%- endcomment -%}
+  <div class="flex flex-col gap-3 pt-4">
 
     {%- if show_vendor and product.vendor != blank -%}
-      <p class="text-[0.6rem] uppercase tracking-[0.18em] text-[#888]">
+      <p class="font-[--font-primary--family] text-[0.55rem] uppercase tracking-[0.2em] text-[#aaa]">
         {{ product.vendor }}
       </p>
     {%- endif -%}
 
-    {%- comment -%} Product type / label {%- endcomment -%}
-    <p class="text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-[#555]">
-      {%- if product.type != blank -%}
-        {{ product.type }}
-      {%- else -%}
-        {{ 'products.product.product' | t | default: 'Product' }}
-      {%- endif -%}
-    </p>
+    {%- comment -%} Title + price row {%- endcomment -%}
+    <div class="flex items-baseline justify-between gap-3">
+      <a href="{{ product_url }}" class="font-[--font-primary--family] text-[0.75rem] font-medium leading-snug tracking-tight text-black transition-opacity hover:opacity-60">
+        {{ product.title }}
+      </a>
+      <span class="shrink-0 font-[--font-primary--family] text-[0.7rem] text-[#555]">
+        {{ current_var.price | money }}
+      </span>
+    </div>
 
-    {%- comment -%} ── Color swatches ──────────────────────────────── {%- endcomment -%}
-    {%- assign color_option = nil -%}
-    {%- for option in product.options_with_values -%}
-      {%- assign option_name_lower = option.name | downcase -%}
-      {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
-        {%- assign color_option = option -%}
-        {%- assign color_option_index = forloop.index0 -%}
-        {%- break -%}
-      {%- endif -%}
-    {%- endfor -%}
+    {%- comment -%} ── Bottom row: swatches + add to cart ────────── {%- endcomment -%}
+    <div class="flex items-center justify-between gap-3">
 
-    {%- comment -%} ── ADD TO CART row ─────────────────────────────── {%- endcomment -%}
-    <div class="flex items-center gap-x-3">
-
-      <button
-        type="button"
-        @click="addToCart()"
-        :disabled="addingToCart"
-        class="shrink-0 text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity duration-150 hover:opacity-50 disabled:cursor-wait disabled:opacity-40"
-        aria-label="{{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}"
-      >
-        <span x-show="!addedToCart && !addingToCart">
-          {{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}
-        </span>
-        <span x-show="addingToCart" x-cloak>…</span>
-        <span x-show="addedToCart" x-cloak class="text-green-600">✓ Added</span>
-      </button>
+      {%- comment -%} Color swatches ─────────────────────────────── {%- endcomment -%}
+      {%- assign color_option = nil -%}
+      {%- for option in product.options_with_values -%}
+        {%- assign option_name_lower = option.name | downcase -%}
+        {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
+          {%- assign color_option = option -%}
+          {%- assign color_option_index = forloop.index0 -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
 
       {%- if color_option != nil -%}
-        <div class="flex items-center gap-x-1.5" role="group" aria-label="Color options">
+        <div class="flex items-center gap-1.5" role="group" aria-label="Color options">
           {%- for value in color_option.values -%}
             {%- assign swatch_variant = nil -%}
             {%- for variant in product.variants -%}
-              {%- assign v_color = variant.options[color_option_index] -%}
-              {%- if v_color == value and variant.available -%}
+              {%- if variant.options[color_option_index] == value and variant.available -%}
                 {%- assign swatch_variant = variant -%}
                 {%- break -%}
               {%- endif -%}
             {%- endfor -%}
-
             {%- if swatch_variant == nil -%}
               {%- for variant in product.variants -%}
-                {%- assign v_color = variant.options[color_option_index] -%}
-                {%- if v_color == value -%}
+                {%- if variant.options[color_option_index] == value -%}
                   {%- assign swatch_variant = variant -%}
                   {%- break -%}
                 {%- endif -%}
@@ -142,10 +127,6 @@
 
             {%- if swatch_variant -%}
               {%- assign value_handle = value | handleize -%}
-              {%- comment -%}
-                Map common colour names → CSS colours.
-                Extend this list for your store's palette.
-              {%- endcomment -%}
               {%- assign css_color = value_handle
                 | replace: 'orange', '#e86012'
                 | replace: 'rust',   '#c0510e'
@@ -159,15 +140,16 @@
                 | replace: 'gray',   '#888888'
                 | replace: 'pink',   '#e879a0'
                 | replace: 'yellow', '#f5c400'
+                | replace: 'cream',  '#f0ead6'
+                | replace: 'sand',   '#c8b89a'
               -%}
-
               <button
                 type="button"
-                @click="activeColor = {{ swatch_variant.id }}"
-                :class="activeColor === {{ swatch_variant.id }}
-                  ? 'ring-2 ring-black ring-offset-1 scale-110'
-                  : 'ring-1 ring-transparent hover:ring-[#bbb] hover:ring-offset-1'"
-                class="h-[3vw] w-[3vw] min-h-[12px] min-w-[12px] lg:h-[0.9vw] lg:w-[0.9vw] lg:min-h-[10px] lg:min-w-[10px] rounded-full transition-all duration-150"
+                @click.prevent="activeVariantId = {{ swatch_variant.id }}"
+                :class="activeVariantId === {{ swatch_variant.id }}
+                  ? 'ring-2 ring-black ring-offset-[2.5px] scale-110'
+                  : 'ring-1 ring-transparent hover:ring-[#ccc] hover:ring-offset-[2px]'"
+                class="h-3.5 w-3.5 rounded-full transition-all duration-200 will-change-transform"
                 style="background-color: {{ css_color }};"
                 aria-label="{{ value | escape }}"
                 title="{{ value | escape }}"
@@ -175,8 +157,23 @@
             {%- endif -%}
           {%- endfor -%}
         </div>
+      {%- else -%}
+        <span></span>
       {%- endif -%}
-    </div>
 
+      {%- comment -%} Add to cart ────────────────────────────────── {%- endcomment -%}
+      <button
+        type="button"
+        @click.prevent="addToCart()"
+        :disabled="addingToCart"
+        class="shrink-0 font-[--font-primary--family] text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-black transition-opacity duration-150 hover:opacity-40 disabled:cursor-wait disabled:opacity-30"
+        aria-label="Add to cart"
+      >
+        <span x-show="!addedToCart && !addingToCart">Add to cart</span>
+        <span x-show="addingToCart" x-cloak>…</span>
+        <span x-show="addedToCart" x-cloak class="text-black">✓ Added</span>
+      </button>
+
+    </div>
   </div>
 </article>

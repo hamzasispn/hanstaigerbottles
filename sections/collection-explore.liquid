@@ -1,13 +1,11 @@
 {%- comment -%}
   Section: collection-explore.liquid
-  ─────────────────────────────────────────────────────
-  • Tailwind CSS only — zero raw <style> blocks
+  • Tailwind CSS only — zero inline styles
   • Alpine.js for interactivity
   • AJAX filtering & sorting — NO full page reloads
   • Shopify Storefront Filtering (Online Store 2.0)
-  • JSON-safe: all Liquid values assigned to data-* attrs
-    so Alpine reads them from the DOM, never embedded
-    inside a JS object literal where quotes can break.
+  • Smooth scroll-to-top on page change
+  • No translation strings, no sort dropdown
 {%- endcomment -%}
 
 {%- liquid
@@ -25,74 +23,59 @@
   assign active_filters = collection_obj.active_filters | default: empty
 -%}
 
-{%- comment -%} ══════════════════════════════════════════════
-    SECTION ROOT
-    All Liquid→JS data is stored in data-* attributes and
-    read by Alpine via $el.dataset — no Liquid inside JSON.
-═══════════════════════════════════════════════════ {%- endcomment -%}
 <section
   id="section-{{ section.id }}"
-  class="collection-explore w-full bg-white px-[clamp(1rem,4vw,5rem)] py-[clamp(2rem,5vw,6rem)]"
+  class="collection-explore w-full bg-white px-[clamp(1.25rem,5vw,5rem)] py-[clamp(2rem,5vw,6rem)]"
   data-collection-url="{{ collection_obj.url }}"
   data-sort-by="{{ collection_obj.sort_by | escape }}"
   x-data="collectionExplore($el)"
   x-init="init()"
 >
 
-  {%- comment -%} ── Section heading ───────────────────────────────── {%- endcomment -%}
-  <h2 class="mb-[3vw] text-[clamp(1.6rem,3.2vw,3rem)] font-light leading-tight tracking-tight text-black">
+  <h2 class="mb-10 font-[--font-primary--family] text-[clamp(1.8rem,3.5vw,3.4rem)] font-light tracking-tight text-black">
     {{ heading }}
   </h2>
 
-  {%- comment -%} ── Layout: sidebar + main ────────────────────────── {%- endcomment -%}
-  <div class="flex flex-col gap-[3vw] md:flex-row md:items-start">
+  <div class="flex flex-col gap-10 md:flex-row md:items-start">
 
-    {%- comment -%} ════════════════════════════════════════════════════
-        SIDEBAR — FILTERS
-    ════════════════════════════════════════════════════ {%- endcomment -%}
-    <aside class="w-full shrink-0 md:sticky md:top-6 md:w-[clamp(11rem,16vw,18rem)]">
+    {%- comment -%} ── SIDEBAR ──────────────────────────────────────── {%- endcomment -%}
+    <aside class="w-full shrink-0 md:sticky md:top-8 md:w-52">
 
       {%- comment -%} Mobile toggle {%- endcomment -%}
       <button
-        class="mb-3 flex w-full items-center justify-between border border-black px-3 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.2em] md:hidden"
+        class="mb-4 flex w-full items-center justify-between py-2 font-[--font-primary--family] text-[0.62rem] font-semibold uppercase tracking-[0.25em] text-black md:hidden"
         @click="mobileFiltersOpen = !mobileFiltersOpen"
         :aria-expanded="mobileFiltersOpen.toString()"
       >
-        Filters
+        <span>Filters</span>
         <svg
-          class="h-3 w-3 transition-transform duration-200"
+          class="h-3 w-3 transition-transform duration-300"
           :class="mobileFiltersOpen ? 'rotate-180' : ''"
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/>
         </svg>
       </button>
 
       <div
-        class="divide-y divide-[#e0e0e0]"
-        :class="mobileFiltersOpen ? 'flex flex-col' : 'hidden md:flex md:flex-col'"
+        class="flex flex-col gap-8"
+        :class="mobileFiltersOpen ? 'flex' : 'hidden md:flex'"
       >
 
-        {%- comment -%} ══ Shopify Storefront Filters ══════ {%- endcomment -%}
+        {%- comment -%} ── Shopify Storefront Filters ──────────────── {%- endcomment -%}
         {%- if enable_filtering and collection_obj.filters.size > 0 -%}
           {%- for filter in collection_obj.filters -%}
-            <details
-              class="group py-[1.2vw] first:pt-0"
-              {% if forloop.index <= 2 %}open{% endif %}
-            >
-              <summary class="flex cursor-pointer select-none list-none items-center justify-between [&::-webkit-details-marker]:hidden">
-                <span class="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-black">
-                  {{ filter.label }}
-                </span>
-                <span class="text-[0.8rem] text-[#666] transition-transform duration-200 group-open:rotate-45">+</span>
-              </summary>
+            <div class="flex flex-col gap-3" {{ block.shopify_attributes }}>
+              <p class="font-[--font-primary--family] text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-black">
+                {{ filter.label }}
+              </p>
 
-              <div class="mt-[0.8vw] flex flex-col gap-y-[0.5vw]">
-                {%- case filter.type -%}
+              {%- case filter.type -%}
 
-                {%- when 'list' -%}
+              {%- when 'list' -%}
+                <div class="flex flex-col gap-2">
                   {%- for filter_value in filter.values -%}
-                    <label class="group/label flex cursor-pointer items-center gap-x-2">
+                    <label class="group flex cursor-pointer items-center gap-2.5">
                       <input
                         type="checkbox"
                         name="{{ filter_value.param_name }}"
@@ -100,196 +83,153 @@
                         {% if filter_value.active %}checked{% endif %}
                         {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}
                         class="h-3 w-3 accent-black"
-                        @change="applyFilters($el.closest('form'))"
+                        @change="applyFilters($el.closest('form') || document.getElementById('collection-filter-form-{{ section.id }}'))"
                       >
-                      <span class="text-[0.65rem] text-[#333] group-hover/label:text-black">
+                      <span class="font-[--font-primary--family] text-[0.62rem] text-[#555] transition-colors group-hover:text-black">
                         {{ filter_value.label }}
                         {%- if section.settings.show_filter_count -%}
-                          <span class="text-[#aaa]">({{ filter_value.count }})</span>
+                          <span class="text-[#bbb]">({{ filter_value.count }})</span>
                         {%- endif -%}
                       </span>
                     </label>
                   {%- endfor -%}
+                </div>
 
-                {%- when 'price_range' -%}
-                  <div
-                    class="flex flex-col gap-y-2"
-                    x-data="{
-                      minVal: {{ filter.min_value.value | default: filter.range_min | divided_by: 100.0 }},
-                      maxVal: {{ filter.max_value.value | default: filter.range_max | divided_by: 100.0 }},
-                      rangeMin: {{ filter.range_min | divided_by: 100.0 }},
-                      rangeMax: {{ filter.range_max | divided_by: 100.0 }}
-                    }"
-                  >
-                    <div class="flex items-center gap-x-1">
-                      <span class="text-[0.6rem] text-[#666]">{{ cart.currency.symbol }}<span x-text="minVal.toFixed(0)"></span></span>
-                      <span class="text-[0.6rem] text-[#bbb]">–</span>
-                      <span class="text-[0.6rem] text-[#666]">{{ cart.currency.symbol }}<span x-text="maxVal.toFixed(0)"></span></span>
-                    </div>
-                    <div class="relative h-[3px] w-full rounded-full bg-[#ddd]">
-                      <div
-                        class="absolute h-full rounded-full bg-black"
-                        :style="`left:${((minVal-rangeMin)/(rangeMax-rangeMin))*100}%; right:${((rangeMax-maxVal)/(rangeMax-rangeMin))*100}%`"
-                      ></div>
-                      <input
-                        type="range"
-                        class="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent"
-                        :min="rangeMin" :max="rangeMax" step="1"
-                        x-model.number="minVal"
-                        name="{{ filter.min_value.param_name }}"
-                        @change="applyFilters($el.closest('form'))"
-                      >
-                      <input
-                        type="range"
-                        class="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent"
-                        :min="rangeMin" :max="rangeMax" step="1"
-                        x-model.number="maxVal"
-                        name="{{ filter.max_value.param_name }}"
-                        @change="applyFilters($el.closest('form'))"
-                      >
-                    </div>
+              {%- when 'price_range' -%}
+                <div
+                  class="flex flex-col gap-3"
+                  x-data="{
+                    minVal: {{ filter.min_value.value | default: filter.range_min | divided_by: 100.0 }},
+                    maxVal: {{ filter.max_value.value | default: filter.range_max | divided_by: 100.0 }},
+                    rangeMin: {{ filter.range_min | divided_by: 100.0 }},
+                    rangeMax: {{ filter.range_max | divided_by: 100.0 }}
+                  }"
+                >
+                  <div class="flex items-center gap-1 font-[--font-primary--family] text-[0.6rem] text-[#666]">
+                    <span>{{ cart.currency.symbol }}<span x-text="minVal.toFixed(0)"></span></span>
+                    <span class="text-[#ccc]">—</span>
+                    <span>{{ cart.currency.symbol }}<span x-text="maxVal.toFixed(0)"></span></span>
                   </div>
+                  <div class="relative h-px w-full bg-[#ddd]">
+                    <div
+                      class="absolute top-0 h-px bg-black"
+                      :style="`left:${((minVal-rangeMin)/(rangeMax-rangeMin))*100}%; right:${((rangeMax-maxVal)/(rangeMax-rangeMin))*100}%`"
+                    ></div>
+                    <input
+                      type="range"
+                      class="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent"
+                      :min="rangeMin" :max="rangeMax" step="1"
+                      x-model.number="minVal"
+                      name="{{ filter.min_value.param_name }}"
+                      @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                    >
+                    <input
+                      type="range"
+                      class="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent"
+                      :min="rangeMin" :max="rangeMax" step="1"
+                      x-model.number="maxVal"
+                      name="{{ filter.max_value.param_name }}"
+                      @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                    >
+                  </div>
+                </div>
 
-                {%- endcase -%}
-              </div>
-            </details>
+              {%- endcase -%}
+            </div>
           {%- endfor -%}
         {%- endif -%}
 
-        {%- comment -%} ══ Schema blocks — fallback filter groups ═══════ {%- endcomment -%}
+        {%- comment -%} ── Schema block fallback filter groups ─────── {%- endcomment -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'filter_group' -%}
-            <details
-              class="group py-[1.2vw] first:pt-0"
-              open
-              {{ block.shopify_attributes }}
-            >
-              <summary class="flex cursor-pointer select-none list-none items-center justify-between [&::-webkit-details-marker]:hidden">
-                <span class="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-black">
-                  {{ block.settings.label }}
-                </span>
-                <span class="text-[0.8rem] text-[#666] transition-transform duration-200 group-open:rotate-45">+</span>
-              </summary>
-              <div class="mt-[0.8vw] flex flex-col gap-y-[0.4vw]">
+            <div class="flex flex-col gap-3" {{ block.shopify_attributes }}>
+              <p class="font-[--font-primary--family] text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-black">
+                {{ block.settings.label }}
+              </p>
+              <div class="flex flex-col gap-2">
                 {%- assign filter_values = block.settings.values | split: ',' -%}
                 {%- for val in filter_values -%}
-                  <label class="group/label flex cursor-pointer items-center gap-x-2 py-0.5">
+                  <label class="group flex cursor-pointer items-center gap-2.5">
                     <input type="checkbox" class="h-3 w-3 accent-black">
-                    <span class="text-[0.65rem] text-[#333] group-hover/label:text-black">{{ val | strip }}</span>
+                    <span class="font-[--font-primary--family] text-[0.62rem] text-[#555] transition-colors group-hover:text-black">{{ val | strip }}</span>
                   </label>
                 {%- endfor -%}
               </div>
-            </details>
+            </div>
           {%- endif -%}
         {%- endfor -%}
+
+        {%- comment -%} ── Active filter pills ──────────────────────── {%- endcomment -%}
+        {%- if active_filters.size > 0 -%}
+          <div class="flex flex-col gap-2 pt-2">
+            <p class="font-[--font-primary--family] text-[0.55rem] font-semibold uppercase tracking-[0.25em] text-[#999]">Active</p>
+            <div class="flex flex-wrap gap-1.5">
+              {%- for active_filter in active_filters -%}
+                <button
+                  class="group flex items-center gap-1 bg-black px-2.5 py-1 font-[--font-primary--family] text-[0.55rem] uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-70"
+                  @click="removeFilter('{{ active_filter.url_to_remove | escape }}')"
+                  type="button"
+                >
+                  {{ active_filter.label }}: {{ active_filter.value.label | default: active_filter.value }}
+                  <svg class="h-2 w-2" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M2 2l8 8M10 2L2 10"/>
+                  </svg>
+                </button>
+              {%- endfor -%}
+              <button
+                type="button"
+                class="font-[--font-primary--family] text-[0.55rem] uppercase tracking-[0.2em] text-[#aaa] transition-colors hover:text-black"
+                @click="clearAllFilters()"
+              >
+                Clear all
+              </button>
+            </div>
+          </div>
+        {%- endif -%}
 
       </div>
     </aside>
 
-    {%- comment -%} ════════════════════════════════════════════════════
-        MAIN CONTENT
-    ════════════════════════════════════════════════════ {%- endcomment -%}
+    {%- comment -%} ── MAIN ─────────────────────────────────────────── {%- endcomment -%}
     <div class="min-w-0 flex-1">
 
-      {%- comment -%} ── Top toolbar: tabs + active pills + sort ──────── {%- endcomment -%}
-      <div class="mb-[2vw] flex flex-wrap items-center justify-between gap-y-3 border-b border-[#e0e0e0] pb-3">
-
-        {%- comment -%} Tabs {%- endcomment -%}
-        <div class="flex items-center gap-x-[2vw]">
+      {%- comment -%} ── Tabs ────────────────────────────────────────── {%- endcomment -%}
+      {%- if enable_sorting -%}
+        <div class="mb-8 flex items-center gap-7">
           <button
-            class="relative text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-black
-                   after:absolute after:bottom-[-2px] after:left-0 after:h-[1.5px] after:w-full after:bg-current
-                   after:transition-transform after:duration-200 after:ease-in-out
-                   after:origin-left"
-            :class="activeTab === 'all' ? 'after:scale-x-100' : 'after:scale-x-0 text-[#777] hover:text-black'"
+            class="relative font-[--font-primary--family] text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            :class="activeTab === 'all' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
             @click="activeTab = 'all'; applySort('manual')"
-            aria-label="Show all products"
           >
-            All<sup class="ml-0.5 text-[0.5rem] text-[#888]">{{ collection_obj.products_count }}</sup>
+            All<sup class="ml-0.5 text-[0.45rem]">{{ collection_obj.products_count }}</sup>
           </button>
-
-          {%- if enable_sorting -%}
-            <button
-              class="relative text-[0.6rem] font-semibold uppercase tracking-[0.2em]
-                     after:absolute after:bottom-[-2px] after:left-0 after:h-[1.5px] after:w-full after:bg-current
-                     after:transition-transform after:duration-200 after:ease-in-out after:origin-left"
-              :class="activeTab === 'best' ? 'after:scale-x-100 text-black' : 'after:scale-x-0 text-[#777] hover:text-black'"
-              @click="activeTab = 'best'; applySort('best-selling')"
-            >
-              Best sellers
-            </button>
-
-            <button
-              class="relative text-[0.6rem] font-semibold uppercase tracking-[0.2em]
-                     after:absolute after:bottom-[-2px] after:left-0 after:h-[1.5px] after:w-full after:bg-current
-                     after:transition-transform after:duration-200 after:ease-in-out after:origin-left"
-              :class="activeTab === 'top' ? 'after:scale-x-100 text-black' : 'after:scale-x-0 text-[#777] hover:text-black'"
-              @click="activeTab = 'top'; applySort('created-desc')"
-            >
-              Top rated
-            </button>
-          {%- endif -%}
+          <button
+            class="relative font-[--font-primary--family] text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            :class="activeTab === 'best' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
+            @click="activeTab = 'best'; applySort('best-selling')"
+          >
+            Best sellers
+          </button>
+          <button
+            class="relative font-[--font-primary--family] text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            :class="activeTab === 'new' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
+            @click="activeTab = 'new'; applySort('created-desc')"
+          >
+            New arrivals
+          </button>
         </div>
+      {%- endif -%}
 
-        {%- comment -%} Active filter pills + clear + sort select ──────── {%- endcomment -%}
-        <div class="flex flex-wrap items-center gap-2">
-          {%- if active_filters.size > 0 -%}
-            {%- for active_filter in active_filters -%}
-              <button
-                class="inline-flex cursor-pointer items-center gap-[0.35rem] border border-[#ccc]
-                       px-[0.65rem] py-[0.2rem] text-[0.65rem] uppercase tracking-[0.1em]
-                       transition-colors duration-150 hover:bg-[#f0f0f0]"
-                @click="removeFilter('{{ active_filter.url_to_remove | escape }}')"
-                type="button"
-              >
-                {{ active_filter.label }}: {{ active_filter.value.label | default: active_filter.value }}
-                <svg class="h-[0.625rem] w-[0.625rem]" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M2 2l8 8M10 2L2 10"/>
-                </svg>
-              </button>
-            {%- endfor -%}
-            <button
-              type="button"
-              class="text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-[#888] underline underline-offset-2 hover:text-black"
-              @click="clearAllFilters()"
-            >
-              Clear all<sup>{{ active_filters.size }}</sup>
-            </button>
-          {%- endif -%}
-
-          {%- if enable_sorting and collection_obj.sort_options.size > 0 -%}
-            <select
-              class="ml-auto border-0 bg-transparent text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-[#555] outline-none hover:text-black"
-              x-model="sortBy"
-              @change="applySort($event.target.value)"
-              aria-label="Sort by"
-            >
-              {%- for sort_option in collection_obj.sort_options -%}
-                <option
-                  value="{{ sort_option.value }}"
-                  {% if collection_obj.sort_by == sort_option.value %}selected{% endif %}
-                >
-                  {{ sort_option.name }}
-                </option>
-              {%- endfor -%}
-            </select>
-          {%- endif -%}
-        </div>
-      </div>
-
-      {%- comment -%} ── Loading overlay (shown during AJAX fetch) ────── {%- endcomment -%}
+      {%- comment -%} ── Loading ─────────────────────────────────────── {%- endcomment -%}
       <div
         x-show="loading"
         x-cloak
-        class="flex min-h-[20vw] w-full items-center justify-center"
+        class="flex min-h-64 w-full items-center justify-center"
       >
-        <svg class="h-7 w-7 animate-spin text-black" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-        </svg>
+        <div class="h-5 w-5 animate-spin rounded-full border border-black border-t-transparent"></div>
       </div>
 
-      {%- comment -%} ── Filter form + product grid (AJAX-replaced) ─────── {%- endcomment -%}
+      {%- comment -%} ── Results ─────────────────────────────────────── {%- endcomment -%}
       {%- paginate collection_obj.products by products_per_page -%}
 
       <div
@@ -304,22 +244,12 @@
           class="w-full"
           @submit.prevent="applyFilters($el)"
         >
-          <input type="hidden" name="sort_by" value="{{ collection_obj.sort_by }}">
+          <input type="hidden" name="sort_by" :value="sortBy">
 
           {%- if collection_obj.products.size > 0 -%}
-            <div class="
-              grid gap-[clamp(0.75rem,1.5vw,1.5rem)]
-              grid-cols-1
-              sm:grid-cols-2
-              md:grid-cols-3
-            ">
+            <div class="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 md:grid-cols-3">
               {%- for product in collection_obj.products -%}
-                <article class="
-                  product-card
-                  opacity-0 translate-y-[1.5vw]
-                  animate-[cardReveal_0.45s_ease_forwards]
-                  [animation-delay:calc({{ forloop.index0 }}*0.05s)]
-                ">
+                <article class="opacity-0 translate-y-4 animate-[cardReveal_0.5s_ease_forwards] [animation-delay:calc({{ forloop.index0 }}*60ms)]">
                   {% render 'product-card',
                     product: product,
                     lazy: forloop.index > 3,
@@ -329,12 +259,12 @@
               {%- endfor -%}
             </div>
           {%- else -%}
-            <div class="flex min-h-[30vw] flex-col items-center justify-center text-center">
-              <p class="text-[1.2rem] font-light text-[#aaa]">No products found.</p>
+            <div class="flex min-h-64 flex-col items-center justify-center gap-4 text-center">
+              <p class="font-[--font-primary--family] text-sm font-light text-[#aaa]">No products found.</p>
               {%- if active_filters.size > 0 -%}
                 <button
                   type="button"
-                  class="mt-4 text-[0.65rem] font-semibold uppercase tracking-widest underline underline-offset-2"
+                  class="font-[--font-primary--family] text-[0.6rem] font-semibold uppercase tracking-widest text-black underline underline-offset-4 transition-opacity hover:opacity-50"
                   @click="clearAllFilters()"
                 >
                   Clear filters
@@ -344,16 +274,16 @@
           {%- endif -%}
         </form>
 
-        {%- comment -%} ── Pagination ─────────────────────────────────── {%- endcomment -%}
+        {%- comment -%} ── Pagination ───────────────────────────────── {%- endcomment -%}
         {%- if paginate.pages > 1 -%}
-          <nav class="mt-[4vw] flex items-center justify-center gap-x-3" aria-label="Pagination">
+          <nav class="mt-16 flex items-center justify-center gap-2" aria-label="Pagination">
             {%- if paginate.previous -%}
               <button
                 type="button"
-                class="border border-black px-[2vw] py-[0.6vw] text-[0.6rem] font-semibold uppercase tracking-[0.2em] transition-colors hover:bg-black hover:text-white"
+                class="px-5 py-2 font-[--font-primary--family] text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-50"
                 @click="fetchPage('{{ paginate.previous.url | escape }}')"
               >
-                &larr; Prev
+                ← Prev
               </button>
             {%- endif -%}
 
@@ -361,18 +291,20 @@
               {%- if part.is_link -%}
                 <button
                   type="button"
-                  class="border border-[#ccc] px-[1.5vw] py-[0.6vw] text-[0.6rem] font-semibold uppercase tracking-[0.2em] hover:border-black"
+                  class="h-8 w-8 font-[--font-primary--family] text-[0.6rem] font-semibold text-[#aaa] transition-colors hover:text-black"
                   @click="fetchPage('{{ part.url | escape }}')"
                 >
                   {{ part.title }}
                 </button>
               {%- else -%}
                 {%- if part.title == paginate.current_page -%}
-                  <span class="border border-black bg-black px-[1.5vw] py-[0.6vw] text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-white">
+                  <span class="flex h-8 w-8 items-center justify-center bg-black font-[--font-primary--family] text-[0.6rem] font-semibold text-white">
                     {{ part.title }}
                   </span>
                 {%- else -%}
-                  <span class="text-[0.6rem] text-[#aaa]">{{ part.title }}</span>
+                  <span class="flex h-8 w-8 items-center justify-center font-[--font-primary--family] text-[0.6rem] text-[#ddd]">
+                    {{ part.title }}
+                  </span>
                 {%- endif -%}
               {%- endif -%}
             {%- endfor -%}
@@ -380,10 +312,10 @@
             {%- if paginate.next -%}
               <button
                 type="button"
-                class="border border-black px-[2vw] py-[0.6vw] text-[0.6rem] font-semibold uppercase tracking-[0.2em] transition-colors hover:bg-black hover:text-white"
+                class="px-5 py-2 font-[--font-primary--family] text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-50"
                 @click="fetchPage('{{ paginate.next.url | escape }}')"
               >
-                Next &rarr;
+                Next →
               </button>
             {%- endif -%}
           </nav>
@@ -395,38 +327,25 @@
   </div>
 </section>
 
-{%- comment -%} ══════════════════════════════════════════════
-    ALPINE COMPONENT — collectionExplore
-    • All Liquid values read from data-* attrs (no Liquid-in-JSON)
-    • AJAX fetch replaces only #collection-results-<id>
-    • URL bar updated with history.pushState — no reload
-═══════════════════════════════════════════════════ {%- endcomment -%}
 <script>
   function collectionExplore(rootEl) {
     return {
-      /* ── state ──────────────────────────────────────────── */
       mobileFiltersOpen: false,
       activeTab: 'all',
       loading: false,
-
-      /* read from data-* so Liquid never injects into JSON */
       collectionUrl: rootEl.dataset.collectionUrl || '',
       sortBy: rootEl.dataset.sortBy || 'manual',
-
       sectionId: rootEl.id.replace('section-', ''),
 
-      /* ── lifecycle ──────────────────────────────────────── */
       init() {
-        /* sync tab with current sort param on load */
         const params = new URLSearchParams(window.location.search);
         const s = params.get('sort_by') || this.sortBy;
         if (s === 'best-selling')  this.activeTab = 'best';
-        else if (s === 'created-desc') this.activeTab = 'top';
+        else if (s === 'created-desc') this.activeTab = 'new';
         else this.activeTab = 'all';
         this.sortBy = s;
       },
 
-      /* ── AJAX core ──────────────────────────────────────── */
       async fetchPage(url) {
         this.loading = true;
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -446,7 +365,6 @@
         }
       },
 
-      /* ── sort (tab clicks & select) ─────────────────────── */
       applySort(val) {
         this.sortBy = val;
         const u = new URL(window.location.href);
@@ -454,28 +372,21 @@
         this.fetchPage(u.toString());
       },
 
-      /* ── filter form submit ─────────────────────────────── */
       applyFilters(form) {
         if (!form) return;
-        const data = new FormData(form);
-        const u    = new URL(this.collectionUrl, window.location.origin);
-        /* collect all checked filter inputs */
+        const u = new URL(this.collectionUrl, window.location.origin);
         const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
         checkboxes.forEach(cb => u.searchParams.append(cb.name, cb.value));
-        /* price range inputs */
         const ranges = form.querySelectorAll('input[type="range"]');
         ranges.forEach(r => { if (r.name) u.searchParams.set(r.name, r.value); });
-        /* preserve sort */
         if (this.sortBy) u.searchParams.set('sort_by', this.sortBy);
         this.fetchPage(u.toString());
       },
 
-      /* ── remove a single active filter ─────────────────── */
       removeFilter(urlToRemove) {
         this.fetchPage(urlToRemove);
       },
 
-      /* ── clear all filters ──────────────────────────────── */
       clearAllFilters() {
         const u = new URL(this.collectionUrl, window.location.origin);
         if (this.sortBy) u.searchParams.set('sort_by', this.sortBy);
@@ -485,10 +396,9 @@
   }
 </script>
 
-{%- comment -%} Keyframe for card reveal — Tailwind v3 arbitrary animation {%- endcomment -%}
 <style>
   @keyframes cardReveal {
-    from { opacity: 0; transform: translateY(1.5vw); }
+    from { opacity: 0; transform: translateY(1rem); }
     to   { opacity: 1; transform: translateY(0); }
   }
   [x-cloak] { display: none !important; }
@@ -500,82 +410,24 @@
   "tag": "section",
   "class": "section-collection-explore",
   "settings": [
-    {
-      "type": "header",
-      "content": "Content"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Explore the collection"
-    },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection",
-      "info": "Leave blank to use the current collection page."
-    },
-    {
-      "type": "range",
-      "id": "products_per_page",
-      "label": "Products per page",
-      "min": 6,
-      "max": 48,
-      "step": 3,
-      "default": 12
-    },
-    {
-      "type": "header",
-      "content": "Product card"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "label": "Show vendor",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_filter_count",
-      "label": "Show filter counts",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Filtering & Sorting"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_filtering",
-      "label": "Enable Storefront filtering",
-      "default": true,
-      "info": "Requires filters set up in Shopify Admin > Navigation > Search & Discovery."
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_sorting",
-      "label": "Enable sorting tabs",
-      "default": true
-    }
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Explore the collection" },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave blank to use current collection page." },
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 6, "max": 48, "step": 3, "default": 12 },
+    { "type": "header", "content": "Product card" },
+    { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": false },
+    { "type": "checkbox", "id": "show_filter_count", "label": "Show filter counts", "default": true },
+    { "type": "header", "content": "Filtering & Sorting" },
+    { "type": "checkbox", "id": "enable_filtering", "label": "Enable Storefront filtering", "default": true, "info": "Requires filters in Shopify Admin > Navigation > Search & Discovery." },
+    { "type": "checkbox", "id": "enable_sorting", "label": "Enable sorting tabs", "default": true }
   ],
   "blocks": [
     {
       "type": "filter_group",
       "name": "Filter group (fallback)",
       "settings": [
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Group label",
-          "default": "Models"
-        },
-        {
-          "type": "text",
-          "id": "values",
-          "label": "Values (comma-separated)",
-          "default": "Option A, Option B, Option C"
-        }
+        { "type": "text", "id": "label", "label": "Group label", "default": "Models" },
+        { "type": "text", "id": "values", "label": "Values (comma-separated)", "default": "Option A, Option B, Option C" }
       ]
     }
   ],
@@ -583,20 +435,8 @@
     {
       "name": "Collection Explore",
       "blocks": [
-        {
-          "type": "filter_group",
-          "settings": {
-            "label": "Models",
-            "values": "Classic, Pro, Slim, XL"
-          }
-        },
-        {
-          "type": "filter_group",
-          "settings": {
-            "label": "Color",
-            "values": "Orange, Black, Blue, White"
-          }
-        }
+        { "type": "filter_group", "settings": { "label": "Models", "values": "Classic, Pro, Slim, XL" } },
+        { "type": "filter_group", "settings": { "label": "Color", "values": "Orange, Black, Blue, White" } }
       ]
     }
   ]

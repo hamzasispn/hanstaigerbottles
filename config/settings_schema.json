@@ -23,6 +23,29 @@
     ]
   },
   {
+    "name": "Theme Logo",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Add Light Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_image",
+        "label": "upload a logo for light backgrounds",
+      },
+      {
+        "type": "header",
+        "content": "Add Dark Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_image_dark",
+        "label": "upload a logo for dark backgrounds",
+      }
+    ]
+  },
+  {
     "name": "t:general.layout",
     "settings": [
       {
