@@ -5,6 +5,7 @@
   • AJAX filtering & sorting — NO full page reloads
   • Shopify Storefront Filtering (Online Store 2.0)
   • Scroll-to-top only on pagination, NOT on filter/sort change
+  • Masonry via CSS columns — 2nd column cards shorter everywhere
 {%- endcomment -%}
 
 {%- liquid
@@ -31,24 +32,24 @@
   x-init="init()"
 >
 
-  <h2 class="mb-10 font-(--font-primary--family) text-[clamp(1.8rem,3.5vw,3.4rem)] font-light tracking-tight text-black">
+  <h2 class="mb-12 font-(--font-primary--family) text-[clamp(2.2rem,4vw,4rem)] font-light tracking-tight text-black">
     {{ heading }}
   </h2>
 
   <div class="flex flex-col gap-10 md:flex-row md:items-start">
 
     {%- comment -%} ── SIDEBAR ──────────────────────────────────────── {%- endcomment -%}
-    <aside class="w-full shrink-0 md:sticky md:top-8 md:w-48">
+    <aside class="w-full shrink-0 md:sticky md:top-8 md:w-52">
 
       {%- comment -%} Mobile toggle {%- endcomment -%}
       <button
-        class="mb-5 flex w-full items-center justify-between py-2 font-(--font-primary--family) text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-black md:hidden"
+        class="mb-5 flex w-full items-center justify-between py-2 font-(--font-primary--family) text-xs font-semibold uppercase tracking-[0.25em] text-black md:hidden"
         @click="mobileFiltersOpen = !mobileFiltersOpen"
         :aria-expanded="mobileFiltersOpen.toString()"
       >
         <span>Filters</span>
         <svg
-          class="h-3 w-3 transition-transform duration-300"
+          class="h-3.5 w-3.5 transition-transform duration-300"
           :class="mobileFiltersOpen ? 'rotate-180' : ''"
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
@@ -64,27 +65,27 @@
         {%- comment -%} ── Shopify Storefront Filters ──────────────── {%- endcomment -%}
         {%- if enable_filtering and collection_obj.filters.size > 0 -%}
           {%- for filter in collection_obj.filters -%}
-            <div class="flex flex-col gap-3">
-              <p class="font-(--font-primary--family) text-[0.56rem] font-semibold uppercase tracking-[0.3em] text-black">
+            <div class="flex flex-col gap-3.5">
+              <p class="font-(--font-primary--family) text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-black">
                 {{ filter.label }}
               </p>
 
               {%- case filter.type -%}
 
               {%- when 'list' -%}
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2.5">
                   {%- for filter_value in filter.values -%}
-                    <label class="group flex cursor-pointer items-center gap-2.5">
+                    <label class="group flex cursor-pointer items-center gap-3">
                       <input
                         type="checkbox"
                         name="{{ filter_value.param_name }}"
                         value="{{ filter_value.value }}"
                         {% if filter_value.active %}checked{% endif %}
                         {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}
-                        class="h-[0.7rem] w-[0.7rem] shrink-0 accent-black"
+                        class="h-3 w-3 shrink-0 accent-black"
                         @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
                       >
-                      <span class="font-(--font-primary--family) text-[0.62rem] leading-none text-[#666] transition-colors group-hover:text-black">
+                      <span class="font-(--font-primary--family) text-[0.72rem] leading-none text-[#555] transition-colors group-hover:text-black">
                         {{ filter_value.label }}
                         {%- if section.settings.show_filter_count -%}
                           <span class="text-[#ccc]"> {{ filter_value.count }}</span>
@@ -107,15 +108,15 @@
                   }"
                 >
 
-                  {%- comment -%} Price inputs {%- endcomment -%}
+                  {%- comment -%} Min / Max number inputs {%- endcomment -%}
                   <div class="flex items-center gap-2">
-                    <div class="flex flex-1 flex-col gap-1">
-                      <span class="font-(--font-primary--family) text-[0.5rem] uppercase tracking-[0.2em] text-[#aaa]">Min</span>
-                      <div class="flex items-center gap-0.5 bg-[#f5f5f5] px-2 py-1.5">
-                        <span class="font-(--font-primary--family) text-[0.6rem] text-[#999]">{{ cart.currency.symbol }}</span>
+                    <div class="flex flex-1 flex-col gap-1.5">
+                      <span class="font-(--font-primary--family) text-[0.58rem] uppercase tracking-[0.2em] text-[#aaa]">Min</span>
+                      <div class="flex items-center gap-1 bg-[#f5f5f5] px-2.5 py-2">
+                        <span class="font-(--font-primary--family) text-[0.68rem] text-[#aaa]">{{ cart.currency.symbol }}</span>
                         <input
                           type="number"
-                          class="w-full bg-transparent font-(--font-primary--family) text-[0.65rem] text-black outline-none"
+                          class="w-full bg-transparent font-(--font-primary--family) text-[0.75rem] text-black outline-none"
                           :min="rangeMin" :max="maxVal - 1" step="1"
                           x-model.number="minVal"
                           :name="minName"
@@ -123,14 +124,14 @@
                         >
                       </div>
                     </div>
-                    <span class="mt-4 font-(--font-primary--family) text-[0.55rem] text-[#ccc]">—</span>
-                    <div class="flex flex-1 flex-col gap-1">
-                      <span class="font-(--font-primary--family) text-[0.5rem] uppercase tracking-[0.2em] text-[#aaa]">Max</span>
-                      <div class="flex items-center gap-0.5 bg-[#f5f5f5] px-2 py-1.5">
-                        <span class="font-(--font-primary--family) text-[0.6rem] text-[#999]">{{ cart.currency.symbol }}</span>
+                    <span class="mt-5 font-(--font-primary--family) text-[0.6rem] text-[#ccc]">—</span>
+                    <div class="flex flex-1 flex-col gap-1.5">
+                      <span class="font-(--font-primary--family) text-[0.58rem] uppercase tracking-[0.2em] text-[#aaa]">Max</span>
+                      <div class="flex items-center gap-1 bg-[#f5f5f5] px-2.5 py-2">
+                        <span class="font-(--font-primary--family) text-[0.68rem] text-[#aaa]">{{ cart.currency.symbol }}</span>
                         <input
                           type="number"
-                          class="w-full bg-transparent font-(--font-primary--family) text-[0.65rem] text-black outline-none"
+                          class="w-full bg-transparent font-(--font-primary--family) text-[0.75rem] text-black outline-none"
                           :min="minVal + 1" :max="rangeMax" step="1"
                           x-model.number="maxVal"
                           :name="maxName"
@@ -140,7 +141,7 @@
                     </div>
                   </div>
 
-                  {%- comment -%} Dual range track {%- endcomment -%}
+                  {%- comment -%} Dual range slider {%- endcomment -%}
                   <div class="relative h-[3px] w-full rounded-full bg-[#e8e8e8]">
                     <div
                       class="absolute top-0 h-full rounded-full bg-black"
@@ -148,7 +149,7 @@
                     ></div>
                     <input
                       type="range"
-                      class="pointer-events-none absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:shadow-sm [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-125 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-black"
+                      class="pointer-events-none absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-125 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-black"
                       :min="rangeMin" :max="rangeMax" step="1"
                       x-model.number="minVal"
                       :name="minName"
@@ -157,7 +158,7 @@
                     >
                     <input
                       type="range"
-                      class="pointer-events-none absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:shadow-sm [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-125 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-black"
+                      class="pointer-events-none absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-black [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-125 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-black"
                       :min="rangeMin" :max="rangeMax" step="1"
                       x-model.number="maxVal"
                       :name="maxName"
@@ -176,16 +177,16 @@
         {%- comment -%} ── Schema block fallback filter groups ─────── {%- endcomment -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'filter_group' -%}
-            <div class="flex flex-col gap-3" {{ block.shopify_attributes }}>
-              <p class="font-(--font-primary--family) text-[0.56rem] font-semibold uppercase tracking-[0.3em] text-black">
+            <div class="flex flex-col gap-3.5" {{ block.shopify_attributes }}>
+              <p class="font-(--font-primary--family) text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-black">
                 {{ block.settings.label }}
               </p>
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2.5">
                 {%- assign filter_values = block.settings.values | split: ',' -%}
                 {%- for val in filter_values -%}
-                  <label class="group flex cursor-pointer items-center gap-2.5">
-                    <input type="checkbox" class="h-[0.7rem] w-[0.7rem] shrink-0 accent-black">
-                    <span class="font-(--font-primary--family) text-[0.62rem] text-[#666] transition-colors group-hover:text-black">{{ val | strip }}</span>
+                  <label class="group flex cursor-pointer items-center gap-3">
+                    <input type="checkbox" class="h-3 w-3 shrink-0 accent-black">
+                    <span class="font-(--font-primary--family) text-[0.72rem] text-[#555] transition-colors group-hover:text-black">{{ val | strip }}</span>
                   </label>
                 {%- endfor -%}
               </div>
@@ -196,23 +197,23 @@
         {%- comment -%} ── Active filter pills ──────────────────────── {%- endcomment -%}
         {%- if active_filters.size > 0 -%}
           <div class="flex flex-col gap-2.5 pt-1">
-            <p class="font-(--font-primary--family) text-[0.52rem] font-semibold uppercase tracking-[0.28em] text-[#bbb]">Active filters</p>
+            <p class="font-(--font-primary--family) text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-[#bbb]">Active filters</p>
             <div class="flex flex-wrap gap-1.5">
               {%- for active_filter in active_filters -%}
                 <button
-                  class="flex items-center gap-1 bg-black px-2 py-1 font-(--font-primary--family) text-[0.52rem] uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-60"
+                  class="flex items-center gap-1.5 bg-black px-2.5 py-1 font-(--font-primary--family) text-[0.6rem] uppercase tracking-[0.1em] text-white transition-opacity hover:opacity-60"
                   @click="removeFilter('{{ active_filter.url_to_remove | escape }}')"
                   type="button"
                 >
                   {{ active_filter.label }}: {{ active_filter.value.label | default: active_filter.value }}
-                  <svg class="h-[0.45rem] w-[0.45rem]" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <svg class="h-2 w-2" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M2 2l8 8M10 2L2 10"/>
                   </svg>
                 </button>
               {%- endfor -%}
               <button
                 type="button"
-                class="font-(--font-primary--family) text-[0.52rem] uppercase tracking-[0.18em] text-[#bbb] underline underline-offset-2 transition-colors hover:text-black"
+                class="font-(--font-primary--family) text-[0.6rem] uppercase tracking-[0.18em] text-[#bbb] underline underline-offset-2 transition-colors hover:text-black"
                 @click="clearAllFilters()"
               >
                 Clear all
@@ -229,24 +230,24 @@
 
       {%- comment -%} ── Tabs ────────────────────────────────────────── {%- endcomment -%}
       {%- if enable_sorting -%}
-        <div class="mb-8 flex items-center gap-7">
+        <div class="mb-10 flex items-center gap-8">
           <button
-            class="relative pb-1 font-(--font-primary--family) text-[0.58rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
-            :class="activeTab === 'all' ? 'text-black after:scale-x-100' : 'text-[#c0c0c0] after:scale-x-0 hover:text-black'"
+            class="relative pb-1 font-(--font-primary--family) text-[0.7rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            :class="activeTab === 'all' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
             @click="activeTab = 'all'; applySort('manual')"
           >
-            All<sup class="ml-0.5 text-[0.42rem]">{{ collection_obj.products_count }}</sup>
+            All<sup class="ml-0.5 text-[0.5rem]">{{ collection_obj.products_count }}</sup>
           </button>
           <button
-            class="relative pb-1 font-(--font-primary--family) text-[0.58rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
-            :class="activeTab === 'best' ? 'text-black after:scale-x-100' : 'text-[#c0c0c0] after:scale-x-0 hover:text-black'"
+            class="relative pb-1 font-(--font-primary--family) text-[0.7rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            :class="activeTab === 'best' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
             @click="activeTab = 'best'; applySort('best-selling')"
           >
             Best sellers
           </button>
           <button
-            class="relative pb-1 font-(--font-primary--family) text-[0.58rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
-            :class="activeTab === 'new' ? 'text-black after:scale-x-100' : 'text-[#c0c0c0] after:scale-x-0 hover:text-black'"
+            class="relative pb-1 font-(--font-primary--family) text-[0.7rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            :class="activeTab === 'new' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
             @click="activeTab = 'new'; applySort('created-desc')"
           >
             New arrivals
@@ -281,24 +282,34 @@
           <input type="hidden" name="sort_by" :value="sortBy">
 
           {%- if collection_obj.products.size > 0 -%}
-            <div class="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 md:grid-cols-3">
+
+            {%- comment -%} ── Masonry grid via CSS columns ─────────── {%- endcomment -%}
+            <div class="columns-2 gap-x-4 md:columns-3 md:gap-x-6">
               {%- for product in collection_obj.products -%}
-                <article class="opacity-0 translate-y-3 animate-[cardReveal_0.45s_ease_forwards] [animation-delay:calc({{ forloop.index0 }}*55ms)]">
+                {%- assign col_pos = forloop.index0 | modulo: 2 -%}
+                <div class="
+                  break-inside-avoid mb-4 md:mb-6
+                  opacity-0 translate-y-3
+                  animate-[cardReveal_0.45s_ease_forwards]
+                  [animation-delay:calc({{ forloop.index0 }}*55ms)]
+                  {% if col_pos == 1 %}card--offset{% endif %}
+                ">
                   {% render 'product-card',
                     product: product,
-                    lazy: forloop.index > 3,
+                    lazy: forloop.index > 4,
                     show_vendor: section.settings.show_vendor
                   %}
-                </article>
+                </div>
               {%- endfor -%}
             </div>
+
           {%- else -%}
             <div class="flex min-h-64 flex-col items-center justify-center gap-4 text-center">
-              <p class="font-(--font-primary--family) text-sm font-light text-[#bbb]">No products found.</p>
+              <p class="font-(--font-primary--family) text-base font-light text-[#bbb]">No products found.</p>
               {%- if active_filters.size > 0 -%}
                 <button
                   type="button"
-                  class="font-(--font-primary--family) text-[0.58rem] font-semibold uppercase tracking-widest text-black underline underline-offset-4 transition-opacity hover:opacity-50"
+                  class="font-(--font-primary--family) text-[0.7rem] font-semibold uppercase tracking-widest text-black underline underline-offset-4 transition-opacity hover:opacity-50"
                   @click="clearAllFilters()"
                 >
                   Clear filters
@@ -314,7 +325,7 @@
             {%- if paginate.previous -%}
               <button
                 type="button"
-                class="px-4 py-2 font-(--font-primary--family) text-[0.56rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-40"
+                class="px-5 py-2 font-(--font-primary--family) text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-40"
                 @click="fetchPage('{{ paginate.previous.url | escape }}', true)"
               >
                 ← Prev
@@ -325,18 +336,18 @@
               {%- if part.is_link -%}
                 <button
                   type="button"
-                  class="flex h-7 w-7 items-center justify-center font-(--font-primary--family) text-[0.58rem] font-semibold text-[#bbb] transition-colors hover:text-black"
+                  class="flex h-8 w-8 items-center justify-center font-(--font-primary--family) text-[0.65rem] font-semibold text-[#bbb] transition-colors hover:text-black"
                   @click="fetchPage('{{ part.url | escape }}', true)"
                 >
                   {{ part.title }}
                 </button>
               {%- else -%}
                 {%- if part.title == paginate.current_page -%}
-                  <span class="flex h-7 w-7 items-center justify-center bg-black font-(--font-primary--family) text-[0.58rem] font-semibold text-white">
+                  <span class="flex h-8 w-8 items-center justify-center bg-black font-(--font-primary--family) text-[0.65rem] font-semibold text-white">
                     {{ part.title }}
                   </span>
                 {%- else -%}
-                  <span class="flex h-7 w-7 items-center justify-center font-(--font-primary--family) text-[0.58rem] text-[#ddd]">
+                  <span class="flex h-8 w-8 items-center justify-center font-(--font-primary--family) text-[0.65rem] text-[#ddd]">
                     {{ part.title }}
                   </span>
                 {%- endif -%}
@@ -346,7 +357,7 @@
             {%- if paginate.next -%}
               <button
                 type="button"
-                class="px-4 py-2 font-(--font-primary--family) text-[0.56rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-40"
+                class="px-5 py-2 font-(--font-primary--family) text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-40"
                 @click="fetchPage('{{ paginate.next.url | escape }}', true)"
               >
                 Next →
@@ -374,13 +385,12 @@
       init() {
         const params = new URLSearchParams(window.location.search);
         const s = params.get('sort_by') || this.sortBy;
-        if (s === 'best-selling')       this.activeTab = 'best';
-        else if (s === 'created-desc')  this.activeTab = 'new';
-        else                            this.activeTab = 'all';
+        if (s === 'best-selling')      this.activeTab = 'best';
+        else if (s === 'created-desc') this.activeTab = 'new';
+        else                           this.activeTab = 'all';
         this.sortBy = s;
       },
 
-      /* scrollToTop=false for filters, true for pagination & sort tabs */
       async fetchPage(url, scrollToTop = false) {
         this.loading = true;
         if (scrollToTop) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -400,7 +410,6 @@
         }
       },
 
-      /* sort tabs scroll to top so user sees fresh results */
       applySort(val) {
         this.sortBy = val;
         const u = new URL(window.location.href);
@@ -408,7 +417,6 @@
         this.fetchPage(u.toString(), true);
       },
 
-      /* filters stay in place — no scroll */
       applyFilters(form) {
         if (!form) return;
         const u = new URL(this.collectionUrl, window.location.origin);
@@ -439,6 +447,17 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   [x-cloak] { display: none !important; }
+
+  /* 2nd column cards — shorter image on all screen sizes */
+  .card--offset .product-card-image {
+    height: 38vw;
+  }
+
+  @media (min-width: 768px) {
+    .card--offset .product-card-image {
+      height: 19vw;
+    }
+  }
 </style>
 
 {% schema %}
