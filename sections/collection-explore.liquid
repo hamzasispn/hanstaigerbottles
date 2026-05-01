@@ -5,7 +5,6 @@
   • AJAX filtering & sorting — NO full page reloads
   • Shopify Storefront Filtering (Online Store 2.0)
   • Scroll-to-top only on pagination, NOT on filter/sort change
-  • Masonry via CSS columns — 2nd column cards shorter everywhere
 {%- endcomment -%}
 
 {%- liquid
@@ -32,13 +31,14 @@
   x-init="init()"
 >
 
-  <h2 class="mb-12 font-(--font-primary--family) text-[clamp(2.2rem,4vw,4rem)] font-light tracking-tight text-black">
+  <h2 class="mb-12 font-(--font-primary--family) text-[clamp(2rem,3.5vw,3.8rem)] font-light tracking-tight text-black">
     {{ heading }}
   </h2>
 
   <div class="flex flex-col gap-10 md:flex-row md:items-start">
 
-    {%- comment -%} ── SIDEBAR ──────────────────────────────────────── {%- endcomment -%}
+    {%- comment -%} ══ SIDEBAR ═════════════════════════════════════════ {%- endcomment -%}
+    {%- if enable_filtering -%}
     <aside class="w-full shrink-0 md:sticky md:top-8 md:w-52">
 
       {%- comment -%} Mobile toggle {%- endcomment -%}
@@ -48,11 +48,7 @@
         :aria-expanded="mobileFiltersOpen.toString()"
       >
         <span>Filters</span>
-        <svg
-          class="h-3.5 w-3.5 transition-transform duration-300"
-          :class="mobileFiltersOpen ? 'rotate-180' : ''"
-          fill="none" stroke="currentColor" viewBox="0 0 24 24"
-        >
+        <svg class="h-3.5 w-3.5 transition-transform duration-300" :class="mobileFiltersOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/>
         </svg>
       </button>
@@ -63,9 +59,10 @@
       >
 
         {%- comment -%} ── Shopify Storefront Filters ──────────────── {%- endcomment -%}
-        {%- if enable_filtering and collection_obj.filters.size > 0 -%}
+        {%- if collection_obj.filters.size > 0 -%}
           {%- for filter in collection_obj.filters -%}
             <div class="flex flex-col gap-3.5">
+
               <p class="font-(--font-primary--family) text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-black">
                 {{ filter.label }}
               </p>
@@ -88,7 +85,7 @@
                       <span class="font-(--font-primary--family) text-[0.72rem] leading-none text-[#555] transition-colors group-hover:text-black">
                         {{ filter_value.label }}
                         {%- if section.settings.show_filter_count -%}
-                          <span class="text-[#ccc]"> {{ filter_value.count }}</span>
+                          <span class="text-[#ccc]"> ({{ filter_value.count }})</span>
                         {%- endif -%}
                       </span>
                     </label>
@@ -107,8 +104,6 @@
                     maxName: '{{ filter.max_value.param_name }}'
                   }"
                 >
-
-                  {%- comment -%} Min / Max number inputs {%- endcomment -%}
                   <div class="flex items-center gap-2">
                     <div class="flex flex-1 flex-col gap-1.5">
                       <span class="font-(--font-primary--family) text-[0.58rem] uppercase tracking-[0.2em] text-[#aaa]">Min</span>
@@ -141,7 +136,6 @@
                     </div>
                   </div>
 
-                  {%- comment -%} Dual range slider {%- endcomment -%}
                   <div class="relative h-[3px] w-full rounded-full bg-[#e8e8e8]">
                     <div
                       class="absolute top-0 h-full rounded-full bg-black"
@@ -166,7 +160,6 @@
                       @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
                     >
                   </div>
-
                 </div>
 
               {%- endcase -%}
@@ -185,7 +178,11 @@
                 {%- assign filter_values = block.settings.values | split: ',' -%}
                 {%- for val in filter_values -%}
                   <label class="group flex cursor-pointer items-center gap-3">
-                    <input type="checkbox" class="h-3 w-3 shrink-0 accent-black">
+                    <input
+                      type="checkbox"
+                      class="h-3 w-3 shrink-0 accent-black"
+                      @change="applyFilters(document.getElementById('collection-filter-form-{{ section.id }}'))"
+                    >
                     <span class="font-(--font-primary--family) text-[0.72rem] text-[#555] transition-colors group-hover:text-black">{{ val | strip }}</span>
                   </label>
                 {%- endfor -%}
@@ -206,7 +203,7 @@
                   type="button"
                 >
                   {{ active_filter.label }}: {{ active_filter.value.label | default: active_filter.value }}
-                  <svg class="h-2 w-2" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <svg class="h-2 w-2 shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M2 2l8 8M10 2L2 10"/>
                   </svg>
                 </button>
@@ -224,8 +221,9 @@
 
       </div>
     </aside>
+    {%- endif -%}
 
-    {%- comment -%} ── MAIN ─────────────────────────────────────────── {%- endcomment -%}
+    {%- comment -%} ══ MAIN ════════════════════════════════════════════ {%- endcomment -%}
     <div class="min-w-0 flex-1">
 
       {%- comment -%} ── Tabs ────────────────────────────────────────── {%- endcomment -%}
@@ -255,16 +253,12 @@
         </div>
       {%- endif -%}
 
-      {%- comment -%} ── Loading overlay ──────────────────────────── {%- endcomment -%}
-      <div
-        x-show="loading"
-        x-cloak
-        class="flex min-h-64 w-full items-center justify-center"
-      >
+      {%- comment -%} ── Loading ──────────────────────────────────────── {%- endcomment -%}
+      <div x-show="loading" x-cloak class="flex min-h-64 w-full items-center justify-center">
         <div class="h-4 w-4 animate-spin rounded-full border border-black border-t-transparent"></div>
       </div>
 
-      {%- comment -%} ── Results ─────────────────────────────────── {%- endcomment -%}
+      {%- comment -%} ── Results ─────────────────────────────────────── {%- endcomment -%}
       {%- paginate collection_obj.products by products_per_page -%}
 
       <div
@@ -283,15 +277,21 @@
 
           {%- if collection_obj.products.size > 0 -%}
 
-            {%- comment -%} ── Masonry grid via CSS columns ─────────── {%- endcomment -%}
-            <div class="columns-2 gap-x-4 md:columns-3 md:gap-x-6">
+            {%- comment -%}
+              CSS columns masonry:
+              — 2 columns on mobile, 3 on desktop
+              — Odd-indexed cards (0,2,4… = left/right col) get default tall image
+              — Even-indexed cards (1,3,5… = middle col on desktop, right col on mobile)
+                get class card--offset → shorter image via <style> below
+            {%- endcomment -%}
+            <div class="columns-2 gap-x-3 md:columns-3 md:gap-x-5">
               {%- for product in collection_obj.products -%}
                 {%- assign col_pos = forloop.index0 | modulo: 2 -%}
                 <div class="
-                  break-inside-avoid mb-4 md:mb-6
+                  break-inside-avoid mb-3 md:mb-5
                   opacity-0 translate-y-3
                   animate-[cardReveal_0.45s_ease_forwards]
-                  [animation-delay:calc({{ forloop.index0 }}*55ms)]
+                  [animation-delay:calc({{ forloop.index0 }}*50ms)]
                   {% if col_pos == 1 %}card--offset{% endif %}
                 ">
                   {% render 'product-card',
@@ -448,12 +448,19 @@
   }
   [x-cloak] { display: none !important; }
 
-  /* 2nd column cards — shorter image on all screen sizes */
+  /* Default image height — 1st & 3rd column (tall) */
+  .product-card-image {
+    height: 56vw;
+  }
+  /* 2nd column — shorter on ALL screen sizes */
   .card--offset .product-card-image {
     height: 38vw;
   }
 
   @media (min-width: 768px) {
+    .product-card-image {
+      height: 28vw;
+    }
     .card--offset .product-card-image {
       height: 19vw;
     }

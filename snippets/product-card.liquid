@@ -1,7 +1,7 @@
 {%- comment -%}
   Snippet: product-card.liquid
-  • .product-card-image height is the default (tall column)
-  • Parent .card--offset overrides to shorter height via CSS
+  • product-card-image height set globally in section <style>
+  • card--offset parent class overrides to shorter height
   • No inline styles except dynamic swatch background-color
 {%- endcomment -%}
 
@@ -40,8 +40,8 @@
 
   {%- comment -%} ── Image ─────────────────────────────────────────── {%- endcomment -%}
   
-    <a href="{{ product_url }}"
-    class="product-card-image relative block overflow-hidden bg-[#efefef] h-[56vw] md:h-[28vw]"
+  <a href="{{ product_url }}"
+    class="product-card-image relative block overflow-hidden bg-[#ebebeb]"
     aria-label="{{ product.title | escape }}"
   >
     {%- if product.featured_media -%}
@@ -49,11 +49,11 @@
         product.featured_media
         | image_url: width: 800
         | image_tag:
-          class: 'absolute inset-0 h-full w-full object-contain p-[8%] transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.04]',
+          class: 'absolute inset-0 h-full w-full object-contain p-[7%] transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.04]',
           loading: lazy | ternary: 'lazy', 'eager',
           alt: product.featured_media.alt | escape | default: product.title,
           widths: '300,400,600,800',
-          sizes: '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw'
+          sizes: '(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 25vw'
       }}
     {%- else -%}
       <span class="absolute inset-0 flex items-center justify-center">
@@ -77,7 +77,6 @@
       </p>
     {%- endif -%}
 
-    {%- comment -%} Title + price {%- endcomment -%}
     <div class="flex items-start justify-between gap-2">
       
       <a href="{{ product_url }}"
