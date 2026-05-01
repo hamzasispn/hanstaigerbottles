@@ -32,7 +32,7 @@
   x-init="init()"
 >
 
-  <h2 class="mb-10 font-[--font-primary--family] text-[clamp(1.8rem,3.5vw,3.4rem)] font-light tracking-tight text-black">
+  <h2 class="mb-10 font-(--font-primary--family) text-[clamp(1.8rem,3.5vw,3.4rem)] font-light tracking-tight text-black">
     {{ heading }}
   </h2>
 
@@ -43,7 +43,7 @@
 
       {%- comment -%} Mobile toggle {%- endcomment -%}
       <button
-        class="mb-4 flex w-full items-center justify-between py-2 font-[--font-primary--family] text-[0.62rem] font-semibold uppercase tracking-[0.25em] text-black md:hidden"
+        class="mb-4 flex w-full items-center justify-between py-2 font-(--font-primary--family) text-[0.62rem] font-semibold uppercase tracking-[0.25em] text-black md:hidden"
         @click="mobileFiltersOpen = !mobileFiltersOpen"
         :aria-expanded="mobileFiltersOpen.toString()"
       >
@@ -66,7 +66,7 @@
         {%- if enable_filtering and collection_obj.filters.size > 0 -%}
           {%- for filter in collection_obj.filters -%}
             <div class="flex flex-col gap-3" {{ block.shopify_attributes }}>
-              <p class="font-[--font-primary--family] text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-black">
+              <p class="font-(--font-primary--family) text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-black">
                 {{ filter.label }}
               </p>
 
@@ -85,7 +85,7 @@
                         class="h-3 w-3 accent-black"
                         @change="applyFilters($el.closest('form') || document.getElementById('collection-filter-form-{{ section.id }}'))"
                       >
-                      <span class="font-[--font-primary--family] text-[0.62rem] text-[#555] transition-colors group-hover:text-black">
+                      <span class="font-(--font-primary--family) text-[0.62rem] text-[#555] transition-colors group-hover:text-black">
                         {{ filter_value.label }}
                         {%- if section.settings.show_filter_count -%}
                           <span class="text-[#bbb]">({{ filter_value.count }})</span>
@@ -105,7 +105,7 @@
                     rangeMax: {{ filter.range_max | divided_by: 100.0 }}
                   }"
                 >
-                  <div class="flex items-center gap-1 font-[--font-primary--family] text-[0.6rem] text-[#666]">
+                  <div class="flex items-center gap-1 font-(--font-primary--family) text-[0.6rem] text-[#666]">
                     <span>{{ cart.currency.symbol }}<span x-text="minVal.toFixed(0)"></span></span>
                     <span class="text-[#ccc]">—</span>
                     <span>{{ cart.currency.symbol }}<span x-text="maxVal.toFixed(0)"></span></span>
@@ -143,7 +143,7 @@
         {%- for block in section.blocks -%}
           {%- if block.type == 'filter_group' -%}
             <div class="flex flex-col gap-3" {{ block.shopify_attributes }}>
-              <p class="font-[--font-primary--family] text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-black">
+              <p class="font-(--font-primary--family) text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-black">
                 {{ block.settings.label }}
               </p>
               <div class="flex flex-col gap-2">
@@ -151,7 +151,7 @@
                 {%- for val in filter_values -%}
                   <label class="group flex cursor-pointer items-center gap-2.5">
                     <input type="checkbox" class="h-3 w-3 accent-black">
-                    <span class="font-[--font-primary--family] text-[0.62rem] text-[#555] transition-colors group-hover:text-black">{{ val | strip }}</span>
+                    <span class="font-(--font-primary--family) text-[0.62rem] text-[#555] transition-colors group-hover:text-black">{{ val | strip }}</span>
                   </label>
                 {%- endfor -%}
               </div>
@@ -162,11 +162,11 @@
         {%- comment -%} ── Active filter pills ──────────────────────── {%- endcomment -%}
         {%- if active_filters.size > 0 -%}
           <div class="flex flex-col gap-2 pt-2">
-            <p class="font-[--font-primary--family] text-[0.55rem] font-semibold uppercase tracking-[0.25em] text-[#999]">Active</p>
+            <p class="font-(--font-primary--family) text-[0.55rem] font-semibold uppercase tracking-[0.25em] text-[#999]">Active</p>
             <div class="flex flex-wrap gap-1.5">
               {%- for active_filter in active_filters -%}
                 <button
-                  class="group flex items-center gap-1 bg-black px-2.5 py-1 font-[--font-primary--family] text-[0.55rem] uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-70"
+                  class="group flex items-center gap-1 bg-black px-2.5 py-1 font-(--font-primary--family) text-[0.55rem] uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-70"
                   @click="removeFilter('{{ active_filter.url_to_remove | escape }}')"
                   type="button"
                 >
@@ -178,7 +178,7 @@
               {%- endfor -%}
               <button
                 type="button"
-                class="font-[--font-primary--family] text-[0.55rem] uppercase tracking-[0.2em] text-[#aaa] transition-colors hover:text-black"
+                class="font-(--font-primary--family) text-[0.55rem] uppercase tracking-[0.2em] text-[#aaa] transition-colors hover:text-black"
                 @click="clearAllFilters()"
               >
                 Clear all
@@ -197,21 +197,21 @@
       {%- if enable_sorting -%}
         <div class="mb-8 flex items-center gap-7">
           <button
-            class="relative font-[--font-primary--family] text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            class="relative font-(--font-primary--family) text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
             :class="activeTab === 'all' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
             @click="activeTab = 'all'; applySort('manual')"
           >
             All<sup class="ml-0.5 text-[0.45rem]">{{ collection_obj.products_count }}</sup>
           </button>
           <button
-            class="relative font-[--font-primary--family] text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            class="relative font-(--font-primary--family) text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
             :class="activeTab === 'best' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
             @click="activeTab = 'best'; applySort('best-selling')"
           >
             Best sellers
           </button>
           <button
-            class="relative font-[--font-primary--family] text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
+            class="relative font-(--font-primary--family) text-[0.6rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-px after:w-full after:origin-left after:bg-black after:transition-transform after:duration-300"
             :class="activeTab === 'new' ? 'text-black after:scale-x-100' : 'text-[#bbb] after:scale-x-0 hover:text-black'"
             @click="activeTab = 'new'; applySort('created-desc')"
           >
@@ -260,11 +260,11 @@
             </div>
           {%- else -%}
             <div class="flex min-h-64 flex-col items-center justify-center gap-4 text-center">
-              <p class="font-[--font-primary--family] text-sm font-light text-[#aaa]">No products found.</p>
+              <p class="font-(--font-primary--family) text-sm font-light text-[#aaa]">No products found.</p>
               {%- if active_filters.size > 0 -%}
                 <button
                   type="button"
-                  class="font-[--font-primary--family] text-[0.6rem] font-semibold uppercase tracking-widest text-black underline underline-offset-4 transition-opacity hover:opacity-50"
+                  class="font-(--font-primary--family) text-[0.6rem] font-semibold uppercase tracking-widest text-black underline underline-offset-4 transition-opacity hover:opacity-50"
                   @click="clearAllFilters()"
                 >
                   Clear filters
@@ -280,7 +280,7 @@
             {%- if paginate.previous -%}
               <button
                 type="button"
-                class="px-5 py-2 font-[--font-primary--family] text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-50"
+                class="px-5 py-2 font-(--font-primary--family) text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-50"
                 @click="fetchPage('{{ paginate.previous.url | escape }}')"
               >
                 ← Prev
@@ -291,18 +291,18 @@
               {%- if part.is_link -%}
                 <button
                   type="button"
-                  class="h-8 w-8 font-[--font-primary--family] text-[0.6rem] font-semibold text-[#aaa] transition-colors hover:text-black"
+                  class="h-8 w-8 font-(--font-primary--family) text-[0.6rem] font-semibold text-[#aaa] transition-colors hover:text-black"
                   @click="fetchPage('{{ part.url | escape }}')"
                 >
                   {{ part.title }}
                 </button>
               {%- else -%}
                 {%- if part.title == paginate.current_page -%}
-                  <span class="flex h-8 w-8 items-center justify-center bg-black font-[--font-primary--family] text-[0.6rem] font-semibold text-white">
+                  <span class="flex h-8 w-8 items-center justify-center bg-black font-(--font-primary--family) text-[0.6rem] font-semibold text-white">
                     {{ part.title }}
                   </span>
                 {%- else -%}
-                  <span class="flex h-8 w-8 items-center justify-center font-[--font-primary--family] text-[0.6rem] text-[#ddd]">
+                  <span class="flex h-8 w-8 items-center justify-center font-(--font-primary--family) text-[0.6rem] text-[#ddd]">
                     {{ part.title }}
                   </span>
                 {%- endif -%}
@@ -312,7 +312,7 @@
             {%- if paginate.next -%}
               <button
                 type="button"
-                class="px-5 py-2 font-[--font-primary--family] text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-50"
+                class="px-5 py-2 font-(--font-primary--family) text-[0.58rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-50"
                 @click="fetchPage('{{ paginate.next.url | escape }}')"
               >
                 Next →
