@@ -8,18 +8,12 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign section_collection = section.settings.collection
-  assign collection_obj     = collections[section_collection]
-  assign heading            = section.settings.heading | default: 'Explore the collection'
-  assign products_per_page  = section.settings.products_per_page | default: 12
-  assign enable_filtering   = section.settings.enable_filtering
-  assign enable_sorting     = section.settings.enable_sorting
-
-  if collection_obj == blank and collection != blank
-    assign collection_obj = collection
-  endif
-
-  assign active_filters = collection_obj.active_filters | default: empty
+  assign collection_obj    = collection
+  assign heading           = section.settings.heading | default: collection.title
+  assign products_per_page = section.settings.products_per_page | default: 12
+  assign enable_filtering  = section.settings.enable_filtering
+  assign enable_sorting    = section.settings.enable_sorting
+  assign active_filters    = collection.active_filters | default: empty
 -%}
 
 <section
@@ -166,30 +160,6 @@
             </div>
           {%- endfor -%}
         {%- endif -%}
-
-        {%- comment -%} ── Schema block fallback filter groups ─────── {%- endcomment -%}
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'filter_group' -%}
-            <div class="flex flex-col gap-3.5" {{ block.shopify_attributes }}>
-              <p class="font-(--font-primary--family) text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-black">
-                {{ block.settings.label }}
-              </p>
-              <div class="flex flex-col gap-2.5">
-                {%- assign filter_values = block.settings.values | split: ',' -%}
-                {%- for val in filter_values -%}
-                  <label class="group flex cursor-pointer items-center gap-3">
-                    <input
-                      type="checkbox"
-                      class="h-3 w-3 shrink-0 accent-black"
-                      @change="applyFilters()"
-                    >
-                    <span class="font-(--font-primary--family) text-[0.72rem] text-[#555] transition-colors group-hover:text-black">{{ val | strip }}</span>
-                  </label>
-                {%- endfor -%}
-              </div>
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
 
         {%- comment -%} ── Active filter pills ──────────────────────── {%- endcomment -%}
         {%- if active_filters.size > 0 -%}
@@ -506,8 +476,7 @@
   "class": "section-collection-explore",
   "settings": [
     { "type": "header", "content": "Content" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Explore the collection" },
-    { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave blank to use current collection page." },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "Leave blank to use the collection title." },
     { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 6, "max": 48, "step": 3, "default": 12 },
     { "type": "header", "content": "Product card" },
     { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": false },
@@ -516,24 +485,8 @@
     { "type": "checkbox", "id": "enable_filtering", "label": "Enable Storefront filtering", "default": true, "info": "Requires filters in Shopify Admin > Navigation > Search & Discovery." },
     { "type": "checkbox", "id": "enable_sorting", "label": "Enable sorting tabs", "default": true }
   ],
-  "blocks": [
-    {
-      "type": "filter_group",
-      "name": "Filter group (fallback)",
-      "settings": [
-        { "type": "text", "id": "label", "label": "Group label", "default": "Models" },
-        { "type": "text", "id": "values", "label": "Values (comma-separated)", "default": "Option A, Option B, Option C" }
-      ]
-    }
-  ],
   "presets": [
-    {
-      "name": "Collection Explore",
-      "blocks": [
-        { "type": "filter_group", "settings": { "label": "Models", "values": "Classic, Pro, Slim, XL" } },
-        { "type": "filter_group", "settings": { "label": "Color", "values": "Orange, Black, Blue, White" } }
-      ]
-    }
+    { "name": "Collection Explore" }
   ]
 }
 {% endschema %}
