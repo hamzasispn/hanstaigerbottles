@@ -286,7 +286,7 @@
             {%- endcomment -%}
             <div class="columns-2 gap-x-3 md:columns-3 md:gap-x-5">
               {%- for product in collection_obj.products -%}
-                {%- assign col_pos = forloop.index0 | modulo: 2 -%}
+                {%- assign col_pos = forloop.index0 | modulo: 3 -%}
                 <div class="
                   break-inside-avoid mb-3 md:mb-5
                   opacity-0 translate-y-3
@@ -414,14 +414,28 @@
         this.sortBy = val;
         const u = new URL(window.location.href);
         u.searchParams.set('sort_by', val);
-        this.fetchPage(u.toString(), true);
+        this.fetchPage(u.toString(), false);
       },
 
       applyFilters(form) {
         if (!form) return;
         const u = new URL(this.collectionUrl, window.location.origin);
+        // Carry over any existing filter params from the current URL
+        // (except sort_by which we set explicitly below)
+        const current = new URLSearchParams(window.location.search);
+        current.forEach((val, key) => {
+          if (key !== 'sort_by' && key !== 'page') {
+            u.searchParams.append(key, val);
+          }
+        });
+        // Now apply checked boxes — clear them first to avoid duplication
+        const filterNames = new Set();
+        form.querySelectorAll('input[type="checkbox"]')
+          .forEach(cb => filterNames.add(cb.name));
+        filterNames.forEach(name => u.searchParams.delete(name));
         form.querySelectorAll('input[type="checkbox"]:checked')
           .forEach(cb => u.searchParams.append(cb.name, cb.value));
+        // Price range inputs
         form.querySelectorAll('input[type="range"], input[type="number"]')
           .forEach(r => { if (r.name && r.value !== '') u.searchParams.set(r.name, r.value); });
         if (this.sortBy) u.searchParams.set('sort_by', this.sortBy);
