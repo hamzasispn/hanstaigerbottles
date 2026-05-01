@@ -1,17 +1,13 @@
 {%- comment -%}
   Snippet: product-card.liquid
-  Usage: {% render 'product-card', product: product, lazy: true %}
-  Params:
-    - product      {Object}  Shopify product object (required)
-    - lazy         {Boolean} Lazy-load image (default: true)
-    - show_vendor  {Boolean} Show vendor label (default: false)
-    - aspect       {String}  Card image aspect ratio (default: 'aspect-[3/4]')
+  • Uniform image height across all columns
+  • 2-col mobile safe (no orphaned middle card)
+  • No inline styles except dynamic swatch background-color
 {%- endcomment -%}
 
 {%- liquid
   assign lazy        = lazy | default: true
   assign show_vendor = show_vendor | default: false
-  assign aspect      = aspect | default: 'aspect-[3/4]'
   assign current_var = product.selected_or_first_available_variant
   assign product_url = product.url | within: collection
 -%}
@@ -42,69 +38,70 @@
   }"
 >
 
-  {%- comment -%} ── Image ────────────────────────────────────────── {%- endcomment -%}
+  {%- comment -%} ── Image — fixed height, no aspect ratio shifting ── {%- endcomment -%}
   
-    <a href="{{ product_url }}"
-    class="{{ aspect }} relative block overflow-hidden bg-[#efefef]"
+   <a href="{{ product_url }}"
+    class="relative block h-[42vw] overflow-hidden bg-[#efefef] sm:h-[28vw] lg:h-[22vw]"
     aria-label="{{ product.title | escape }}"
-    tabindex="0"
   >
     {%- if product.featured_media -%}
       {{
         product.featured_media
         | image_url: width: 800
         | image_tag:
-          class: 'absolute inset-0 h-full w-full object-contain p-[6%] transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.05]',
+          class: 'absolute inset-0 h-full w-full object-contain p-[8%] transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.04]',
           loading: lazy | ternary: 'lazy', 'eager',
           alt: product.featured_media.alt | escape | default: product.title,
           widths: '300,400,600,800',
-          sizes: '(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 28vw'
+          sizes: '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw'
       }}
     {%- else -%}
-      <span class="absolute inset-0 flex items-center justify-center text-[#ccc]">
-        {{ 'image' | placeholder_svg_tag: 'w-14 h-14 opacity-20' }}
+      <span class="absolute inset-0 flex items-center justify-center">
+        {{ 'image' | placeholder_svg_tag: 'w-10 h-10 opacity-10' }}
       </span>
     {%- endif -%}
 
     {%- if product.compare_at_price > product.price -%}
-      <span class="absolute left-3 top-3 bg-black px-2 py-0.5 font-(--font-primary--family) text-[0.5rem] font-semibold uppercase tracking-[0.2em] text-white">
+      <span class="absolute left-2.5 top-2.5 bg-black px-1.5 py-0.5 font-(--font-primary--family) text-[0.48rem] font-semibold uppercase tracking-[0.18em] text-white">
         Sale
       </span>
     {%- endif -%}
   </a>
 
-  {%- comment -%} ── Card body ──────────────────────────────────── {%- endcomment -%}
-  <div class="flex flex-col gap-3 pt-4">
+  {%- comment -%} ── Body ─────────────────────────────────────────── {%- endcomment -%}
+  <div class="flex flex-col gap-2.5 pt-3">
 
     {%- if show_vendor and product.vendor != blank -%}
-      <p class="font-(--font-primary--family) text-[0.55rem] uppercase tracking-[0.2em] text-[#aaa]">
+      <p class="font-(--font-primary--family) text-[0.5rem] uppercase tracking-[0.2em] text-[#bbb]">
         {{ product.vendor }}
       </p>
     {%- endif -%}
 
-    {%- comment -%} Title + price row {%- endcomment -%}
-    <div class="flex items-baseline justify-between gap-3">
-      <a href="{{ product_url }}" class="font-(--font-primary--family) text-[0.75rem] font-medium leading-snug tracking-tight text-black transition-opacity hover:opacity-60">
+    {%- comment -%} Title + price {%- endcomment -%}
+    <div class="flex items-start justify-between gap-2">
+      
+        href="{{ product_url }}"
+        class="font-(--font-primary--family) text-[0.7rem] font-medium leading-snug tracking-tight text-black transition-opacity hover:opacity-50 sm:text-[0.75rem]"
+      >
         {{ product.title }}
       </a>
-      <span class="shrink-0 font-(--font-primary--family) text-[0.7rem] text-[#555]">
+      <span class="shrink-0 font-(--font-primary--family) text-[0.68rem] tabular-nums text-[#666]">
         {{ current_var.price | money }}
       </span>
     </div>
 
-    {%- comment -%} ── Bottom row: swatches + add to cart ────────── {%- endcomment -%}
-    <div class="flex items-center justify-between gap-3">
+    {%- comment -%} ── Swatches + add to cart ───────────────────── {%- endcomment -%}
+    {%- assign color_option = nil -%}
+    {%- for option in product.options_with_values -%}
+      {%- assign option_name_lower = option.name | downcase -%}
+      {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
+        {%- assign color_option = option -%}
+        {%- assign color_option_index = forloop.index0 -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
 
-      {%- comment -%} Color swatches ─────────────────────────────── {%- endcomment -%}
-      {%- assign color_option = nil -%}
-      {%- for option in product.options_with_values -%}
-        {%- assign option_name_lower = option.name | downcase -%}
-        {%- if option_name_lower == 'color' or option_name_lower == 'colour' -%}
-          {%- assign color_option = option -%}
-          {%- assign color_option_index = forloop.index0 -%}
-          {%- break -%}
-        {%- endif -%}
-      {%- endfor -%}
+    <div class="flex items-center justify-between gap-2 pt-0.5">
 
       {%- if color_option != nil -%}
         <div class="flex items-center gap-1.5" role="group" aria-label="Color options">
@@ -133,7 +130,7 @@
                 | replace: 'blue',   '#2d3fcf'
                 | replace: 'navy',   '#0a1a4a'
                 | replace: 'black',  '#1a1a1a'
-                | replace: 'white',  '#f5f5f5'
+                | replace: 'white',  '#f0f0f0'
                 | replace: 'red',    '#d62828'
                 | replace: 'green',  '#2d6a4f'
                 | replace: 'grey',   '#888888'
@@ -147,9 +144,9 @@
                 type="button"
                 @click.prevent="activeVariantId = {{ swatch_variant.id }}"
                 :class="activeVariantId === {{ swatch_variant.id }}
-                  ? 'ring-2 ring-black ring-offset-[2.5px] scale-110'
+                  ? 'ring-2 ring-black ring-offset-[2px] scale-110'
                   : 'ring-1 ring-transparent hover:ring-[#ccc] hover:ring-offset-[2px]'"
-                class="h-3.5 w-3.5 rounded-full transition-all duration-200 will-change-transform"
+                class="h-3 w-3 rounded-full transition-all duration-200 will-change-transform sm:h-3.5 sm:w-3.5"
                 style="background-color: {{ css_color }};"
                 aria-label="{{ value | escape }}"
                 title="{{ value | escape }}"
@@ -161,19 +158,18 @@
         <span></span>
       {%- endif -%}
 
-      {%- comment -%} Add to cart ────────────────────────────────── {%- endcomment -%}
       <button
         type="button"
         @click.prevent="addToCart()"
         :disabled="addingToCart"
-        class="shrink-0 font-(--font-primary--family) text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-black transition-opacity duration-150 hover:opacity-40 disabled:cursor-wait disabled:opacity-30"
+        class="shrink-0 font-(--font-primary--family) text-[0.52rem] font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-40 disabled:cursor-wait disabled:opacity-30 sm:text-[0.55rem]"
         aria-label="Add to cart"
       >
         <span x-show="!addedToCart && !addingToCart">Add to cart</span>
         <span x-show="addingToCart" x-cloak>…</span>
-        <span x-show="addedToCart" x-cloak class="text-black">✓ Added</span>
+        <span x-show="addedToCart" x-cloak>✓ Added</span>
       </button>
 
     </div>
   </div>
-</article>  
+</article>
