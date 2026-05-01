@@ -67,7 +67,7 @@
     {%- endif -%}
 
     {%- if product.compare_at_price > product.price -%}
-      <span class="absolute left-3 top-3 bg-black px-2 py-0.5 font-[--font-primary--family] text-[0.5rem] font-semibold uppercase tracking-[0.2em] text-white">
+      <span class="absolute left-3 top-3 bg-black px-2 py-0.5 font-(--font-primary--family) text-[0.5rem] font-semibold uppercase tracking-[0.2em] text-white">
         Sale
       </span>
     {%- endif -%}
@@ -77,17 +77,17 @@
   <div class="flex flex-col gap-3 pt-4">
 
     {%- if show_vendor and product.vendor != blank -%}
-      <p class="font-[--font-primary--family] text-[0.55rem] uppercase tracking-[0.2em] text-[#aaa]">
+      <p class="font-(--font-primary--family) text-[0.55rem] uppercase tracking-[0.2em] text-[#aaa]">
         {{ product.vendor }}
       </p>
     {%- endif -%}
 
     {%- comment -%} Title + price row {%- endcomment -%}
     <div class="flex items-baseline justify-between gap-3">
-      <a href="{{ product_url }}" class="font-[--font-primary--family] text-[0.75rem] font-medium leading-snug tracking-tight text-black transition-opacity hover:opacity-60">
+      <a href="{{ product_url }}" class="font-(--font-primary--family) text-[0.75rem] font-medium leading-snug tracking-tight text-black transition-opacity hover:opacity-60">
         {{ product.title }}
       </a>
-      <span class="shrink-0 font-[--font-primary--family] text-[0.7rem] text-[#555]">
+      <span class="shrink-0 font-(--font-primary--family) text-[0.7rem] text-[#555]">
         {{ current_var.price | money }}
       </span>
     </div>
@@ -166,7 +166,7 @@
         type="button"
         @click.prevent="addToCart()"
         :disabled="addingToCart"
-        class="shrink-0 font-[--font-primary--family] text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-black transition-opacity duration-150 hover:opacity-40 disabled:cursor-wait disabled:opacity-30"
+        class="shrink-0 font-(--font-primary--family) text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-black transition-opacity duration-150 hover:opacity-40 disabled:cursor-wait disabled:opacity-30"
         aria-label="Add to cart"
       >
         <span x-show="!addedToCart && !addingToCart">Add to cart</span>
@@ -176,4 +176,4 @@
 
     </div>
   </div>
-</article>
+</article>  
