@@ -20,7 +20,7 @@
       <div class="swiper-wrapper items-stretch">
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
-            <div class="swiper-slide transition-all duration-500 ease-out scale-[0.88] blur-[3px] opacity-60 [&.swiper-slide-active]:scale-100 [&.swiper-slide-active]:blur-[0px] [&.swiper-slide-active]:opacity-100" {{ block.shopify_attributes }}>
+            <div class="swiper-slide transition-all duration-500 ease-out scale-[0.88] [&.swiper-slide-active]:scale-100 " {{ block.shopify_attributes }}>
               <div class="relative w-full overflow-hidden h-[33.889vw] flex items-center justify-between p-[4.375vw] z-10">
                 {% if block.settings.image %}
                   <img
@@ -82,9 +82,7 @@
     new window.Swiper('.trusted-brands-slider', {
       slidesPerView: 1.5,
       centeredSlides: true,
-      loop: true,
-      loopAdditionalSlides: 2,
-      spaceBetween: window.innerWidth * (24 / 1440),
+      spaceBetween: window.innerWidth * (12 / 1440),
       modules: [window.Navigation],
       navigation: {
         nextEl: '.trusted-brands-next',
@@ -95,7 +93,7 @@
           spaceBetween: 16,
         },
         768: {
-          spaceBetween: window.innerWidth * (24 / 1440),
+          spaceBetween: window.innerWidth * (12 / 1440),
         },
       },
     });
