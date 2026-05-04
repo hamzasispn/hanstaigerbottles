@@ -1,0 +1,83 @@
+<div class="mx-auto max-w-[92vw] lg:max-w-[88.889vw] py-[10vw] lg:py-[5.556vw]">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-[3vw] lg:gap-[1.111vw]">
+
+    {%- comment -%} Left - Text Card {%- endcomment -%}
+    <div class="relative bg-gradient-to-b from-[#2a2a2a] to-[#000000] rounded-[2vw] lg:rounded-[0.556vw] flex flex-col justify-between p-[8vw] lg:p-[3.333vw] min-h-[80vw] lg:min-h-[27.778vw]">
+      <div>
+        <h2 class="text-white text-[8vw] lg:text-[2.778vw] leading-[9.5vw] lg:leading-[3.333vw] font-medium mb-[4vw] lg:mb-[1.389vw] max-w-[90%] lg:max-w-[80%]">
+          {{ section.settings.heading }}
+        </h2>
+        <p class="text-white/70 text-[3.5vw] lg:text-[0.972vw] leading-[5.5vw] lg:leading-[1.528vw] max-w-[90%] lg:max-w-[75%]">
+          {{ section.settings.subtext }}
+        </p>
+      </div>
+      <div class="flex justify-end mt-[8vw] lg:mt-0">
+        
+         <a href="{{ section.settings.button_link }}"
+          class="inline-flex items-center gap-[2vw] lg:gap-[0.556vw] bg-white/20 hover:bg-white/30 transition-colors text-white text-[3.5vw] lg:text-[0.972vw] px-[5vw] lg:px-[1.389vw] py-[2.5vw] lg:py-[0.694vw] rounded-[1vw] lg:rounded-[0.278vw]"
+        >
+          {{ section.settings.button_label }}
+          <span class="text-[4vw] lg:text-[1.111vw]">{% render 'button-arrow' %}</span>
+        </a>
+      </div>
+    </div>
+
+    {%- comment -%} Right - Image Card {%- endcomment -%}
+    <div class="rounded-[2vw] lg:rounded-[0.556vw] overflow-hidden min-h-[80vw] lg:min-h-[27.778vw]">
+      {% if section.settings.image != blank %}
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          class="w-full h-full object-cover"
+          width="1200"
+          height="800"
+        >
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Split Banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Consistency builds performance"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Make hydration a reliable part of your routine. Choose the formula that sustains you through every challenge."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Choose your setup"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Right Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split Banner"
+    }
+  ]
+}
+{% endschema %}
