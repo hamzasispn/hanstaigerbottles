@@ -1,6 +1,26 @@
 <div class="py-[10vw] lg:py-[4.167vw] overflow-hidden max-w-[88.889vw] mx-auto">
 
-  <div class="swiper marquee-swiper-{{ section.id }}">
+  <div
+    class="swiper"
+    data-marquee-id="{{ section.id }}"
+    x-data
+    x-init="
+      new Swiper($el, {
+        modules: [window.Autoplay, window.FreeMode],
+        loop: true,
+        slidesPerView: 4,
+        spaceBetween: 160,
+        speed: {{ section.settings.speed }},
+        autoplay: {
+          delay: 0,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: {{ section.settings.pause_on_hover }},
+        },
+        allowTouchMove: true,
+        freeMode: { enabled: true, momentum: false },
+      });
+    "
+  >
     <div class="swiper-wrapper items-center">
       {% for block in section.blocks %}
         {% if block.type == 'logo' %}
@@ -27,27 +47,6 @@
   </div>
 
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    new Swiper('.marquee-swiper-{{ section.id }}', {
-      loop: true,
-      slidesPerView: 4,
-      spaceBetween: 160,
-      speed: {{ section.settings.speed }},
-      autoplay: {
-        delay: 0,
-        disableOnInteraction: false,
-        pauseOnMouseEnter: {{ section.settings.pause_on_hover }},
-      },
-      allowTouchMove: true,
-      freeMode: {
-        enabled: true,
-        momentum: false,
-      },
-    });
-  });
-</script>
 
 {% schema %}
 {
