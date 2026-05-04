@@ -20,7 +20,7 @@
       <div class="swiper-wrapper items-stretch">
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
-            <div class="swiper-slide transition-all duration-500 ease-out scale-[0.88] [&.swiper-slide-active]:scale-100 " {{ block.shopify_attributes }}>
+            <div class="swiper-slide transition-all duration-500 ease-out scale-[0.98] [&.swiper-slide-active]:scale-100 " {{ block.shopify_attributes }}>
               <div class="relative w-full overflow-hidden h-[33.889vw] flex items-center justify-between p-[4.375vw] z-10">
                 {% if block.settings.image %}
                   <img
