@@ -21,12 +21,12 @@
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
             <div class="swiper-slide" {{ block.shopify_attributes }}>
-              <div class="relative w-full overflow-hidden h-[33.889vw] flex items-center justify-between p-[4.375vw]">
+              <div class="relative w-full overflow-hidden h-[33.889vw] flex items-center justify-between p-[4.375vw] z-10">
                 {% if block.settings.image %}
                   <img
                     src="{{ block.settings.image | image_url: width: 1800 }}"
                     alt="{{ block.settings.image.alt | escape }}"
-                    class="absolute inset-0 w-full h-full object-cover"
+                    class="absolute inset-0 w-full h-full object-cover -z-10"
                     loading="lazy"
                   >
                 {% else %}
