@@ -81,7 +81,9 @@
   document.addEventListener('DOMContentLoaded', function () {
     new window.Swiper('.trusted-brands-slider', {
       slidesPerView: 1.5,
+      centeredSlides: true,
       loop: true,
+      loopAdditionalSlides: 2,
       spaceBetween: window.innerWidth * (24 / 1440),
       modules: [window.Navigation],
       navigation: {
