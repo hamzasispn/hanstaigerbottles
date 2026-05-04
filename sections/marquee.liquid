@@ -32,8 +32,8 @@
   document.addEventListener('DOMContentLoaded', function () {
     new Swiper('.marquee-swiper-{{ section.id }}', {
       loop: true,
-      slidesPerView: 'auto',
-      spaceBetween: 0,
+      slidesPerView: 4,
+      spaceBetween: 160,
       speed: {{ section.settings.speed }},
       autoplay: {
         delay: 0,
