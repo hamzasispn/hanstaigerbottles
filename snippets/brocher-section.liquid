@@ -1,0 +1,197 @@
+<div class="py-[5.556vw] max-w-[88.889vw] mx-auto">
+  <div class="section-header grid grid-cols-1 lg:grid-cols-2 gap-[3vw] lg:gap-[1.111vw] mb-[5vw] lg:mb-[1.667vw]">
+    <h2 class="lg:text-[2.778vw] lg:leading-[3.056vw] text-black">{{ section.settings.heading }}</h2>
+    {%- comment -%} Feature List — top right {%- endcomment -%}
+    <div class="w-full flex justify-start lg:justify-end">
+      {% if section.blocks.size > 0 %}
+        <ul data-anim="stagger-children">
+          {% for block in section.blocks %}
+            {% if block.type == 'feature_item' %}
+              <li
+                class="text-[3.2vw] leading-[4.2vw] gap-[3vw] mb-[3vw] lg:text-[0.972vw] lg:leading-[1.389vw] lg:gap-[1.111vw] lg:mb-[1.389vw] flex items-center"
+                {{ block.shopify_attributes }}
+              >
+                <span class="w-[5.5vw] h-[5.5vw] p-[1vw] lg:w-[1.667vw] lg:h-[1.667vw] lg:p-[0.347vw]">
+                  {% if block.settings.icon == 'calender-icon' %}
+                    {% render 'calender-icon' %}
+                  {% elsif block.settings.icon == 'globe-icon' %}
+                    {% render 'globe-icon' %}
+                  {% elsif block.settings.icon == 'sun-icon' %}
+                    {% render 'sun-icon' %}
+                  {% elsif block.settings.icon == 'ship-icon' %}
+                    {% render 'ship-icon' %}
+                  {% elsif block.settings.icon == 'chair-icon' %}
+                    {% render 'chair-icon' %}
+                  {% elsif block.settings.icon == 'replay-music-icon' %}
+                    {% render 'replay-music-icon' %}
+                  {% else %}
+                    {% render 'calender-icon' %}
+                  {% endif %}
+                </span>
+                <div>
+                  {% if block.settings.label != blank %}
+                    <span
+                      class="mr-[2vw] lg:mr-[0.833vw] inline-block"
+                      style="color: {{ block.settings.label_color }};"
+                    >
+                      {{- block.settings.label -}}
+                    </span>
+                  {% endif %}
+                  {% if block.settings.description != blank %}
+                    <span style="color: {{ block.settings.description_color }};">{{ block.settings.description }}</span>
+                  {% endif %}
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="lg:h-[50vw] h-[128.158vw] relative p-[2.778vw]">
+    <img src="{{ section.settings.background_image | img_url: '1200x' }}" alt="Brochure Section Background" class="w-full h-full object-cover absolute inset-0 -z-10">
+    <div class="w-full h-full flex items-end justify-end">
+       <div class="flex gap-[0.556vw]">
+            <a href="{{ section.settings.button_one_link }}" class="py-[2vw] px-[3vw] gap-[3vw] bg-(--color-primary) text-[3vw] leading-[4vw] lg:py-[0.556vw] lg:px-[0.833vw] lg:gap-[1.111vw] lg:text-[0.972vw] lg:leading-[1.389vw] text-white">
+                {{ section.settings.button_one_label }}
+            </a>
+            <a href="{{ section.settings.button_two_link }}" class="py-[2vw] px-[3vw] gap-[3vw] text-[3vw] leading-[4vw] lg:py-[0.556vw] lg:px-[0.833vw] lg:gap-[1.111vw] lg:text-[0.972vw] lg:leading-[1.389vw] flex items-center text-white bg-[#C4C4C4]/40 backdrop-blur-md">
+              {{ section.settings.button_two_label }}
+              <span class="text-[4vw] lg:text-[1.111vw]">{% render 'button-arrow' %}</span>  
+            </a>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Download Brochure Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your own, unique <br> personal X1 bottle"
+    },
+    {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background Image",
+    },
+    {
+        "type": "url",
+        "id": "button_one_link",
+        "label": "Button One Link"
+    },
+    {
+        "type": "text",
+        "id": "button_one_label",
+        "label": "Button One Label"
+    },
+    {
+        "type": "url",
+        "id": "button_two_link",
+        "label": "Button Two Link"
+    },
+    {
+        "type": "text",
+        "id": "button_two_label",
+        "label": "Button Two Label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature_item",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "calender-icon",
+              "label": "Calender Icon"
+            },
+            {
+              "value": "globe-icon",
+              "label": "Globe Icon"
+            },
+            {
+              "value": "replay-music-icon",
+              "label": "Replay Music Icon"
+            },
+            {
+              "value": "sun-icon",
+              "label": "Sun Icon"
+            },
+            {
+              "value": "chair-icon",
+              "label": "Chair Icon"
+            },
+            {
+              "value": "ship-icon",
+              "label": "Ship Icon"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "color",
+          "id": "label_color",
+          "label": "Label Color",
+          "default": "#E53D00"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "color",
+          "id": "description_color",
+          "label": "Description Color",
+          "default": "#222222"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Download Brochure Section",
+      "blocks": [
+        {
+          "type": "feature_item",
+          "settings": {
+            "icon": "calender-icon",
+            "label": "30-Day Cycle",
+            "description": "Perfectly timed for continuous use."
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "icon": "globe-icon",
+            "label": "Global Shipping",
+            "description": "We deliver worldwide with care."
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "icon": "replay-music-icon",
+            "label": "Satisfaction Guarantee",
+            "description": "Love it or return it within 30 days."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
