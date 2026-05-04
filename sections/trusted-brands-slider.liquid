@@ -1,0 +1,160 @@
+<div class="bg-[#F4F4F5] pt-[14vw] pb-[10vw] lg:pt-[6.944vw] lg:pb-[4.167vw] overflow-hidden" x-data>
+  {%- comment -%} Heading {%- endcomment -%}
+  <div class="flex flex-col items-center text-center px-[6vw] lg:px-[5.556vw]">
+    {% if section.settings.heading != blank %}
+      <h2 class="text-[#1A1A1A] font-light tracking-[-0.02em] text-[8vw] leading-[9vw] lg:text-[3.056vw] lg:leading-[3.472vw] max-w-full lg:max-w-[44.444vw]">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.description != blank %}
+      <p class="text-[#5A5A5A] mt-[4vw] lg:mt-[1.667vw] text-[3.4vw] leading-[5vw] lg:text-[0.972vw] lg:leading-[1.528vw] max-w-full lg:max-w-[36.111vw]">
+        {{ section.settings.description }}
+      </p>
+    {% endif %}
+  </div>
+
+  {%- comment -%} Slider {%- endcomment -%}
+  <div class="relative mt-[8vw] lg:mt-[4.167vw]">
+    <div class="swiper trusted-brands-slider !overflow-visible">
+      <div class="swiper-wrapper items-stretch">
+        {% for block in section.blocks %}
+          {% if block.type == 'slide' %}
+            <div class="swiper-slide !w-[88vw] lg:!w-[63.889vw] !h-auto" {{ block.shopify_attributes }}>
+              <div class="relative w-full aspect-[16/11] lg:aspect-[920/520] overflow-hidden">
+                {% if block.settings.image %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 1800 }}"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    class="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="absolute inset-0 bg-[#D9D9D9] flex items-center justify-center text-[#999] text-[3.4vw] lg:text-[0.972vw]">
+                    No image
+                  </div>
+                {% endif %}
+
+                {%- comment -%} Subtle bottom gradient for text legibility {%- endcomment -%}
+                <div
+                  class="absolute inset-0 pointer-events-none"
+                  style="background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%);"
+                ></div>
+
+                {%- comment -%} Brand label — bottom left {%- endcomment -%}
+                {% if block.settings.brand_label != blank %}
+                  <span class="absolute left-[5vw] bottom-[5vw] lg:left-[2.222vw] lg:bottom-[2.222vw] text-white tracking-[0.25em] uppercase text-[2.6vw] leading-[3.4vw] lg:text-[0.833vw] lg:leading-[1.111vw]">
+                    {{ block.settings.brand_label }}
+                  </span>
+                {% endif %}
+
+                {%- comment -%} Quote — bottom right {%- endcomment -%}
+                {% if block.settings.quote != blank %}
+                  <p class="absolute right-[5vw] bottom-[5vw] lg:right-[2.222vw] lg:bottom-[2.222vw] text-white text-right text-[3vw] leading-[4.4vw] lg:text-[0.972vw] lg:leading-[1.389vw] max-w-[55vw] lg:max-w-[24.306vw]">
+                    {{ block.settings.quote }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {%- comment -%} Navigation Arrows {%- endcomment -%}
+    <div class="flex justify-end items-center gap-[2vw] lg:gap-[0.694vw] mt-[6vw] lg:mt-[2.778vw] px-[6vw] lg:pr-[5.556vw]">
+      <button
+        class="trusted-brands-prev w-[20vw] h-[8vw] lg:w-[6.944vw] lg:h-[2.5vw] rotate-180 flex items-center justify-center bg-[#D1D1D1] disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Previous slide"
+      >
+        {% render 'button-arrow' %}
+      </button>
+      <button
+        class="trusted-brands-next w-[20vw] h-[8vw] lg:w-[6.944vw] lg:h-[2.5vw] flex items-center justify-center bg-[#D1D1D1] disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Next slide"
+      >
+        {% render 'button-arrow' %}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new window.Swiper('.trusted-brands-slider', {
+      slidesPerView: 'auto',
+      centeredSlides: true,
+      loop: true,
+      spaceBetween: window.innerWidth * (24 / 1440),
+      modules: [window.Navigation],
+      navigation: {
+        nextEl: '.trusted-brands-next',
+        prevEl: '.trusted-brands-prev',
+      },
+      breakpoints: {
+        0: {
+          spaceBetween: 16,
+        },
+        768: {
+          spaceBetween: window.innerWidth * (24 / 1440),
+        },
+      },
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Trusted Brands Slider",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Trusted by brands that value precision"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "From private charters to custom objects, Hanstaiger is chosen for its speed, quality and attention to detail."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "brand_label",
+          "label": "Brand Label",
+          "default": "HANSTAIGER WORLD"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "“The response time and clarity were exceptional. Everything was handled with precision”"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trusted Brands Slider",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide", "settings": { "brand_label": "HANSTAIGER" } },
+        { "type": "slide", "settings": { "brand_label": "HANSTAIGER" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
