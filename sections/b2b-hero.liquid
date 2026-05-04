@@ -1,0 +1,39 @@
+<div class="grid-cols-2 grid">
+    <div style="background-image: url('{{ section.settings.background_image | img_url: width: 1800 }}');"></div>
+    <div class="py-[8.75vw] px-[5.556vw]">
+        <div class="flex items-start justify-between">
+            <h2 class="max-w-[24.583vw] text-[3.333vw] leading-[3.75vw]">{{ section.settings.heading }}</h2>
+            <img src="{{ section.settings.feature_imgage | img_url: width: 600 }}" alt="{{ section.settings.feature_image.alt | escape }}" class="w-[11.111vw] h-[14.444vw] object-contain">
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "B2B Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "B2B Hero"
+    },
+    {
+      "type": "image_picker",
+      "id": "feature_image",
+      "label": "Feature Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "B2B Hero"
+    }
+  ]
+}
+{% endschema %}
