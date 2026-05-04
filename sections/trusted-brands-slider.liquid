@@ -16,12 +16,12 @@
 
   {%- comment -%} Slider {%- endcomment -%}
   <div class="relative mt-[8vw] lg:mt-[4.167vw]">
-    <div class="swiper trusted-brands-slider !overflow-visible">
+    <div class="swiper trusted-brands-slider">
       <div class="swiper-wrapper items-stretch">
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
-            <div class="swiper-slide !w-[88vw] lg:!w-[63.889vw] !h-auto" {{ block.shopify_attributes }}>
-              <div class="relative w-full aspect-[16/11] lg:aspect-[920/520] overflow-hidden">
+            <div class="swiper-slide" {{ block.shopify_attributes }}>
+              <div class="relative w-full overflow-hidden flex items-center justify-between p-[4.375vw]">
                 {% if block.settings.image %}
                   <img
                     src="{{ block.settings.image | image_url: width: 1800 }}"
@@ -43,14 +43,12 @@
 
                 {%- comment -%} Brand label — bottom left {%- endcomment -%}
                 {% if block.settings.brand_label != blank %}
-                  <span class="absolute left-[5vw] bottom-[5vw] lg:left-[2.222vw] lg:bottom-[2.222vw] text-white tracking-[0.25em] uppercase text-[2.6vw] leading-[3.4vw] lg:text-[0.833vw] lg:leading-[1.111vw]">
-                    {{ block.settings.brand_label }}
-                  </span>
+                  <img src="{{ block.settings.brand_label | img_url: width: 600 }}" alt="{{ block.settings.brand_label.alt | escape }}" class="w-[15.139vw] h-auto"/>
                 {% endif %}
 
                 {%- comment -%} Quote — bottom right {%- endcomment -%}
                 {% if block.settings.quote != blank %}
-                  <p class="absolute right-[5vw] bottom-[5vw] lg:right-[2.222vw] lg:bottom-[2.222vw] text-white text-right text-[3vw] leading-[4.4vw] lg:text-[0.972vw] lg:leading-[1.389vw] max-w-[55vw] lg:max-w-[24.306vw]">
+                  <p class="text-white text-right text-[3vw] leading-[4.4vw] lg:text-[0.972vw] lg:leading-[1.389vw] max-w-[55vw] lg:max-w-[23.681vw]">
                     {{ block.settings.quote }}
                   </p>
                 {% endif %}
@@ -82,7 +80,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     new window.Swiper('.trusted-brands-slider', {
-      slidesPerView: 'auto',
+      slidesPerView: 1.1,
       centeredSlides: true,
       loop: true,
       spaceBetween: window.innerWidth * (24 / 1440),
@@ -132,10 +130,9 @@
           "label": "Image"
         },
         {
-          "type": "text",
+          "type": "image_picker",
           "id": "brand_label",
           "label": "Brand Label",
-          "default": "HANSTAIGER WORLD"
         },
         {
           "type": "textarea",
