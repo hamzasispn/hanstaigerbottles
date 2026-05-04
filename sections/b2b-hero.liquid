@@ -1,9 +1,11 @@
 <div class="grid-cols-2 grid">
-    <div style="background-image: url('{{ section.settings.background_image | img_url: width: 1800 }}');"></div>
+    <div>
+        <img src="{{ section.settings.background_image | img_url: width: 1080 }}" alt="{{ section.settings.background_image.alt | escape }}" class="w-full h-full object-cover">
+    </div>
     <div class="py-[8.75vw] px-[5.556vw]">
         <div class="flex items-start justify-between">
             <h2 class="max-w-[24.583vw] text-[3.333vw] leading-[3.75vw]">{{ section.settings.heading }}</h2>
-            <img src="{{ section.settings.feature_imgage | img_url: width: 600 }}" alt="{{ section.settings.feature_image.alt | escape }}" class="w-[11.111vw] h-[14.444vw] object-contain">
+            <img src="{{ section.settings.feature_image | img_url: width: 600 }}" alt="{{ section.settings.feature_image.alt | escape }}" class="w-[11.111vw] h-[14.444vw] object-contain">
         </div>
     </div>
 </div>
