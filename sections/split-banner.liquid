@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-[3vw] lg:gap-[1.111vw]">
 
     {%- comment -%} Left - Text Card {%- endcomment -%}
-    <div class="relative bg-gradient-to-b from-[#2a2a2a] to-[#000000] rounded-[2vw] lg:rounded-[0.556vw] flex flex-col justify-between p-[8vw] lg:p-[3.333vw] min-h-[80vw] lg:min-h-[27.778vw]">
+    <div class="relative flex flex-col justify-between p-[8vw] lg:p-[3.333vw] bg-cover" style="background-image: url('{% if section.settings.left_image %} {{ section.settings.left_image | img_url: 'master' }} {% else %} {{ 'banner-bg.jpg' | asset_url }} {% endif %}');">
       <div>
         <h2 class="text-white text-[8vw] lg:text-[2.778vw] leading-[9.5vw] lg:leading-[3.333vw] font-medium mb-[4vw] lg:mb-[1.389vw] max-w-[90%] lg:max-w-[80%]">
           {{ section.settings.heading }}
@@ -23,7 +23,7 @@
     </div>
 
     {%- comment -%} Right - Image Card {%- endcomment -%}
-    <div class="rounded-[2vw] lg:rounded-[0.556vw] overflow-hidden min-h-[80vw] lg:min-h-[27.778vw]">
+    <div class="overflow-hidden">
       {% if section.settings.image != blank %}
         <img
           src="{{ section.settings.image | image_url: width: 1200 }}"
@@ -67,6 +67,11 @@
       "type": "url",
       "id": "button_link",
       "label": "Button Link"
+    },
+    {
+        "type": "image_picker",
+        "id": "left_image",
+        "label": "Left Image",
     },
     {
       "type": "image_picker",
