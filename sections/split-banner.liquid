@@ -2,9 +2,9 @@
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-[3vw] lg:gap-[1.111vw]">
 
     {%- comment -%} Left - Text Card {%- endcomment -%}
-    <div class="relative flex flex-col justify-between p-[8vw] lg:p-[3.333vw] bg-cover" style="background-image: url('{% if section.settings.left_image %} {{ section.settings.left_image | img_url: 'master' }} {% else %} {{ 'banner-bg.jpg' | asset_url }} {% endif %}');">
+    <div class="relative flex flex-col justify-between p-[8vw] lg:p-[1.667vw] bg-cover" style="background-image: url('{% if section.settings.left_image %} {{ section.settings.left_image | img_url: 'master' }} {% else %} {{ 'banner-bg.jpg' | asset_url }} {% endif %}');">
       <div>
-        <h2 class="text-white text-[8vw] lg:text-[2.778vw] leading-[9.5vw] lg:leading-[3.333vw] font-medium mb-[4vw] lg:mb-[1.389vw] max-w-[90%] lg:max-w-[80%]">
+        <h2 class="text-white text-[8vw] lg:text-[2.778vw] leading-[9.5vw] lg:leading-[3.056vw] font-normal mb-[4vw] lg:mb-[1.667vw] max-w-[90%] lg:max-w-[80%]">
           {{ section.settings.heading }}
         </h2>
         <p class="text-white/70 text-[3.5vw] lg:text-[0.972vw] leading-[5.5vw] lg:leading-[1.528vw] max-w-[90%] lg:max-w-[75%]">
