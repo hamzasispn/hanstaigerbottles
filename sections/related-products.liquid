@@ -1,0 +1,149 @@
+{%- liquid
+  assign limit = section.settings.products_to_show | default: 6
+  assign heading = section.settings.heading
+  assign current_product = product
+-%}
+
+{%- if current_product != blank -%}
+  <div
+    class="related-products-section bg-white py-[14vw] lg:py-[6.944vw] overflow-hidden"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ current_product.id }}"
+    data-limit="{{ limit }}"
+    data-intent="related"
+  >
+    {%- if heading != blank -%}
+      <h2 class="text-[#1A1A1A] font-normal tracking-[-0.02em] text-[10vw] leading-[11vw] lg:text-[5vw] lg:leading-[5.5vw] px-[6vw] lg:px-[5.556vw] mb-[8vw] lg:mb-[3.472vw]">
+        {{ heading }}
+      </h2>
+    {%- endif -%}
+
+    <div class="relative px-[6vw] lg:px-[5.556vw]">
+      <div class="swiper related-products-slider-{{ section.id }}">
+        <div class="swiper-wrapper items-stretch">
+          {%- if recommendations.performed and recommendations.products_count > 0 -%}
+            {%- for rec in recommendations.products -%}
+              <div class="swiper-slide h-auto">
+                {% render 'related-product-card', product: rec %}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            {%- comment -%} SSR fallback: products from same collection {%- endcomment -%}
+            {%- assign fallback_collection = current_product.collections.first -%}
+            {%- if fallback_collection -%}
+              {%- assign count = 0 -%}
+              {%- for p in fallback_collection.products -%}
+                {%- if p.id != current_product.id and count < limit -%}
+                  <div class="swiper-slide h-auto">
+                    {% render 'related-product-card', product: p %}
+                  </div>
+                  {%- assign count = count | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} Navigation Arrows {%- endcomment -%}
+      <div class="flex justify-end items-center gap-[2vw] lg:gap-[0.694vw] mt-[6vw] lg:mt-[2.778vw]">
+        <button
+          class="related-products-prev-{{ section.id }} w-[20vw] h-[8vw] lg:w-[6.944vw] lg:h-[2.5vw] rotate-180 flex items-center justify-center bg-[#EBEBEB] hover:bg-[#D1D1D1] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          aria-label="Previous slide"
+          type="button"
+        >
+          {% render 'button-arrow' %}
+        </button>
+        <button
+          class="related-products-next-{{ section.id }} w-[20vw] h-[8vw] lg:w-[6.944vw] lg:h-[2.5vw] flex items-center justify-center bg-[#EBEBEB] hover:bg-[#D1D1D1] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          aria-label="Next slide"
+          type="button"
+        >
+          {% render 'button-arrow' %}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var sectionId = {{ section.id | json }};
+      var productId = {{ current_product.id | json }};
+      var limit = {{ limit | json }};
+      var container = document.querySelector('.related-products-section[data-section-id="' + sectionId + '"]');
+
+      function initSwiper() {
+        if (!window.Swiper) return;
+        new window.Swiper('.related-products-slider-' + sectionId, {
+          slidesPerView: 1.4,
+          spaceBetween: 12,
+          modules: [window.Navigation],
+          navigation: {
+            nextEl: '.related-products-next-' + sectionId,
+            prevEl: '.related-products-prev-' + sectionId,
+          },
+          breakpoints: {
+            640: { slidesPerView: 2.2, spaceBetween: 16 },
+            900: { slidesPerView: 3.2, spaceBetween: 20 },
+            1200: { slidesPerView: 4.2, spaceBetween: 24 },
+          },
+        });
+      }
+
+      // Fetch recommendations from Shopify (powered by Search & Discovery)
+      var url = '{{ routes.product_recommendations_url }}?section_id=' + encodeURIComponent(sectionId)
+              + '&product_id=' + encodeURIComponent(productId)
+              + '&limit=' + encodeURIComponent(limit)
+              + '&intent=related';
+
+      fetch(url)
+        .then(function (r) { return r.text(); })
+        .then(function (text) {
+          var html = new DOMParser().parseFromString(text, 'text/html');
+          var fresh = html.querySelector('.related-products-section[data-section-id="' + sectionId + '"]');
+          if (fresh && container) {
+            container.innerHTML = fresh.innerHTML;
+          }
+          initSwiper();
+        })
+        .catch(function () { initSwiper(); });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Related products",
+  "tag": "section",
+  "class": "section-related-products",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Related products"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Maximum products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "paragraph",
+      "content": "Powered by the Shopify Search & Discovery app. Install it from the Shopify App Store to customize recommendations."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related products"
+    }
+  ]
+}
+{% endschema %}

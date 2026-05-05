@@ -1,0 +1,93 @@
+{% doc %}
+  Renders a related product card matching the related products design.
+  Card: gray image area with floating "+" button overlaid bottom-right,
+  title and price displayed in a row below the image.
+
+  @param {object} product - The product to render
+  @param {boolean} [lazy] - Whether to lazy load the image (default true)
+
+  @example
+  {% render 'related-product-card', product: product %}
+{% enddoc %}
+
+{%- liquid
+  assign lazy = lazy | default: true
+  assign current_var = product.selected_or_first_available_variant
+-%}
+
+<article class="related-card group flex flex-col h-full" x-data="{
+  adding: false,
+  added: false,
+  async addToCart() {
+    this.adding = true;
+    try {
+      const res = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: {{ current_var.id | json }}, quantity: 1 })
+      });
+      if (res.ok) {
+        this.added = true;
+        window.dispatchEvent(new CustomEvent('cart:refresh'));
+        setTimeout(() => this.added = false, 1800);
+      }
+    } finally { this.adding = false; }
+  }
+}">
+
+  {%- comment -%} ── Image ─────────────────────────────────── {%- endcomment -%}
+  <a
+    href="{{ product.url }}"
+    class="related-card__image relative block w-full overflow-hidden bg-[#EBEBEB]"
+    aria-label="{{ product.title | escape }}"
+  >
+    {%- if product.featured_media -%}
+      {{
+        product.featured_media
+        | image_url: width: 900
+        | image_tag:
+          class: 'absolute inset-0 h-full w-full object-contain p-[10%] transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.04]',
+          loading: lazy | ternary: 'lazy', 'eager',
+          alt: product.featured_media.alt | escape | default: product.title,
+          widths: '300,500,700,900',
+          sizes: '(max-width: 640px) 70vw, (max-width: 1200px) 33vw, 22vw'
+      }}
+    {%- else -%}
+      <span class="absolute inset-0 flex items-center justify-center text-[#bbb]">
+        {{ 'image' | placeholder_svg_tag: 'w-12 h-12 opacity-30' }}
+      </span>
+    {%- endif -%}
+
+    {%- comment -%} ── Plus button overlay ────────────────── {%- endcomment -%}
+    <button
+      type="button"
+      @click.prevent="addToCart()"
+      :disabled="adding"
+      class="absolute right-[3vw] bottom-[3vw] lg:right-[1.25vw] lg:bottom-[1.25vw] w-[14vw] h-[8vw] lg:w-[5.139vw] lg:h-[2.5vw] flex items-center justify-center bg-white/90 backdrop-blur-sm hover:bg-white text-[#1A1A1A] transition-all disabled:opacity-50"
+      aria-label="{{ 'products.product.add_to_cart' | t: default: 'Add to cart' }}"
+    >
+      <span x-show="!adding && !added" class="text-[5vw] lg:text-[1.4vw] leading-none font-light">+</span>
+      <span x-show="adding" x-cloak class="text-[3vw] lg:text-[0.9vw]">…</span>
+      <span x-show="added" x-cloak class="text-[3vw] lg:text-[0.9vw]">✓</span>
+    </button>
+  </a>
+
+  {%- comment -%} ── Title + Price ─────────────────────────── {%- endcomment -%}
+  <div class="flex items-center justify-between gap-[3vw] lg:gap-[1.111vw] pt-[3vw] lg:pt-[1.111vw]">
+    <a
+      href="{{ product.url }}"
+      class="text-[#1A1A1A] text-[3.6vw] leading-[4.4vw] lg:text-[1.111vw] lg:leading-[1.389vw] tracking-[-0.01em] transition-opacity hover:opacity-60"
+    >
+      {{ product.title }}
+    </a>
+    <span class="shrink-0 text-[#A0A0A0] text-[3.4vw] leading-[4.4vw] lg:text-[1vw] lg:leading-[1.389vw] tabular-nums">
+      {{ current_var.price | money }}
+    </span>
+  </div>
+</article>
+
+{% stylesheet %}
+  .related-card__image {
+    aspect-ratio: 3 / 4;
+  }
+{% endstylesheet %}
