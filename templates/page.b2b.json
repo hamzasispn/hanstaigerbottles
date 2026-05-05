@@ -173,36 +173,6 @@
         "feature_color": "#f37021"
       }
     },
-    "trusted_brands_slider_RjHjfU": {
-      "type": "trusted-brands-slider",
-      "blocks": {
-        "slide_UAg8nK": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Image_4.jpg",
-            "brand_label": "shopify://shop_images/logos.svg",
-            "quote": "“The quality and attention to detail exceeded expectations at every stage”"
-          }
-        },
-        "slide_UKCQHH": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/image_5.jpg",
-            "brand_label": "shopify://shop_images/logos.svg",
-            "quote": "“The response time and clarity were exceptional. Everything was handled with precision”"
-          }
-        }
-      },
-      "block_order": [
-        "slide_UAg8nK",
-        "slide_UKCQHH"
-      ],
-      "name": "Trusted Brands Slider",
-      "settings": {
-        "heading": "Trusted by brands that value precision",
-        "description": "From private charters to custom objects, Hanstaiger is chosen for its speed, quality and attention to detail."
-      }
-    },
     "two_column_image_box_zECb3m": {
       "type": "two-column-image-box",
       "name": "2 Column Image Box",
@@ -234,6 +204,36 @@
         "right_button_text_color": "#FFFFFF",
         "right_font_family": "Helvetica Neue"
       }
+    },
+    "trusted_brands_slider_RjHjfU": {
+      "type": "trusted-brands-slider",
+      "blocks": {
+        "slide_UAg8nK": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Image_4.jpg",
+            "brand_label": "shopify://shop_images/logos.svg",
+            "quote": "“The quality and attention to detail exceeded expectations at every stage”"
+          }
+        },
+        "slide_UKCQHH": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/image_5.jpg",
+            "brand_label": "shopify://shop_images/logos.svg",
+            "quote": "“The response time and clarity were exceptional. Everything was handled with precision”"
+          }
+        }
+      },
+      "block_order": [
+        "slide_UAg8nK",
+        "slide_UKCQHH"
+      ],
+      "name": "Trusted Brands Slider",
+      "settings": {
+        "heading": "Trusted by brands that value precision",
+        "description": "From private charters to custom objects, Hanstaiger is chosen for its speed, quality and attention to detail."
+      }
     }
   },
   "order": [
@@ -243,7 +243,7 @@
     "marquee_tGi4Vg",
     "image_box_yaCUhR",
     "custom_text_Bk7qCb",
-    "trusted_brands_slider_RjHjfU",
-    "two_column_image_box_zECb3m"
+    "two_column_image_box_zECb3m",
+    "trusted_brands_slider_RjHjfU"
   ]
 }
