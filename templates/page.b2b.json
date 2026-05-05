@@ -1,0 +1,249 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page",
+      "disabled": true,
+      "settings": {}
+    },
+    "b2b_hero_9HF4AY": {
+      "type": "b2b-hero",
+      "name": "B2B Hero",
+      "settings": {
+        "background_image": "shopify://shop_images/img_porsche_2.jpg",
+        "heading": "Not merchandise.",
+        "heading_two": "Brand architecture.",
+        "feature_image": "shopify://shop_images/img_17.jpg",
+        "subheading_one": "Engineered objects   /   Lasting impressions",
+        "subheading_two": "hanstaiger",
+        "description": "For brands like Porsche, where precision defines identity, every object must carry meaning. Custom bottles become a extension of the brand, designed to be remembered.",
+        "button_url": "",
+        "button_text": "Configure your order"
+      }
+    },
+    "gallery_REkEH7": {
+      "type": "gallery",
+      "blocks": {
+        "image_card_dCFK34": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Background_5.jpg",
+            "show_content": true,
+            "title": "Share your vision",
+            "description": "We understand your brand and guide your decision.",
+            "button_text": "See More",
+            "button_link": ""
+          }
+        },
+        "image_card_NEqPn6": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Background_6.jpg",
+            "show_content": true,
+            "title": "Receive your design",
+            "description": "Mockup and quotation, precisely aligned.",
+            "button_text": "See More",
+            "button_link": ""
+          }
+        },
+        "image_card_QBqwEz": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Background_7.jpg",
+            "show_content": true,
+            "title": "Ready to deliver",
+            "description": "Your bottles arrive, refined and complete.",
+            "button_text": "See More",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_card_dCFK34",
+        "image_card_NEqPn6",
+        "image_card_QBqwEz"
+      ],
+      "name": "Gallery Section",
+      "settings": {
+        "subtitle": "",
+        "brackets_color": "#ffffff",
+        "heading": "Your order, refined in three steps"
+      }
+    },
+    "marquee_tGi4Vg": {
+      "type": "marquee",
+      "blocks": {
+        "logo_HwU3iF": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/image_630_Vectorized.svg"
+          }
+        },
+        "logo_iJhmVF": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/image_631_Vectorized.svg"
+          }
+        },
+        "logo_nV7Jf8": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/cara8-logo_paraguas.svg"
+          }
+        },
+        "logo_Dc3fUr": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/image_632_Vectorized.svg"
+          }
+        },
+        "logo_VjiUhm": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/image_629_Vectorized.svg"
+          }
+        }
+      },
+      "block_order": [
+        "logo_HwU3iF",
+        "logo_iJhmVF",
+        "logo_nV7Jf8",
+        "logo_Dc3fUr",
+        "logo_VjiUhm"
+      ],
+      "name": "Marquee Logos",
+      "settings": {
+        "speed": 2700,
+        "pause_on_hover": true,
+        "grayscale": false
+      }
+    },
+    "image_box_yaCUhR": {
+      "type": "image-box",
+      "name": "Image Box",
+      "settings": {
+        "background_image": "shopify://shop_images/Image_3.jpg",
+        "image_fit": "cover",
+        "heading": "Custom bottles, <br> built around your brand",
+        "heading_color": "#ffffff",
+        "subheading": "Fully customised",
+        "subheading_color": "#ffffff",
+        "description": "Choose techniques, finishes and packaging to create a consistent and elevated brand object.",
+        "description_color": "#ffffff",
+        "button_url": "",
+        "button_label": "Shop now",
+        "button_bg_color": "rgba(209, 209, 209, 1)",
+        "button_text_color": "#111111",
+        "font_family": "Inter"
+      }
+    },
+    "custom_text_Bk7qCb": {
+      "type": "custom-text",
+      "blocks": {
+        "feature_gXag4D": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Durable"
+          }
+        },
+        "feature_JyPfDz": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Solid"
+          }
+        }
+      },
+      "block_order": [
+        "feature_gXag4D",
+        "feature_JyPfDz"
+      ],
+      "name": "Custom Text Box",
+      "settings": {
+        "description": "Refined in its proportions and precise in every detail, this is a bottle conceived as an object of presence. Its structure is engineered for durability, ensuring resistance to daily use while maintaining its visual integrity over time. A balance between elegance and performance, designed not only to stand out, but to endure.",
+        "link": "",
+        "second_text": "Designed to stand apart",
+        "feature_color": "#f37021"
+      }
+    },
+    "trusted_brands_slider_RjHjfU": {
+      "type": "trusted-brands-slider",
+      "blocks": {
+        "slide_UAg8nK": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Image_4.jpg",
+            "brand_label": "shopify://shop_images/logos.svg",
+            "quote": "“The quality and attention to detail exceeded expectations at every stage”"
+          }
+        },
+        "slide_UKCQHH": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/image_5.jpg",
+            "brand_label": "shopify://shop_images/logos.svg",
+            "quote": "“The response time and clarity were exceptional. Everything was handled with precision”"
+          }
+        }
+      },
+      "block_order": [
+        "slide_UAg8nK",
+        "slide_UKCQHH"
+      ],
+      "name": "Trusted Brands Slider",
+      "settings": {
+        "heading": "Trusted by brands that value precision",
+        "description": "From private charters to custom objects, Hanstaiger is chosen for its speed, quality and attention to detail."
+      }
+    },
+    "two_column_image_box_zECb3m": {
+      "type": "two-column-image-box",
+      "name": "2 Column Image Box",
+      "settings": {
+        "left_background_image": "shopify://shop_images/Container_1.jpg",
+        "left_image_fit": "cover",
+        "left_heading": "Large volumes, precise results",
+        "left_heading_color": "#FFFFFF",
+        "left_subheading": "",
+        "left_subheading_color": "#FFFFFF",
+        "left_description": "Designed for consistent brand execution",
+        "left_description_color": "#FFFFFF",
+        "left_button_url": "#",
+        "left_button_label": "Configure at scale",
+        "left_button_bg_color": "rgba(0, 0, 0, 70%)",
+        "left_button_text_color": "#FFFFFF",
+        "left_font_family": "Helvetica Neue",
+        "right_background_image": "shopify://shop_images/Container_1.png",
+        "right_image_fit": "cover",
+        "right_heading": "From 50 units or 8.50€ per bottle",
+        "right_heading_color": "#FFFFFF",
+        "right_subheading": "",
+        "right_subheading_color": "#83868E",
+        "right_description": "refined & durable | 20 h thermal performance",
+        "right_description_color": "#FFFFFF",
+        "right_button_url": "#",
+        "right_button_label": "Explore small runs",
+        "right_button_bg_color": "rgba(0, 0, 0, 70%)",
+        "right_button_text_color": "#FFFFFF",
+        "right_font_family": "Helvetica Neue"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "b2b_hero_9HF4AY",
+    "gallery_REkEH7",
+    "marquee_tGi4Vg",
+    "image_box_yaCUhR",
+    "custom_text_Bk7qCb",
+    "trusted_brands_slider_RjHjfU",
+    "two_column_image_box_zECb3m"
+  ]
+}
