@@ -114,17 +114,17 @@
               <button type="button"
                 class="h-7 w-7 cursor-pointer rounded border-2 border-transparent p-0"
                 style="background: {{ val | handle }};"
-                :class="selected[{{ oi }}] === {{ val | json }} ? 'outline outline-1 outline-offset-2 outline-neutral-900' : ''"
-                :disabled="!isAvailable({{ oi }}, {{ val | json }})"
-                @click="pick({{ oi }}, {{ val | json }})"
+                :class="selected[{{ oi }}] === {{ val | json | escape }} ? 'outline outline-1 outline-offset-2 outline-neutral-900' : ''"
+                :disabled="!isAvailable({{ oi }}, {{ val | json | escape }})"
+                @click="pick({{ oi }}, {{ val | json | escape }})"
                 aria-label="{{ val | escape }}"
                 title="{{ val | escape }}"></button>
             {%- else -%}
               <button type="button"
                 class="cursor-pointer rounded border border-neutral-300 bg-white px-4 py-2 text-sm text-neutral-700 disabled:cursor-not-allowed disabled:opacity-40"
-                :class="selected[{{ oi }}] === {{ val | json }} ? 'border-neutral-900 text-neutral-900' : ''"
-                :disabled="!isAvailable({{ oi }}, {{ val | json }})"
-                @click="pick({{ oi }}, {{ val | json }})">{{ val }}</button>
+                :class="selected[{{ oi }}] === {{ val | json | escape }} ? 'border-neutral-900 text-neutral-900' : ''"
+                :disabled="!isAvailable({{ oi }}, {{ val | json | escape }})"
+                @click="pick({{ oi }}, {{ val | json | escape }})">{{ val }}</button>
             {%- endif -%}
           {%- endfor -%}
         </div>
