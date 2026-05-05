@@ -1,0 +1,540 @@
+<div class="image-box py-[12vw] lg:py-[6.944vw]">
+  <div class="grid lg:grid-cols-2 grid-cols-1">
+
+    {%- comment -%} ===== LEFT COLUMN ===== {%- endcomment -%}
+    <div
+      class="column-panel h-[50vh] lg:h-screen py-[10vw] px-[8vw] lg:py-[6.944vw] lg:px-[6.25vw] flex flex-col justify-between relative z-10 bg-[#dfe0e2] rounded-sm overflow-hidden"
+    >
+      {%- comment -%} Background Image {%- endcomment -%}
+      {% if section.settings.left_background_image %}
+        <img
+          src="{{ section.settings.left_background_image | img_url: '2000x' }}"
+          width="2000"
+          height="1000"
+          alt="{{ section.settings.left_background_image.alt | escape }}"
+          class="absolute inset-0 w-full h-full -z-10"
+          style="object-fit: {{ section.settings.left_image_fit }};"
+        >
+      {% else %}
+        <img
+          src="{{ 'image-box-bg.jpg' | asset_url }}"
+          width="2000"
+          height="1000"
+          alt=""
+          class="absolute inset-0 w-full h-full -z-10"
+          style="object-fit: {{ section.settings.left_image_fit }};"
+        >
+      {% endif %}
+
+      {%- comment -%} Feature List — top LEFT aligned {%- endcomment -%}
+      <div class="w-full flex justify-start">
+        {% assign left_blocks = section.blocks | where: 'type', 'left_feature_item' %}
+        {% if left_blocks.size > 0 %}
+          <ul data-anim="stagger-children">
+            {% for block in left_blocks %}
+              <li
+                class="text-[3.2vw] leading-[4.2vw] gap-[3vw] mb-[3vw] lg:text-[0.972vw] lg:leading-[1.389vw] lg:gap-[1.111vw] lg:mb-[1.389vw] flex items-center"
+                {{ block.shopify_attributes }}
+              >
+                <span class="w-[5.5vw] h-[5.5vw] p-[1vw] lg:w-[1.667vw] lg:h-[1.667vw] lg:p-[0.347vw]">
+                  {% if block.settings.icon == 'calender-icon' %}
+                    {% render 'calender-icon' %}
+                  {% elsif block.settings.icon == 'globe-icon' %}
+                    {% render 'globe-icon' %}
+                  {% elsif block.settings.icon == 'replay-music-icon' %}
+                    {% render 'replay-music-icon' %}
+                  {% else %}
+                    {% render 'calender-icon' %}
+                  {% endif %}
+                </span>
+                <div>
+                  {% if block.settings.label != blank %}
+                    <span
+                      class="mr-[2vw] lg:mr-[0.833vw] inline-block"
+                      style="color: {{ block.settings.label_color }};"
+                    >
+                      {{- block.settings.label -}}
+                    </span>
+                  {% endif %}
+                  {% if block.settings.description != blank %}
+                    <span style="color: {{ block.settings.description_color }};">
+                      {{- block.settings.description -}}
+                    </span>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      {%- comment -%} Bottom Content — left aligned {%- endcomment -%}
+      <div class="w-full text-left">
+        {% if section.settings.left_heading != blank %}
+          <h2
+            data-anim="split-words"
+            class="text-[8vw] mb-[2vw] lg:text-[1.889vw] lg:mb-[0.556vw]"
+            style="
+              color: {{ section.settings.left_heading_color }};
+              font-family: '{{ section.settings.left_font_family }}', sans-serif;
+            "
+          >
+            {{ section.settings.left_heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.left_subheading != blank %}
+          <p
+            data-anim="fade-up"
+            class="text-[2.6vw] tracking-[0.3vw] mb-[4vw] lg:text-[0.813vw] lg:tracking-[0.09vw] lg:mb-[1.389vw] uppercase"
+            style="color: {{ section.settings.left_subheading_color }};"
+          >
+            {{ section.settings.left_subheading }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.left_description != blank %}
+          <p
+            data-anim="fade-up"
+            class="text-[3.4vw] leading-[5vw] mb-[6vw] max-w-full lg:text-[1.111vw] lg:leading-[1.528vw] lg:mb-[2.778vw] lg:max-w-[30.069vw]"
+            style="
+              color: {{ section.settings.left_description_color }};
+              font-family: '{{ section.settings.left_font_family }}', sans-serif;
+            "
+          >
+            {{ section.settings.left_description }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.left_button_url != blank %}
+          <a
+            href="{{ section.settings.left_button_url }}"
+            class="{% if section.settings.left_button_label == blank %} w-[20vw] lg:w-[6.944vw] {% endif%} h-[10vw] px-[4vw] gap-[2vw] text-[3vw] lg:h-[2.5vw] lg:px-[1.111vw] lg:gap-[0.556vw] lg:text-[0.833vw] inline-flex items-center justify-center font-medium"
+            style="
+              background-color: {{ section.settings.left_button_bg_color }};
+              color: {{ section.settings.left_button_text_color }};
+              font-family: '{{ section.settings.left_font_family }}', sans-serif;
+            "
+          >
+            {% if section.settings.left_button_label != blank %}
+              <span>{{ section.settings.left_button_label }}</span>
+            {% endif %}
+            {% render 'button-arrow' %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {%- comment -%} ===== RIGHT COLUMN ===== {%- endcomment -%}
+    <div
+      class="column-panel h-[50vh] lg:h-screen py-[10vw] px-[8vw] lg:py-[6.944vw] lg:px-[6.25vw] flex flex-col justify-between relative z-10 bg-[#dfe0e2] rounded-sm overflow-hidden"
+    >
+      {%- comment -%} Background Image {%- endcomment -%}
+      {% if section.settings.right_background_image %}
+        <img
+          src="{{ section.settings.right_background_image | img_url: '2000x' }}"
+          width="2000"
+          height="1000"
+          alt="{{ section.settings.right_background_image.alt | escape }}"
+          class="absolute inset-0 w-full h-full -z-10"
+          style="object-fit: {{ section.settings.right_image_fit }};"
+        >
+      {% else %}
+        <img
+          src="{{ 'image-box-bg.jpg' | asset_url }}"
+          width="2000"
+          height="1000"
+          alt=""
+          class="absolute inset-0 w-full h-full -z-10"
+          style="object-fit: {{ section.settings.right_image_fit }};"
+        >
+      {% endif %}
+
+      {%- comment -%} Feature List — top RIGHT aligned {%- endcomment -%}
+      <div class="w-full flex justify-end">
+        {% assign right_blocks = section.blocks | where: 'type', 'right_feature_item' %}
+        {% if right_blocks.size > 0 %}
+          <ul data-anim="stagger-children">
+            {% for block in right_blocks %}
+              <li
+                class="text-[3.2vw] leading-[4.2vw] gap-[3vw] mb-[3vw] lg:text-[0.972vw] lg:leading-[1.389vw] lg:gap-[1.111vw] lg:mb-[1.389vw] flex items-center"
+                {{ block.shopify_attributes }}
+              >
+                <span class="w-[5.5vw] h-[5.5vw] p-[1vw] lg:w-[1.667vw] lg:h-[1.667vw] lg:p-[0.347vw]">
+                  {% if block.settings.icon == 'calender-icon' %}
+                    {% render 'calender-icon' %}
+                  {% elsif block.settings.icon == 'globe-icon' %}
+                    {% render 'globe-icon' %}
+                  {% elsif block.settings.icon == 'replay-music-icon' %}
+                    {% render 'replay-music-icon' %}
+                  {% else %}
+                    {% render 'calender-icon' %}
+                  {% endif %}
+                </span>
+                <div>
+                  {% if block.settings.label != blank %}
+                    <span
+                      class="mr-[2vw] lg:mr-[0.833vw] inline-block"
+                      style="color: {{ block.settings.label_color }};"
+                    >
+                      {{- block.settings.label -}}
+                    </span>
+                  {% endif %}
+                  {% if block.settings.description != blank %}
+                    <span style="color: {{ block.settings.description_color }};">
+                      {{- block.settings.description -}}
+                    </span>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      {%- comment -%} Bottom Content — right aligned {%- endcomment -%}
+      <div class="w-full text-right">
+        {% if section.settings.right_heading != blank %}
+          <h2
+            data-anim="split-words"
+            class="text-[8vw] mb-[2vw] lg:text-[1.889vw] lg:mb-[0.556vw]"
+            style="
+              color: {{ section.settings.right_heading_color }};
+              font-family: '{{ section.settings.right_font_family }}', sans-serif;
+            "
+          >
+            {{ section.settings.right_heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.right_subheading != blank %}
+          <p
+            data-anim="fade-up"
+            class="text-[2.6vw] tracking-[0.3vw] mb-[4vw] lg:text-[0.813vw] lg:tracking-[0.09vw] lg:mb-[1.389vw] uppercase"
+            style="color: {{ section.settings.right_subheading_color }};"
+          >
+            {{ section.settings.right_subheading }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.right_description != blank %}
+          <p
+            data-anim="fade-up"
+            class="text-[3.4vw] leading-[5vw] mb-[6vw] max-w-full lg:text-[1.111vw] lg:leading-[1.528vw] lg:mb-[2.778vw] lg:max-w-[30.069vw] ml-auto"
+            style="
+              color: {{ section.settings.right_description_color }};
+              font-family: '{{ section.settings.right_font_family }}', sans-serif;
+            "
+          >
+            {{ section.settings.right_description }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.right_button_url != blank %}
+          <a
+            href="{{ section.settings.right_button_url }}"
+            class="{% if section.settings.right_button_label == blank %} w-[20vw] lg:w-[6.944vw] {% endif%} h-[10vw] px-[4vw] gap-[2vw] text-[3vw] lg:h-[2.5vw] lg:px-[1.111vw] lg:gap-[0.556vw] lg:text-[0.833vw] inline-flex items-center justify-center font-medium"
+            style="
+              background-color: {{ section.settings.right_button_bg_color }};
+              color: {{ section.settings.right_button_text_color }};
+              font-family: '{{ section.settings.right_font_family }}', sans-serif;
+            "
+          >
+            {% if section.settings.right_button_label != blank %}
+              <span>{{ section.settings.right_button_label }}</span>
+            {% endif %}
+            {% render 'button-arrow' %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "2 Column Image Box",
+  "tag": "section",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "── LEFT COLUMN ──"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_background_image",
+      "label": "Left Background Image"
+    },
+    {
+      "type": "select",
+      "id": "left_image_fit",
+      "label": "Left Image Fit",
+      "options": [
+        { "value": "cover", "label": "Cover (fill & crop)" },
+        { "value": "contain", "label": "Contain (show full image)" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "text",
+      "id": "left_heading",
+      "label": "Left Heading",
+      "default": "Automated replenishment"
+    },
+    {
+      "type": "color",
+      "id": "left_heading_color",
+      "label": "Left Heading Color",
+      "default": "#4F5257"
+    },
+    {
+      "type": "text",
+      "id": "left_subheading",
+      "label": "Left Subheading",
+      "default": "SUBSCRIBE TO ELECTROLYTES"
+    },
+    {
+      "type": "color",
+      "id": "left_subheading_color",
+      "label": "Left Subheading Color",
+      "default": "#83868E"
+    },
+    {
+      "type": "textarea",
+      "id": "left_description",
+      "label": "Left Description",
+      "default": "Receive a fresh 30-day supply of X1 Electrolytes every month, delivered directly to your door."
+    },
+    {
+      "type": "color",
+      "id": "left_description_color",
+      "label": "Left Description Color",
+      "default": "#83868E"
+    },
+    {
+      "type": "url",
+      "id": "left_button_url",
+      "label": "Left Button Link"
+    },
+    {
+      "type": "text",
+      "id": "left_button_label",
+      "label": "Left Button Text",
+      "default": "Shop now"
+    },
+    {
+      "type": "color_background",
+      "id": "left_button_bg_color",
+      "label": "Left Button Background Color",
+      "default": "rgba(209, 209, 209, 1)"
+    },
+    {
+      "type": "color",
+      "id": "left_button_text_color",
+      "label": "Left Button Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "select",
+      "id": "left_font_family",
+      "label": "Left Font Family",
+      "options": [
+        { "value": "Inter", "label": "Inter" },
+        { "value": "Helvetica Neue", "label": "Theme Default" },
+        { "value": "Georgia", "label": "Georgia" },
+        { "value": "Playfair Display", "label": "Playfair Display" },
+        { "value": "DM Sans", "label": "DM Sans" },
+        { "value": "Montserrat", "label": "Montserrat" },
+        { "value": "Lato", "label": "Lato" }
+      ],
+      "default": "Inter"
+    },
+
+    {
+      "type": "header",
+      "content": "── RIGHT COLUMN ──"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_background_image",
+      "label": "Right Background Image"
+    },
+    {
+      "type": "select",
+      "id": "right_image_fit",
+      "label": "Right Image Fit",
+      "options": [
+        { "value": "cover", "label": "Cover (fill & crop)" },
+        { "value": "contain", "label": "Contain (show full image)" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "text",
+      "id": "right_heading",
+      "label": "Right Heading",
+      "default": "Performance nutrition"
+    },
+    {
+      "type": "color",
+      "id": "right_heading_color",
+      "label": "Right Heading Color",
+      "default": "#4F5257"
+    },
+    {
+      "type": "text",
+      "id": "right_subheading",
+      "label": "Right Subheading",
+      "default": "ELEVATE YOUR GAME"
+    },
+    {
+      "type": "color",
+      "id": "right_subheading_color",
+      "label": "Right Subheading Color",
+      "default": "#83868E"
+    },
+    {
+      "type": "textarea",
+      "id": "right_description",
+      "label": "Right Description",
+      "default": "Scientifically formulated to support peak performance. Trusted by athletes across Europe."
+    },
+    {
+      "type": "color",
+      "id": "right_description_color",
+      "label": "Right Description Color",
+      "default": "#83868E"
+    },
+    {
+      "type": "url",
+      "id": "right_button_url",
+      "label": "Right Button Link"
+    },
+    {
+      "type": "text",
+      "id": "right_button_label",
+      "label": "Right Button Text",
+      "default": "Learn more"
+    },
+    {
+      "type": "color_background",
+      "id": "right_button_bg_color",
+      "label": "Right Button Background Color",
+      "default": "rgba(209, 209, 209, 1)"
+    },
+    {
+      "type": "color",
+      "id": "right_button_text_color",
+      "label": "Right Button Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "select",
+      "id": "right_font_family",
+      "label": "Right Font Family",
+      "options": [
+        { "value": "Inter", "label": "Inter" },
+        { "value": "Helvetica Neue", "label": "Theme Default" },
+        { "value": "Georgia", "label": "Georgia" },
+        { "value": "Playfair Display", "label": "Playfair Display" },
+        { "value": "DM Sans", "label": "DM Sans" },
+        { "value": "Montserrat", "label": "Montserrat" },
+        { "value": "Lato", "label": "Lato" }
+      ],
+      "default": "Inter"
+    }
+
+  ],
+  "blocks": [
+    {
+      "type": "left_feature_item",
+      "name": "Left Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "calender-icon", "label": "Calendar" },
+            { "value": "globe-icon", "label": "Globe" },
+            { "value": "replay-music-icon", "label": "Replay" }
+          ],
+          "default": "calender-icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "color",
+          "id": "label_color",
+          "label": "Label Color",
+          "default": "#4F5257"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "color",
+          "id": "description_color",
+          "label": "Description Color",
+          "default": "#83868E"
+        }
+      ]
+    },
+    {
+      "type": "right_feature_item",
+      "name": "Right Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "calender-icon", "label": "Calendar" },
+            { "value": "globe-icon", "label": "Globe" },
+            { "value": "replay-music-icon", "label": "Replay" }
+          ],
+          "default": "calender-icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "color",
+          "id": "label_color",
+          "label": "Label Color",
+          "default": "#4F5257"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "color",
+          "id": "description_color",
+          "label": "Description Color",
+          "default": "#83868E"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "2 Column Image Box",
+      "blocks": [
+        { "type": "left_feature_item" },
+        { "type": "right_feature_item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
