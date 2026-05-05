@@ -1,0 +1,319 @@
+{%- liquid
+  assign sec = section
+  assign uid = section.id
+  assign base_price = sec.settings.base_price | default: 2400
+  assign currency = sec.settings.currency_symbol | default: '$'
+
+  assign thumbs   = sec.blocks | where: 'type', 'thumbnail'
+  assign colors   = sec.blocks | where: 'type', 'color'
+  assign sizes    = sec.blocks | where: 'type', 'size'
+  assign handlers = sec.blocks | where: 'type', 'handler'
+  assign holders  = sec.blocks | where: 'type', 'holder'
+-%}
+
+<section class="spc" id="spc-{{ uid }}" data-base-price="{{ base_price }}" data-currency="{{ currency }}">
+  <div class="spc__wrap">
+    {%- comment -%} Thumbnails {%- endcomment -%}
+    <aside class="spc__thumbs">
+      {%- for b in thumbs -%}
+        <button type="button" class="spc__thumb" data-img="{{ b.settings.image | image_url: width: 400 }}" {{ b.shopify_attributes }}>
+          {% if b.settings.image %}
+            {{ b.settings.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: 'thumbnail' }}
+          {% endif %}
+        </button>
+      {%- endfor -%}
+    </aside>
+
+    {%- comment -%} Stage with layered images {%- endcomment -%}
+    <div class="spc__stage">
+      <img class="spc__layer spc__layer--main" id="spc-main-{{ uid }}"
+        src="{% if sec.settings.main_image %}{{ sec.settings.main_image | image_url: width: 1200 }}{% endif %}" alt="">
+      <img class="spc__layer spc__layer--color" id="spc-color-{{ uid }}" src="" alt="" hidden>
+      <img class="spc__layer spc__layer--handler" id="spc-handler-{{ uid }}" src="" alt="" hidden>
+      <img class="spc__layer spc__layer--holder" id="spc-holder-{{ uid }}" src="" alt="" hidden>
+    </div>
+
+    {%- comment -%} Details {%- endcomment -%}
+    <div class="spc__info">
+      <h1 class="spc__title">{{ sec.settings.title | default: 'Wellness Bottle' }}</h1>
+      <p class="spc__price"><span id="spc-price-{{ uid }}">{{ base_price | money }}</span></p>
+
+      <hr class="spc__rule">
+
+      {%- if sec.settings.overview != blank -%}
+        <h3 class="spc__sub">{{ 'product.overview' | t: default: 'Overview' }}</h3>
+        {%- if sec.settings.dimensions != blank -%}
+          <p class="spc__dim">{{ sec.settings.dimensions }}</p>
+        {%- endif -%}
+        <p class="spc__desc">{{ sec.settings.overview }}</p>
+      {%- endif -%}
+
+      {%- if colors.size > 0 -%}
+        <hr class="spc__rule">
+        <h3 class="spc__sub">Color</h3>
+        <div class="spc__opts spc__opts--swatch" data-group="color">
+          {%- for b in colors -%}
+            <button type="button" class="spc__swatch{% if forloop.first %} is-active{% endif %}"
+              style="background:{{ b.settings.swatch }}"
+              data-label="{{ b.settings.label | escape }}"
+              data-price="{{ b.settings.price_addon | default: 0 }}"
+              data-img="{% if b.settings.overlay %}{{ b.settings.overlay | image_url: width: 1200 }}{% endif %}"
+              data-main="{% if b.settings.main_image %}{{ b.settings.main_image | image_url: width: 1200 }}{% endif %}"
+              {{ b.shopify_attributes }} aria-label="{{ b.settings.label }}"></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if sizes.size > 0 -%}
+        <hr class="spc__rule">
+        <h3 class="spc__sub">Size</h3>
+        <div class="spc__opts" data-group="size">
+          {%- for b in sizes -%}
+            <button type="button" class="spc__chip{% if forloop.first %} is-active{% endif %}"
+              data-label="{{ b.settings.label | escape }}"
+              data-price="{{ b.settings.price_addon | default: 0 }}"
+              {{ b.shopify_attributes }}>{{ b.settings.label }}</button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if handlers.size > 0 -%}
+        <hr class="spc__rule">
+        <h3 class="spc__sub">Handler</h3>
+        <div class="spc__opts spc__opts--img" data-group="handler">
+          {%- for b in handlers -%}
+            <button type="button" class="spc__imgswatch{% if forloop.first %} is-active{% endif %}"
+              data-label="{{ b.settings.label | escape }}"
+              data-price="{{ b.settings.price_addon | default: 0 }}"
+              data-img="{% if b.settings.overlay %}{{ b.settings.overlay | image_url: width: 1200 }}{% endif %}"
+              {{ b.shopify_attributes }}>
+              {% if b.settings.thumb %}{{ b.settings.thumb | image_url: width: 120 | image_tag: loading: 'lazy', alt: b.settings.label }}{% endif %}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if holders.size > 0 -%}
+        <hr class="spc__rule">
+        <h3 class="spc__sub">Holder</h3>
+        <div class="spc__opts spc__opts--img" data-group="holder">
+          {%- for b in holders -%}
+            <button type="button" class="spc__imgswatch{% if forloop.first %} is-active{% endif %}"
+              data-label="{{ b.settings.label | escape }}"
+              data-price="{{ b.settings.price_addon | default: 0 }}"
+              data-img="{% if b.settings.overlay %}{{ b.settings.overlay | image_url: width: 1200 }}{% endif %}"
+              {{ b.shopify_attributes }}>
+              {% if b.settings.thumb %}{{ b.settings.thumb | image_url: width: 120 | image_tag: loading: 'lazy', alt: b.settings.label }}{% endif %}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if sec.settings.product != blank -%}
+        {%- form 'product', sec.settings.product, class: 'spc__form', id: 'spc-form-' | append: uid -%}
+          <input type="hidden" name="id" id="spc-vid-{{ uid }}" value="{{ sec.settings.product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="properties[Color]" id="spc-prop-color-{{ uid }}">
+          <input type="hidden" name="properties[Size]" id="spc-prop-size-{{ uid }}">
+          <input type="hidden" name="properties[Handler]" id="spc-prop-handler-{{ uid }}">
+          <input type="hidden" name="properties[Holder]" id="spc-prop-holder-{{ uid }}">
+          <button type="submit" class="spc__atc">{{ 'products.add_to_cart' | t: default: 'Add to your cart' }} <span aria-hidden="true">→</span></button>
+        {%- endform -%}
+      {%- else -%}
+        <button type="button" class="spc__atc spc__atc--disabled" disabled>Add to your cart →</button>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .spc { padding: 4vw 2vw; background:#f3f3f3; }
+  .spc__wrap { display:grid; grid-template-columns: 80px 1fr 380px; gap:2vw; max-width:1440px; margin:0 auto; align-items:start; }
+  .spc__thumbs { display:flex; flex-direction:column; gap:12px; padding-top:240px; }
+  .spc__thumb { width:64px; height:64px; border:0; background:transparent; padding:0; cursor:pointer; opacity:.85; }
+  .spc__thumb:hover { opacity:1; }
+  .spc__thumb img { width:100%; height:100%; object-fit:contain; }
+  .spc__stage { position:relative; aspect-ratio: 1/1; min-height:520px; }
+  .spc__layer { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; transition:opacity .25s ease; }
+  .spc__layer--color { z-index:2; }
+  .spc__layer--handler { z-index:3; }
+  .spc__layer--holder { z-index:4; }
+  .spc__info { padding-top:80px; }
+  .spc__title { font-size:36px; font-weight:400; line-height:1.1; margin:0 0 12px; color:#111; }
+  .spc__price { color:#666; font-size:18px; margin:0 0 24px; }
+  .spc__rule { border:0; border-top:1px solid #e0e0e0; margin:20px 0; }
+  .spc__sub { font-size:14px; font-weight:500; margin:0 0 12px; color:#111; }
+  .spc__dim { font-size:14px; color:#444; margin:0 0 8px; }
+  .spc__desc { font-size:14px; color:#444; line-height:1.55; margin:0; }
+  .spc__opts { display:flex; gap:10px; flex-wrap:wrap; }
+  .spc__swatch { width:28px; height:28px; border-radius:4px; border:2px solid transparent; cursor:pointer; padding:0; }
+  .spc__swatch.is-active { outline:1px solid #111; outline-offset:2px; }
+  .spc__chip { padding:8px 16px; border:1px solid #d0d0d0; background:#fff; border-radius:4px; cursor:pointer; font-size:13px; color:#333; }
+  .spc__chip.is-active { border-color:#111; color:#111; }
+  .spc__imgswatch { width:48px; height:48px; border:1px solid #d0d0d0; background:#fff; border-radius:4px; cursor:pointer; padding:4px; }
+  .spc__imgswatch.is-active { border-color:#111; }
+  .spc__imgswatch img { width:100%; height:100%; object-fit:contain; }
+  .spc__atc { margin-top:24px; display:inline-flex; align-items:center; gap:8px; background:#e8e8e8; color:#111; border:0; padding:14px 24px; border-radius:6px; font-size:14px; cursor:pointer; }
+  .spc__atc:hover { background:#dcdcdc; }
+  .spc__atc--disabled { opacity:.6; cursor:not-allowed; }
+  @media (max-width: 900px) {
+    .spc__wrap { grid-template-columns: 1fr; }
+    .spc__thumbs { flex-direction:row; padding-top:0; overflow-x:auto; }
+    .spc__info { padding-top:0; }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function(){
+    document.querySelectorAll('.spc').forEach(function(root){
+      var basePrice = parseInt(root.dataset.basePrice, 10) || 0;
+      var currency = root.dataset.currency || '$';
+      var priceEl = root.querySelector('[id^="spc-price-"]');
+      var mainImg = root.querySelector('.spc__layer--main');
+      var layers = {
+        color: root.querySelector('.spc__layer--color'),
+        handler: root.querySelector('.spc__layer--handler'),
+        holder: root.querySelector('.spc__layer--holder')
+      };
+      var selected = { color:null, size:null, handler:null, holder:null };
+
+      function fmt(cents){
+        var v = (cents/100).toFixed(2).replace('.', ',');
+        return v + ' ' + currency;
+      }
+      function recalc(){
+        var total = basePrice;
+        Object.keys(selected).forEach(function(k){
+          if (selected[k]) total += parseInt(selected[k].price,10) || 0;
+        });
+        if (priceEl) priceEl.textContent = fmt(total);
+        // sync hidden form fields
+        ['color','size','handler','holder'].forEach(function(k){
+          var f = root.querySelector('#spc-prop-'+k+'-'+root.id.replace('spc-',''));
+          if (f && selected[k]) f.value = selected[k].label || '';
+        });
+      }
+      function setLayer(group, src){
+        var l = layers[group];
+        if (!l) return;
+        if (src) { l.src = src; l.hidden = false; }
+        else { l.removeAttribute('src'); l.hidden = true; }
+      }
+      function pick(group, btn){
+        var siblings = btn.parentElement.querySelectorAll('button');
+        siblings.forEach(function(s){ s.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        selected[group] = {
+          label: btn.dataset.label || '',
+          price: btn.dataset.price || 0,
+          img: btn.dataset.img || ''
+        };
+        if (group === 'color' && btn.dataset.main) {
+          mainImg.src = btn.dataset.main;
+        }
+        if (group in layers) setLayer(group, btn.dataset.img);
+        recalc();
+      }
+
+      root.querySelectorAll('[data-group]').forEach(function(grp){
+        var group = grp.dataset.group;
+        grp.querySelectorAll('button').forEach(function(btn){
+          btn.addEventListener('click', function(){ pick(group, btn); });
+          if (btn.classList.contains('is-active')) pick(group, btn);
+        });
+      });
+
+      // thumbnail clicks swap main image
+      root.querySelectorAll('.spc__thumb').forEach(function(t){
+        t.addEventListener('click', function(){
+          if (t.dataset.img) mainImg.src = t.dataset.img;
+        });
+      });
+
+      recalc();
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Single Product Configurator",
+  "settings": [
+    { "type": "header", "content": "Product" },
+    { "type": "product", "id": "product", "label": "Product (for add-to-cart)" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Wellness Bottle SixH 600ML" },
+    { "type": "number", "id": "base_price", "label": "Base price (in cents, e.g. 2400 = 24.00)", "default": 2400 },
+    { "type": "text", "id": "currency_symbol", "label": "Currency symbol", "default": "$" },
+    { "type": "header", "content": "Overview" },
+    { "type": "text", "id": "dimensions", "label": "Dimensions", "default": "30 x 12 x 8 cm" },
+    { "type": "textarea", "id": "overview", "label": "Overview text", "default": "One tumbler, every situation. Double-wall vacuum insulation keeps your drink at the right temperature for hours, while the ergonomic handle and leak-resistant lid make it as practical as it is easy on the eyes." },
+    { "type": "header", "content": "Main image" },
+    { "type": "image_picker", "id": "main_image", "label": "Default main bottle image" }
+  ],
+  "blocks": [
+    {
+      "type": "thumbnail",
+      "name": "Thumbnail",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Thumbnail / view image" }
+      ]
+    },
+    {
+      "type": "color",
+      "name": "Color option",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Orange" },
+        { "type": "color", "id": "swatch", "label": "Swatch color", "default": "#e35a1f" },
+        { "type": "image_picker", "id": "main_image", "label": "Main bottle image (this color)" },
+        { "type": "image_picker", "id": "overlay", "label": "Overlay image (optional, layered on top)" },
+        { "type": "number", "id": "price_addon", "label": "Price add-on (cents)", "default": 0 }
+      ]
+    },
+    {
+      "type": "size",
+      "name": "Size option",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "700 ML" },
+        { "type": "number", "id": "price_addon", "label": "Price add-on (cents)", "default": 0 }
+      ]
+    },
+    {
+      "type": "handler",
+      "name": "Handler option",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Handle A" },
+        { "type": "image_picker", "id": "thumb", "label": "Swatch thumbnail" },
+        { "type": "image_picker", "id": "overlay", "label": "Overlay image (composited on bottle)" },
+        { "type": "number", "id": "price_addon", "label": "Price add-on (cents)", "default": 0 }
+      ]
+    },
+    {
+      "type": "holder",
+      "name": "Holder option",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Holder A" },
+        { "type": "image_picker", "id": "thumb", "label": "Swatch thumbnail" },
+        { "type": "image_picker", "id": "overlay", "label": "Overlay image (composited on bottle)" },
+        { "type": "number", "id": "price_addon", "label": "Price add-on (cents)", "default": 0 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Single Product Configurator",
+      "blocks": [
+        { "type": "thumbnail" }, { "type": "thumbnail" }, { "type": "thumbnail" },
+        { "type": "color", "settings": { "label": "Orange", "swatch": "#e35a1f" } },
+        { "type": "color", "settings": { "label": "Blue",   "swatch": "#2727d6" } },
+        { "type": "color", "settings": { "label": "Black",  "swatch": "#222222" } },
+        { "type": "size", "settings": { "label": "700 ML" } },
+        { "type": "size", "settings": { "label": "500 ML" } },
+        { "type": "size", "settings": { "label": "350 ML" } },
+        { "type": "handler", "settings": { "label": "Handle A" } },
+        { "type": "handler", "settings": { "label": "Handle B" } },
+        { "type": "handler", "settings": { "label": "Handle C" } },
+        { "type": "holder",  "settings": { "label": "Holder A" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
