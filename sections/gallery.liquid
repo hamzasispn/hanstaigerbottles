@@ -2,7 +2,7 @@
   {% if section.settings.heading != blank %}
     <h2
       data-anim="split-words"
-      class="font-light text-[#111111] leading-[1.05] tracking-[-0.02em] text-[12vw] max-w-full lg:text-[5.56vw] lg:max-w-[22vw] mb-[8vw] lg:mb-[3.47vw]"
+      class="font-light text-[#111111] leading-[1.05] tracking-[-0.02em] text-[12vw] max-w-full lg:text-[5.56vw] lg:max-w-[30vw] lg:mt-[12.847vw] mb-[8vw] lg:mb-[9.444vw] "
     >
       {{ section.settings.heading }}
     </h2>
@@ -22,17 +22,57 @@
     x-init="$el.style.gridTemplateColumns = window.innerWidth >= 1024 ? 'repeat({{ image_count }}, 1fr)' : 'repeat(2, 1fr)'"
     @resize.window="$el.style.gridTemplateColumns = window.innerWidth >= 1024 ? 'repeat({{ image_count }}, 1fr)' : 'repeat(2, 1fr)'"
   >
+    {%- assign img_index = 0 -%}
     {% for block in section.blocks %}
       {% if block.type == 'image-card' %}
         {% if block.settings.img != blank %}
-          <img
-            src="{{ block.settings.img | image_url: width: 1080 }}"
-            alt="{{ block.settings.img.alt | escape }}"
-            class="w-full h-full object-cover"
-            width="1080"
-            height="1080"
-            {{ block.shopify_attributes }}
-          >
+          {%- assign img_index = img_index | plus: 1 -%}
+          {%- assign padded_index = img_index | prepend: '00' | slice: -2, 2 -%}
+          {% if block.settings.show_content %}
+            <div class="relative w-full h-full" {{ block.shopify_attributes }}>
+              <img
+                src="{{ block.settings.img | image_url: width: 1080 }}"
+                alt="{{ block.settings.img.alt | escape }}"
+                class="w-full h-full object-cover"
+                width="1080"
+                height="1080"
+              >
+              <div class="absolute inset-0 flex flex-col items-center text-center text-white p-[6vw] lg:p-[2.222vw]">
+                <p class="text-[3.5vw] leading-[4vw] lg:text-[1.111vw] lg:leading-[1.389vw] tracking-[0.1em]">
+                  <span style="color:{{ section.settings.brackets_color }};">[</span>
+                  {{ padded_index }}
+                  <span style="color:{{ section.settings.brackets_color }};">]</span>
+                </p>
+                <div class="mt-auto flex flex-col items-center">
+                  {% if block.settings.title != blank %}
+                    <h3 class="font-light text-[7vw] leading-[1.1] lg:text-[2.222vw] mb-[3vw] lg:mb-[1.111vw]">
+                      {{ block.settings.title }}
+                    </h3>
+                  {% endif %}
+                  {% if block.settings.description != blank %}
+                    <p class="text-[3.5vw] leading-[5vw] lg:text-[1vw] lg:leading-[1.389vw] mb-[5vw] lg:mb-[1.667vw] max-w-[80%]">
+                      {{ block.settings.description }}
+                    </p>
+                  {% endif %}
+                  {% if block.settings.button_text != blank %}
+                    <a href="{{ block.settings.button_link | default: '#' }}" class="py-[2vw] px-[3vw] gap-[3vw] text-[3vw] leading-[4vw] lg:py-[0.556vw] lg:px-[0.833vw] lg:gap-[1.111vw] lg:text-[0.972vw] lg:leading-[1.389vw] flex items-center text-white bg-[#C4C4C4]/40 backdrop-blur-md">
+                      {{ block.settings.button_text }}
+                      <span class="w-[4vw] h-[4vw] lg:w-[1.25vw] lg:h-[1.25vw] flex items-center justify-center">{% render 'button-arrow' %}</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <img
+              src="{{ block.settings.img | image_url: width: 1080 }}"
+              alt="{{ block.settings.img.alt | escape }}"
+              class="w-full h-full object-cover"
+              width="1080"
+              height="1080"
+              {{ block.shopify_attributes }}
+            >
+          {% endif %}
         {% endif %}
       {% endif %}
     {% endfor %}
@@ -100,6 +140,36 @@
           "type": "image_picker",
           "id": "img",
           "label": "Upload Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_content",
+          "label": "Show Content",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "visible_if": "{{ block.settings.show_content }}"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "visible_if": "{{ block.settings.show_content }}"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "visible_if": "{{ block.settings.show_content }}"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link",
+          "visible_if": "{{ block.settings.show_content }}"
         }
       ]
     },
