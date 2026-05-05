@@ -1,11 +1,11 @@
 <div class="max-w-[88.889vw] mx-auto pt-[13.889vw] pb-[15.556vw]">
-  <div class="grid gap-[8.889vw] grid-cols-4">
+  <div class="grid gap-[8.889vw] grid-cols-4 items-start">
     {% for block in section.blocks %}
       <div class="icon-box text-center flex flex-col items-center justify-center gap-[1.389vw]">
-        <h3 class="text-[0.833vw] leading-[1.181vw] font-(--font-primary--family) uppercase text-black">
+        <h3 class="text-[0.833vw] leading-[1.181vw] font-(--font-primary--family) uppercase text-black tracking-[0.028vw]">
           {{ block.settings.title }}
         </h3>
-        <p class="text-[1.389vw] text-[#6C6F77] leading-[1.667vw]">{{ block.settings.description }}</p>
+        <p class="text-[1.389vw] text-[#6C6F77] leading-[1.667vw] font-normal">{{ block.settings.description }}</p>
         <img
           src="{{ block.settings.icon | img_url: '200x' }}"
           alt="{{ block.settings.title }}"
