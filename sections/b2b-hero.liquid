@@ -1,11 +1,11 @@
 <div class="grid-cols-2 grid">
     <div>
-        <img src="{{ section.settings.background_image | img_url}}" alt="{{ section.settings.background_image.alt | escape }}" class="w-full h-full object-cover">
+        <img src="{{ section.settings.background_image | img_url}}" alt="{{ section.settings.background_image.alt | escape }}" class="w-full h-full">
     </div>
     <div class="py-[8.75vw] px-[5.556vw]">
         <div class="flex items-start justify-between">
             <h2 class="max-w-[24.583vw] text-[3.333vw] leading-[3.75vw]">{{ section.settings.heading }}</h2>
-            <img src="{{ section.settings.feature_image | img_url: width: 600 }}" alt="{{ section.settings.feature_image.alt | escape }}" class="w-[11.111vw] h-[14.444vw] object-contain">
+            <img src="{{ section.settings.feature_image | img_url}}" alt="{{ section.settings.feature_image.alt | escape }}" class="w-[11.111vw] h-[14.444vw]">
         </div>
     </div>
 </div>
