@@ -1,9 +1,9 @@
 <div class="grid-cols-2 grid">
   <div>
     <img
-      src="{{ section.settings.background_image | img_url width: 1200 }}"
-      alt="{{ section.settings.background_image.alt | escape }}"
-      class="w-full h-full object-cover"
+    src="{{ section.settings.background_image | img_url: '1200x' }}"
+    alt="{{ section.settings.background_image.alt | escape }}"
+    class="w-full h-full object-cover"
     >
   </div>
   <div class="py-[8.75vw] px-[5.556vw]">
