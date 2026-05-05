@@ -10,7 +10,7 @@
     <div class="flex items-start justify-between mb-[6.528vw]">
       <h2 class="max-w-[24.583vw] text-[3.333vw] leading-[3.75vw]">{{ section.settings.heading }}</h2>
       <img
-        src="{{ section.settings.feature_image | img_url}}"
+        src="{{ section.settings.feature_image | img_url: '1080x'}}"
         alt="{{ section.settings.feature_image.alt | escape }}"
         class="w-[11.111vw] h-[14.444vw]"
       >
