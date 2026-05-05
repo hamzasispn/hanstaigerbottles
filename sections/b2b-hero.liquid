@@ -1,13 +1,38 @@
 <div class="grid-cols-2 grid">
+  <div>
+    <img
+      src="{{ section.settings.background_image | img_url}}"
+      alt="{{ section.settings.background_image.alt | escape }}"
+      class="w-full h-full object-cover"
+    >
+  </div>
+  <div class="py-[8.75vw] px-[5.556vw]">
+    <div class="flex items-start justify-between mb-[6.528vw]">
+      <h2 class="max-w-[24.583vw] text-[3.333vw] leading-[3.75vw]">{{ section.settings.heading }}</h2>
+      <img
+        src="{{ section.settings.feature_image | img_url}}"
+        alt="{{ section.settings.feature_image.alt | escape }}"
+        class="w-[11.111vw] h-[14.444vw]"
+      >
+    </div>
+
+    <div class="flex items-center space-between mb-[6.528vw]">
+      <span class="text-[0.833vw] text-black uppercase font-normal">{{ section.settings.subheading_one }}</span>
+      <span class="text-[0.833vw] text-black uppercase font-normal">{{ section.settings.subheading_two }}</span>
+    </div>
+
     <div>
-        <img src="{{ section.settings.background_image | img_url}}" alt="{{ section.settings.background_image.alt | escape }}" class="w-full h-full object-cover">
+      <h2 class="max-w-[24.583vw] text-[3.333vw] leading-[3.75vw] text-right mb-[1.736vw]">
+        {{ section.settings.heading_two }}
+      </h2>
+      <div class="flex items-end justify-between">
+        <p class="text-[#4F5257] text-[0.903vw] leading-[1.181vw] max-w-[22.639vw]">
+          {{ section.settings.description }}
+        </p>
+        <a href="{{ section.settings.button_url }}" class="btn-primary">{{ section.settings.button_text }}</a>
+      </div>
     </div>
-    <div class="py-[8.75vw] px-[5.556vw]">
-        <div class="flex items-start justify-between">
-            <h2 class="max-w-[24.583vw] text-[3.333vw] leading-[3.75vw]">{{ section.settings.heading }}</h2>
-            <img src="{{ section.settings.feature_image | img_url}}" alt="{{ section.settings.feature_image.alt | escape }}" class="w-[11.111vw] h-[14.444vw]">
-        </div>
-    </div>
+  </div>
 </div>
 
 {% schema %}
@@ -27,9 +52,43 @@
       "default": "B2B Hero"
     },
     {
+      "type": "text",
+      "id": "heading_two",
+      "label": "Heading Two",
+      "default": "B2B Hero"
+    },
+    {
       "type": "image_picker",
       "id": "feature_image",
       "label": "Feature Image"
+    },
+    {
+      "type": "text",
+      "id": "subheading_one",
+      "label": "Subheading One",
+      "default": "Engineered objects   /   Lasting impressions"
+    },
+    {
+      "type": "text",
+      "id": "subheading_two",
+      "label": "Subheading Two",
+      "default": "hanstaiger"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "We are a B2B company that specializes in creating high-quality, custom-designed bottles for our clients. Our team of experts works closely with each client to understand their unique needs and create a bottle that is both functional and visually stunning. We use the latest technology and materials to ensure that our bottles are of the highest quality and meet the specific requirements of our clients."
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text"
     }
   ],
   "presets": [
