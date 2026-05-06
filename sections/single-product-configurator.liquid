@@ -8,8 +8,7 @@
     {{ 'products.product.not_found' | t: default: 'Product not found. Use this section on a product template.' }}
   </section>
 {%- else -%}
-
-{%- capture variants_json -%}
+  {%- capture variants_json -%}
 [
   {%- for v in p.variants -%}
     {
@@ -27,123 +26,146 @@
 ]
 {%- endcapture -%}
 
-<section
-  id="spc-{{ uid }}"
-  class="bg-neutral-100 py-12 px-4 md:py-20 md:px-8"
-  x-data='{
-    variants: {{ variants_json }},
-    optionNames: {{ p.options | json | escape }},
-    selected: {{ p.selected_or_first_available_variant.options | json | escape }},
-    mainImage: {% if p.selected_or_first_available_variant.featured_image %}{{ p.selected_or_first_available_variant.featured_image.src | image_url: width: 1200 | json | escape }}{% elsif p.featured_media %}{{ p.featured_media | image_url: width: 1200 | json | escape }}{% else %}""{% endif %},
-    get currentVariant() {
-      return this.variants.find(v =>
-        (v.option1 ?? null) === (this.selected[0] ?? null) &&
-        (v.option2 ?? null) === (this.selected[1] ?? null) &&
-        (v.option3 ?? null) === (this.selected[2] ?? null)
-      ) || this.variants.find(v => v.available) || this.variants[0];
-    },
-    get formattedPrice() {
-      const v = this.currentVariant;
-      if (!v) return "";
-      return (v.price/100).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) + " {{ cart.currency.symbol }}";
-    },
-    pick(idx, value) {
-      this.selected = this.selected.slice();
-      this.selected[idx] = value;
-      const v = this.currentVariant;
-      if (v && v.featured_image) this.mainImage = v.featured_image;
-    },
-    isAvailable(idx, value) {
-      const test = this.selected.slice();
-      test[idx] = value;
-      return this.variants.some(v =>
-        v.available &&
-        (idx === 0 || v.option1 === test[0]) &&
-        (idx === 1 || v.option2 === test[1]) &&
-        (idx === 2 || v.option3 === test[2]) &&
-        (v["option"+(idx+1)] === value)
-      );
-    }
-  }'
->
-  <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-[80px_1fr_380px]">
-
-    {%- comment -%} Thumbnails from product media {%- endcomment -%}
-    <aside class="flex flex-row gap-3 overflow-x-auto md:flex-col md:pt-60">
-      {%- for m in p.media -%}
-        <button type="button"
-          class="h-16 w-16 shrink-0 border border-transparent bg-transparent p-0 opacity-80 hover:opacity-100"
-          :class="mainImage === '{{ m | image_url: width: 1200 }}' ? 'border-neutral-900 opacity-100' : ''"
-          @click="mainImage = '{{ m | image_url: width: 1200 }}'">
-          {{ m | image_url: width: 160 | image_tag: loading: 'lazy', class: 'h-full w-full object-contain', alt: p.title }}
-        </button>
-      {%- endfor -%}
-    </aside>
-
-    {%- comment -%} Stage {%- endcomment -%}
-    <div class="relative aspect-square min-h-[420px] w-full">
-      <img :src="mainImage" :alt="'{{ p.title | escape }}'" class="absolute inset-0 h-full w-full object-contain transition-opacity duration-200">
-    </div>
-
-    {%- comment -%} Info {%- endcomment -%}
-    <div class="md:pt-12">
-      <h1 class="m-0 mb-3 text-3xl font-normal leading-tight text-neutral-900 md:text-4xl">{{ p.title }}</h1>
-      <p class="mb-6 text-lg text-neutral-500">
-        <span x-text="formattedPrice"></span>
-        <template x-if="currentVariant && currentVariant.compare_at_price > currentVariant.price">
-          <span class="ml-2 text-sm text-neutral-400 line-through" x-text="(currentVariant.compare_at_price/100).toFixed(2) + ' {{ cart.currency.symbol }}'"></span>
-        </template>
-      </p>
-
-      <hr class="my-5 border-t border-neutral-200">
-
-      {%- if p.description != blank -%}
-        <h3 class="mb-3 text-sm font-medium text-neutral-900">Overview</h3>
-        <div class="text-sm leading-relaxed text-neutral-700">{{ p.description }}</div>
-        <hr class="my-5 border-t border-neutral-200">
-      {%- endif -%}
-
-      {%- comment -%} Options from product {%- endcomment -%}
-      {%- for opt in p.options_with_values -%}
-        {%- assign oi = forloop.index0 -%}
-        {%- assign oname_down = opt.name | downcase -%}
-        <h3 class="mb-3 text-sm font-medium text-neutral-900">{{ opt.name }}</h3>
-        <div class="mb-5 flex flex-wrap gap-2.5">
-          {%- for val in opt.values -%}
-            {%- if oname_down contains 'color' -%}
-              <button type="button"
-                class="h-7 w-7 cursor-pointer rounded border-2 border-transparent p-0"
-                style="background: {{ val | handle }};"
-                :class="selected[{{ oi }}] === {{ val | json | escape }} ? 'outline outline-1 outline-offset-2 outline-neutral-900' : ''"
-                :disabled="!isAvailable({{ oi }}, {{ val | json | escape }})"
-                @click="pick({{ oi }}, {{ val | json | escape }})"
-                aria-label="{{ val | escape }}"
-                title="{{ val | escape }}"></button>
-            {%- else -%}
-              <button type="button"
-                class="cursor-pointer rounded border border-neutral-300 bg-white px-4 py-2 text-sm text-neutral-700 disabled:cursor-not-allowed disabled:opacity-40"
-                :class="selected[{{ oi }}] === {{ val | json | escape }} ? 'border-neutral-900 text-neutral-900' : ''"
-                :disabled="!isAvailable({{ oi }}, {{ val | json | escape }})"
-                @click="pick({{ oi }}, {{ val | json | escape }})">{{ val }}</button>
-            {%- endif -%}
+  <section
+    id="spc-{{ uid }}"
+    class="bg-neutral-100 py-12 px-4 md:py-20 md:px-8"
+    x-data='
+      {
+        variants: {{ variants_json }},
+        optionNames: {{ p.options | json | escape }},
+        selected: {{ p.selected_or_first_available_variant.options | json | escape }},
+        mainImage: {% if p.selected_or_first_available_variant.featured_image %}{{ p.selected_or_first_available_variant.featured_image.src | image_url: width: 1200 | json | escape }}{% elsif p.featured_media %}{{ p.featured_media | image_url: width: 1200 | json | escape }}{% else %}""{% endif %},
+        get currentVariant() {
+          return this.variants.find(v =>
+            (v.option1 ?? null) === (this.selected[0] ?? null) &&
+            (v.option2 ?? null) === (this.selected[1] ?? null) &&
+            (v.option3 ?? null) === (this.selected[2] ?? null)
+          ) || this.variants.find(v => v.available) || this.variants[0];
+        },
+        get formattedPrice() {
+          const v = this.currentVariant;
+          if (!v) return "";
+          return (v.price/100).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) + " {{ cart.currency.symbol }}";
+        },
+        pick(idx, value) {
+          this.selected = this.selected.slice();
+          this.selected[idx] = value;
+          const v = this.currentVariant;
+          if (v && v.featured_image) this.mainImage = v.featured_image;
+        },
+        isAvailable(idx, value) {
+          const test = this.selected.slice();
+          test[idx] = value;
+          return this.variants.some(v =>
+            v.available &&
+            (idx === 0 || v.option1 === test[0]) &&
+            (idx === 1 || v.option2 === test[1]) &&
+            (idx === 2 || v.option3 === test[2]) &&
+            (v["option"+(idx+1)] === value)
+          );
+        }
+      }
+    '
+  >
+    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
+      <div>
+        {%- comment -%} Thumbnails from product media {%- endcomment -%}
+        <aside class="flex flex-row gap-3 overflow-x-auto md:flex-col md:pt-60">
+          {%- for m in p.media -%}
+            <button
+              type="button"
+              class="h-16 w-16 shrink-0 border border-transparent bg-transparent p-0 opacity-80 hover:opacity-100"
+              :class="mainImage === '{{ m | image_url: width: 1200 }}' ? 'border-neutral-900 opacity-100' : ''"
+              @click="mainImage = '{{ m | image_url: width: 1200 }}'"
+            >
+              {{
+                m
+                | image_url: width: 160
+                | image_tag: loading: 'lazy', class: 'h-full w-full object-contain', alt: p.title
+              }}
+            </button>
           {%- endfor -%}
+        </aside>
+
+        {%- comment -%} Stage {%- endcomment -%}
+        <div class="relative aspect-square min-h-[420px] w-full">
+          <img
+            :src="mainImage"
+            :alt="'{{ p.title | escape }}'"
+            class="absolute inset-0 h-full w-full object-contain transition-opacity duration-200"
+          >
         </div>
+      </div>
+
+      {%- comment -%} Info {%- endcomment -%}
+      <div class="md:pt-12">
+        <h1 class="m-0 mb-3 text-3xl font-normal leading-tight text-neutral-900 md:text-4xl">{{ p.title }}</h1>
+        <p class="mb-6 text-lg text-neutral-500">
+          <span x-text="formattedPrice"></span>
+          <template x-if="currentVariant && currentVariant.compare_at_price > currentVariant.price">
+            <span
+              class="ml-2 text-sm text-neutral-400 line-through"
+              x-text="(currentVariant.compare_at_price/100).toFixed(2) + ' {{ cart.currency.symbol }}'"
+            ></span>
+          </template>
+        </p>
+
         <hr class="my-5 border-t border-neutral-200">
-      {%- endfor -%}
 
-      {%- form 'product', p, class: 'mt-2' -%}
-        <input type="hidden" name="id" :value="currentVariant ? currentVariant.id : ''">
-        <button type="submit"
-          class="mt-4 inline-flex items-center gap-2 rounded-md border-0 bg-neutral-200 px-6 py-3.5 text-sm text-neutral-900 hover:bg-neutral-300 disabled:cursor-not-allowed disabled:opacity-60"
-          :disabled="!currentVariant || !currentVariant.available">
-          <span x-text="currentVariant && currentVariant.available ? 'Add to your cart' : 'Sold out'"></span>
-          <span aria-hidden="true">→</span>
-        </button>
-      {%- endform -%}
+        {%- if p.description != blank -%}
+          <h3 class="mb-3 text-sm font-medium text-neutral-900">Overview</h3>
+          <div class="text-sm leading-relaxed text-neutral-700">{{ p.description }}</div>
+          <hr class="my-5 border-t border-neutral-200">
+        {%- endif -%}
+
+        {%- comment -%} Options from product {%- endcomment -%}
+        {%- for opt in p.options_with_values -%}
+          {%- assign oi = forloop.index0 -%}
+          {%- assign oname_down = opt.name | downcase -%}
+          <h3 class="mb-3 text-sm font-medium text-neutral-900">{{ opt.name }}</h3>
+          <div class="mb-5 flex flex-wrap gap-2.5">
+            {%- for val in opt.values -%}
+              {%- if oname_down contains 'color' -%}
+                <button
+                  type="button"
+                  class="h-7 w-7 cursor-pointer rounded border-2 border-transparent p-0"
+                  style="background: {{ val | handle }};"
+                  :class="selected[{{ oi }}] === {{ val | json | escape }} ? 'outline outline-1 outline-offset-2 outline-neutral-900' : ''"
+                  :disabled="!isAvailable({{ oi }}, {{ val | json | escape }})"
+                  @click="pick({{ oi }}, {{ val | json | escape }})"
+                  aria-label="{{ val | escape }}"
+                  title="{{ val | escape }}"
+                ></button>
+              {%- else -%}
+                <button
+                  type="button"
+                  class="cursor-pointer rounded border border-neutral-300 bg-white px-4 py-2 text-sm text-neutral-700 disabled:cursor-not-allowed disabled:opacity-40"
+                  :class="selected[{{ oi }}] === {{ val | json | escape }} ? 'border-neutral-900 text-neutral-900' : ''"
+                  :disabled="!isAvailable({{ oi }}, {{ val | json | escape }})"
+                  @click="pick({{ oi }}, {{ val | json | escape }})"
+                >
+                  {{ val }}
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          <hr class="my-5 border-t border-neutral-200">
+        {%- endfor -%}
+
+        {%- form 'product', p, class: 'mt-2' -%}
+          <input type="hidden" name="id" :value="currentVariant ? currentVariant.id : ''">
+          <button
+            type="submit"
+            class="mt-4 inline-flex items-center gap-2 rounded-md border-0 bg-neutral-200 px-6 py-3.5 text-sm text-neutral-900 hover:bg-neutral-300 disabled:cursor-not-allowed disabled:opacity-60"
+            :disabled="!currentVariant || !currentVariant.available"
+          >
+            <span x-text="currentVariant && currentVariant.available ? 'Add to your cart' : 'Sold out'"></span>
+            <span aria-hidden="true">→</span>
+          </button>
+        {%- endform -%}
+      </div>
     </div>
-  </div>
-</section>
-
+  </section>
 {%- endif -%}
 
 {% schema %}
@@ -160,8 +182,6 @@
       "content": "All data (title, price, variants, images, description) is pulled from the current product. Configure swatches via a product option named 'Color' using CSS color names or hex handles."
     }
   ],
-  "presets": [
-    { "name": "Product Configurator" }
-  ]
+  "presets": [{ "name": "Product Configurator" }]
 }
 {% endschema %}
