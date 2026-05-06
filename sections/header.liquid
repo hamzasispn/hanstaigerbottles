@@ -79,9 +79,9 @@
   :class="scrolled ? 'fixed shadow-sm bg-white/20 backdrop-blur-3xl' : 'absolute'"
   class="top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] transition-all duration-300"
 >
-  <div class="grid grid-cols-3 items-center lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto">
+  <div class="grid grid-cols-4 lg:grid-cols-3 items-center lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto">
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
-    <div class="col-span-2 lg:col-span-1">
+    <div>
       <div
         class="relative justify-self-start bg-black/40 backdrop-blur-3xl rounded-[1.5vw] lg:rounded-[0.4vw] px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]"
         @click.outside="openMenu = false"
