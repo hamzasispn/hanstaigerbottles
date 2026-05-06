@@ -89,7 +89,7 @@
         :class="openMenu ? 'justify-between' : ''"
         :aria-expanded="openMenu"
       >
-        <span>
+        <span class="lg:block hidden">
           Overview
         </span>
         <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
@@ -259,7 +259,7 @@
           <button
             type="button"
             @click="$store.cart.open ? $store.cart.close() : $store.cart.openDrawer()"
-            class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] bg-white/15 rounded-[0.7vw] lg:rounded-[0.2vw] px-[2.5vw] lg:px-[0.6vw] py-[1.5vw] lg:py-[0.4vw] text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em] hover:bg-white/25 transition-colors"
+            class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] bg-white/15 rounded-[0.7vw] lg:rounded-[0.2vw] px-[2.5vw] lg:px-[0.6vw] py-[1.5vw] lg:py-[0.4vw] text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em] hover:bg-white/25 transition-colors backdrop-blur-3xl"
             aria-label="Open cart"
           >
             <span>{{ 'cart.title' | t | default: 'Cart' }}</span>
