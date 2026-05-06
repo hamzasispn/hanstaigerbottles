@@ -86,6 +86,7 @@
         type="button"
         @click="openMenu = !openMenu"
         class="flex items-center gap-[2.5vw] lg:gap-[0.7vw]  text-white font-(--font-primary--family) tracking-[0.05em]"
+        :class="openMenu ? 'justify-between' : ''"
         :aria-expanded="openMenu"
       >
         <span>
