@@ -38,7 +38,7 @@
 
 <div class="announcement-bar flex items-center justify-center py-[2vw] lg:py-[0.417vw] lg:px-0 overflow-hidden">
   {%- comment -%} Mobile: marquee {%- endcomment -%}
-  <div class="announcement-bar__marquee lg:hidden" aria-hidden="true">
+  <div class="announcement-bar__marquee !lg:hidden" aria-hidden="true">
     {%- for i in (1..2) -%}
       <div class="announcement-bar__marquee-track">
         {%- for j in (1..4) -%}
