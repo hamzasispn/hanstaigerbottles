@@ -4,39 +4,39 @@
 {% endcomment %}
 
 <footer class="bg-[#ebebeb] w-full font-(--font-primary--family)" x-data="{ open: false }">
-  <div class="max-w-[88.889vw] mx-auto px-6 lg:px-16 pt-14 pb-8">
+  <div class="max-w-full lg:max-w-[88.889vw] mx-auto px-6 lg:px-16 pt-10 lg:pt-14 pb-8">
 
-    <div class="mb-12">
-      <a href="{{ routes.root_url }}" class="text-[#3a3a3a] text-sm tracking-[0.25em] uppercase font-normal">
-        <img src="{{ settings.logo_image_dark | img_url }}" alt="Hanstaiger Logo" class="w-[50vw] lg:w-[12.667vw] object-contain" />
+    <div class="mb-8 lg:mb-12">
+      <a href="{{ routes.root_url }}" class="text-[#3a3a3a] text-sm tracking-[0.25em] uppercase font-normal inline-block">
+        <img src="{{ settings.logo_image_dark | img_url }}" alt="Hanstaiger Logo" class="w-[40vw] lg:w-[12.667vw] object-contain" />
       </a>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-6 mb-16 items-center justify-between">
+    <div class="grid grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 mb-10 lg:mb-16 items-start lg:items-center lg:justify-between">
 
       <div class="flex flex-col gap-2 col-span-1">
         <a href="{{ routes.root_url }}"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 w-fit">
           Home
         </a>
         <a href="{{ routes.collections_url }}/bottles"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 w-fit">
           Bottles
         </a>
         <a href="{{ routes.collections_url }}/electrolytes"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 w-fit">
           Electrolytes
         </a>
         <a href="{{ routes.collections_url }}/gear"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 w-fit">
           Gear
         </a>
         <a href="{{ routes.collections_url }}/the-x1"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 w-fit">
           The X1
         </a>
         <a href="/pages/b2b"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 w-fit">
           B2B
         </a>
       </div>
@@ -45,50 +45,50 @@
         <a href="{{ settings.social_linkedin_link }}"
            target="_blank"
            rel="noopener noreferrer"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-[0.833vw] w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 lg:gap-[0.833vw] w-fit">
           LinkedIn
-          <span class="text-xs leading-none translate-y-[-1px] w-[1.111vw] h-[1.111vw]">{% render 'link-icon' %}</span>
+          <span class="text-xs leading-none translate-y-[-1px] w-[3.5vw] h-[3.5vw] lg:w-[1.111vw] lg:h-[1.111vw]">{% render 'link-icon' %}</span>
         </a>
         <a href="{{ settings.social_instagram_link }}"
            target="_blank"
            rel="noopener noreferrer"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-[0.833vw] w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 lg:gap-[0.833vw] w-fit">
           Instagram
-          <span class="text-xs leading-none translate-y-[-1px] w-[1.111vw] h-[1.111vw]">{% render 'link-icon' %}</span>
+          <span class="text-xs leading-none translate-y-[-1px] w-[3.5vw] h-[3.5vw] lg:w-[1.111vw] lg:h-[1.111vw]">{% render 'link-icon' %}</span>
         </a>
         <a href="{{ settings.social_twitter_link }}"
            target="_blank"
            rel="noopener noreferrer"
-           class="text-[#3a3a3a] text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-[0.833vw] w-fit">
+           class="text-[#3a3a3a] text-sm lg:text-base hover:opacity-60 transition-opacity duration-200 flex items-center gap-2 lg:gap-[0.833vw] w-fit">
           X
-          <span class="text-xs leading-none translate-y-[-1px] w-[1.111vw] h-[1.111vw]">{% render 'link-icon' %}</span>
+          <span class="text-xs leading-none translate-y-[-1px] w-[3.5vw] h-[3.5vw] lg:w-[1.111vw] lg:h-[1.111vw]">{% render 'link-icon' %}</span>
         </a>
       </div>
       <div class="hidden lg:block lg:col-span-2"></div>
-      <div class="bg-[#e0e0e0] rounded-sm p-[1.667vw] flex flex-col lg:flex-row items-start lg:items-center justify-between col-span-8">
-        <p class="text-[#3a3a3a] text-lg leading-snug max-w-xs">
+      <div class="bg-[#e0e0e0] rounded-sm p-5 lg:p-[1.667vw] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-6 col-span-2 lg:col-span-8">
+        <p class="text-[#3a3a3a] text-base lg:text-lg leading-snug max-w-xs">
           Engineered at sea. Let's supply your journey.
         </p>
         <a href="/pages/contact"
-           class="shrink-0 border border-[#b0b0b0] text-[#3a3a3a] text-sm px-6 py-3 hover:bg-[#d4d4d4] transition-colors duration-200 whitespace-nowrap">
+           class="shrink-0 border border-[#b0b0b0] text-[#3a3a3a] text-sm px-5 lg:px-6 py-2.5 lg:py-3 hover:bg-[#d4d4d4] transition-colors duration-200 whitespace-nowrap">
           Contact us now
         </a>
       </div>
 
     </div>
 
-    <div class="border-t border-[#d0d0d0] pt-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+    <div class="border-t border-[#d0d0d0] pt-6 lg:pt-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
 
-      <div class="flex flex-col gap-1">
-        <div class="flex items-center gap-4">
-          <span class="text-[10px] tracking-widest uppercase text-[#888] font-normal w-12">Email</span>
+      <div class="flex flex-col gap-2 lg:gap-1">
+        <div class="flex items-center gap-3 lg:gap-4">
+          <span class="text-[10px] tracking-widest uppercase text-[#888] font-normal w-12 shrink-0">Email</span>
           <a href="mailto:{{ settings.contact_email | default: 'contact@hanstaiger.com' }}"
-             class="text-[#3a3a3a] text-xs tracking-wide uppercase hover:opacity-60 transition-opacity duration-200">
+             class="text-[#3a3a3a] text-xs tracking-wide uppercase hover:opacity-60 transition-opacity duration-200 break-all">
             {{ settings.contact_email | default: 'contact@hanstaiger.com' }}
           </a>
         </div>
-        <div class="flex items-center gap-4">
-          <span class="text-[10px] tracking-widest uppercase text-[#888] font-normal w-12">Phone</span>
+        <div class="flex items-center gap-3 lg:gap-4">
+          <span class="text-[10px] tracking-widest uppercase text-[#888] font-normal w-12 shrink-0">Phone</span>
           <a href="tel:{{ settings.contact_phone | default: '+15551234567' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}"
              class="text-[#3a3a3a] text-xs tracking-wide hover:opacity-60 transition-opacity duration-200">
             {{ settings.contact_phone | default: '+1 (555) 123-4567' }}
@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-8 lg:gap-10">
+      <div class="flex flex-wrap items-center gap-5 lg:gap-10">
         <a href="{{ routes.root_url }}policies/privacy-policy"
            class="text-[#3a3a3a] text-xs hover:opacity-60 transition-opacity duration-200">
           Privacy

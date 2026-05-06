@@ -2,13 +2,59 @@
   .announcement-bar {
       background-color: {{ section.settings.background_color }};
   }
-  .announcement-bar__message {
+  .announcement-bar__message,
+  .announcement-bar__marquee-track span {
       color: {{ section.settings.text_color }};
+  }
+
+  .announcement-bar__marquee {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .announcement-bar__marquee-track {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8vw;
+    padding-right: 8vw;
+    white-space: nowrap;
+    animation: announcement-marquee 22s linear infinite;
+    will-change: transform;
+  }
+  .announcement-bar__marquee:hover .announcement-bar__marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes announcement-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .announcement-bar__marquee-track { animation: none; }
   }
 </style>
 
-<div class="announcement-bar flex items-center justify-center py-[2vw] px-[3vw] lg:py-[0.417vw] lg:px-0">
-  <p class="announcement-bar__message text-center uppercase text-[2.4vw] lg:text-[0.833vw] leading-[1.25] font-normal font-[var(--font-primary--family)]">
+<div class="announcement-bar flex items-center justify-center py-[2vw] lg:py-[0.417vw] lg:px-0 overflow-hidden">
+  {%- comment -%} Mobile: marquee {%- endcomment -%}
+  <div class="announcement-bar__marquee lg:hidden" aria-hidden="true">
+    {%- for i in (1..2) -%}
+      <div class="announcement-bar__marquee-track">
+        {%- for j in (1..4) -%}
+          <span class="uppercase text-[2.8vw] leading-[1.25] font-normal font-[var(--font-primary--family)]">
+            {{ section.settings.announcement_message }}
+          </span>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%} Screen readers {%- endcomment -%}
+  <p class="sr-only lg:hidden">{{ section.settings.announcement_message }}</p>
+
+  {%- comment -%} Desktop: static centered {%- endcomment -%}
+  <p class="announcement-bar__message hidden lg:block text-center uppercase text-[0.833vw] leading-[1.25] font-normal font-[var(--font-primary--family)] px-[3vw]">
     {{ section.settings.announcement_message }}
   </p>
 </div>
