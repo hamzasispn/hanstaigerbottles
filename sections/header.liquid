@@ -94,8 +94,8 @@
         <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
           <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
           <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
-          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full" :class="openMenu ? 'bg-white' : 'bg-transparent'"></span>
-          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full" :class="openMenu ? 'bg-white' : 'bg-transparent'"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full" :class="openMenu ? 'bg-transparent' : 'bg-white'"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full" :class="openMenu ? 'bg-transparent' : 'bg-white'"></span>
         </span>
       </button>
 
@@ -109,7 +109,7 @@
           x-transition:leave="transition ease-in duration-200"
           x-transition:leave-start="opacity-100 translate-y-0 scale-100"
           x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-          class="absolute left-0 top-full w-[80vw] lg:w-[16vw] origin-top-left flex flex-col"
+          class="w-[80vw] lg:w-[16vw] origin-top-left flex flex-col"
         >
           {%- for block in menu_items -%}
             <a
