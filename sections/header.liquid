@@ -79,71 +79,62 @@
   :class="scrolled ? 'fixed shadow-sm bg-white/20 backdrop-blur-3xl' : 'absolute'"
   class="top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] transition-all duration-300"
 >
-  <div class="grid grid-cols-4 lg:grid-cols-3 items-center lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto">
+  <div class="grid grid-cols-3 items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto" :class="openMenu ? 'items-start' : 'lg:items-start items-center'">
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
-    <div>
-      <div
-        class="relative justify-self-start bg-black/40 backdrop-blur-3xl rounded-[1.5vw] lg:rounded-[0.4vw] px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]"
-        @click.outside="openMenu = false"
+    <div class="relative justify-self-start bg-black/40 backdrop-blur-3xl rounded-[1.5vw] lg:rounded-[0.4vw] px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]" @click.outside="openMenu = false">
+      <button
+        type="button"
+        @click="openMenu = !openMenu"
+        class="flex items-center gap-[2.5vw] lg:gap-[0.7vw]  text-white font-(--font-primary--family) tracking-[0.05em] w-full"
+        :class="openMenu ? 'justify-between' : ''"
+        :aria-expanded="openMenu"
       >
-        <button
-          type="button"
-          @click="openMenu = !openMenu"
-          class="flex items-center gap-[2.5vw] lg:gap-[0.7vw]  text-white font-(--font-primary--family) tracking-[0.05em] w-full"
-          :class="openMenu ? 'justify-between' : ''"
-          :aria-expanded="openMenu"
-        >
-          <span class="lg:block hidden"> Overview </span>
-          <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
-            <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
-            <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
-            <span
-              class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full"
-              :class="openMenu ? 'bg-transparent' : 'bg-white'"
-            ></span>
-            <span
-              class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full"
-              :class="openMenu ? 'bg-transparent' : 'bg-white'"
-            ></span>
-          </span>
-        </button>
+        <span class="lg:block hidden">
+          Overview
+        </span>
+        <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full" :class="openMenu ? 'bg-transparent' : 'bg-white'"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full" :class="openMenu ? 'bg-transparent' : 'bg-white'"></span>
+        </span>
+      </button>
 
-        {%- if menu_items.size > 0 -%}
-          <div
-            x-cloak
-            x-show="openMenu"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 -translate-y-[2vw] scale-95"
-            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-            x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-            class="mt-[4vw] lg:mt-[0.8vw] w-[50vw] lg:w-[16vw] origin-top-left flex flex-col"
-          >
-            {%- for block in menu_items -%}
-              <a
-                href="{{ block.settings.link | default: '#' }}"
-                class="flex items-center gap-[3vw] lg:gap-[0.8vw] text-white text-[3.5vw] lg:text-[0.9vw] hover:bg-white/10 rounded-[1vw] lg:rounded-[0.25vw] p-[1.5vw] lg:p-[0.4vw] transition-colors"
-                {{ block.shopify_attributes }}
-              >
-                {%- if block.settings.image -%}
-                  {{
-                    block.settings.image
-                    | image_url: width: 120
-                    | image_tag:
-                      class: 'w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] object-cover rounded-[0.8vw] lg:rounded-[0.2vw] bg-white/10'
-                  }}
-                {%- else -%}
-                  <span
-                    class="w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] bg-white/10 rounded-[0.8vw] lg:rounded-[0.2vw]"
-                  ></span>
-                {%- endif -%}
-                <span>{{ block.settings.label }}</span>
-              </a>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
+      {%- if menu_items.size > 0 -%}
+        <div
+          x-cloak
+          x-show="openMenu"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="opacity-0 -translate-y-[2vw] scale-95"
+          x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+          x-transition:leave="transition ease-in duration-200"
+          x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+          x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
+          class="mt-[4vw] lg:mt-[0.8vw] w-[50vw] lg:w-[16vw] origin-top-left flex flex-col"
+        >
+          {%- for block in menu_items -%}
+            <a
+              href="{{ block.settings.link | default: '#' }}"
+              class="flex items-center gap-[3vw] lg:gap-[0.8vw] text-white text-[3.5vw] lg:text-[0.9vw] hover:bg-white/10 rounded-[1vw] lg:rounded-[0.25vw] p-[1.5vw] lg:p-[0.4vw] transition-colors"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.image -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 120
+                  | image_tag:
+                    class: 'w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] object-cover rounded-[0.8vw] lg:rounded-[0.2vw] bg-white/10'
+                }}
+              {%- else -%}
+                <span
+                  class="w-[10vw] h-[10vw] lg:w-[2.5vw] lg:h-[2.5vw] bg-white/10 rounded-[0.8vw] lg:rounded-[0.2vw]"
+                ></span>
+              {%- endif -%}
+              <span>{{ block.settings.label }}</span>
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
 
     {%- comment -%} ── Wordmark ─────────────────────────────────── {%- endcomment -%}
@@ -153,7 +144,7 @@
     {%- endunless -%}
     <a
       href="{{ routes.root_url }}"
-      class="flex items-center justify-self-center col-span-2 lg:col-span-1"
+      class="flex items-center justify-self-center"
     >
       {%- if settings.logo_image != blank or settings.logo_image_dark != blank -%}
         {%- assign mobile_logo_w = section.settings.logo_width | times: 2.8 -%}
@@ -209,9 +200,7 @@
               <path d="M12 3c-2.5 3-2.5 15 0 18"/>
             </svg>
             {%- comment -%} Desktop: language name + chevron {%- endcomment -%}
-            <span class="hidden lg:inline">
-              {{- localization.language.endonym_name | default: localization.language.name -}}
-            </span>
+            <span class="hidden lg:inline">{{ localization.language.endonym_name | default: localization.language.name }}</span>
             <svg
               class="hidden lg:block w-[0.85vw] h-[0.85vw] transition-transform"
               :class="openLang && '-rotate-180'"
@@ -270,7 +259,7 @@
           <button
             type="button"
             @click="$store.cart.open ? $store.cart.close() : $store.cart.openDrawer()"
-            class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] bg-white/15 rounded-[0.7vw] lg:rounded-[0.2vw] px-[2.5vw] lg:px-[0.6vw] py-[1.5vw] lg:py-[0.4vw] text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em] hover:bg-white/25 transition-colors backdrop-blur-3xl"
+            class="flex items-center gap-[1.5vw] lg:gap-[0.4vw] bg-white/15 rounded-[0.7vw] lg:rounded-[0.2vw] px-[2.5vw] lg:px-[0.6vw] py-[1.5vw] lg:py-[0.4vw] text-[3vw] lg:text-[0.85vw] font-(--font-primary--family) tracking-[0.05em] hover:bg-white/25 transition-colors"
             aria-label="Open cart"
           >
             <span>{{ 'cart.title' | t | default: 'Cart' }}</span>
