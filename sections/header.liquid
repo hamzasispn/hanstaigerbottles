@@ -79,7 +79,7 @@
   :class="scrolled ? 'fixed shadow-sm bg-white/20 backdrop-blur-3xl' : 'absolute'"
   class="top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] transition-all duration-300"
 >
-  <div class="grid grid-cols-2 lg:grid-cols-3 items-start gap-[3vw] lg:gap-[1vw] max-w-[88.889vw] mx-auto">
+  <div class="grid grid-cols-3 items-center lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto">
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
     <div class="relative justify-self-start" @click.outside="openMenu = false">
       <button
@@ -137,20 +137,32 @@
     </div>
 
     {%- comment -%} ── Wordmark ─────────────────────────────────── {%- endcomment -%}
+    {%- assign use_dark_logo = false -%}
+    {%- unless template.name == 'index' or template.name == 'password' -%}
+      {%- assign use_dark_logo = true -%}
+    {%- endunless -%}
     <a
       href="{{ routes.root_url }}"
-      class="hidden lg:flex items-center justify-self-center mix-blend-difference"
+      class="flex items-center justify-self-center"
     >
-      {%- if section.settings.logo != blank -%}
-        {%- assign logo_style = 'width:' | append: section.settings.logo_width | append: 'vw;' -%}
+      {%- if settings.logo_image != blank or settings.logo_image_dark != blank -%}
+        {%- assign mobile_logo_w = section.settings.logo_width | times: 2.8 -%}
+        {%- assign logo_style = 'width:' | append: mobile_logo_w | append: 'vw;' -%}
+        {%- assign logo_style_lg = 'width:' | append: section.settings.logo_width | append: 'vw;' -%}
         {%- assign logo_alt = header_text | default: shop.name -%}
-        {{
-          section.settings.logo
-          | image_url: width: 600
-          | image_tag: class: 'block object-contain', style: logo_style, alt: logo_alt
-        }}
+        {%- if use_dark_logo and settings.logo_image_dark != blank -%}
+          {%- assign active_logo = settings.logo_image_dark -%}
+        {%- else -%}
+          {%- assign active_logo = settings.logo_image | default: settings.logo_image_dark -%}
+        {%- endif -%}
+        <img
+          src="{{ active_logo | image_url: width: 600 }}"
+          alt="{{ logo_alt | escape }}"
+          class="block object-contain w-[22vw] lg:w-[var(--logo-w)]"
+          style="--logo-w: {{ section.settings.logo_width }}vw;"
+        >
       {%- else -%}
-        <span class="text-[1.4vw] tracking-[0.5em] font-medium text-white/80 uppercase">
+        <span class="text-[3.5vw] lg:text-[1.4vw] tracking-[0.5em] font-medium {% if use_dark_logo %}text-black/80{% else %}text-white/80{% endif %} uppercase">
           {{ header_text | default: shop.name }}
         </span>
       {%- endif -%}

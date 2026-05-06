@@ -21,7 +21,7 @@
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
             <div class="swiper-slide transition-all duration-500 ease-out scale-[0.95] [&.swiper-slide-active]:scale-100 " {{ block.shopify_attributes }}>
-              <div class="relative w-full overflow-hidden h-[33.889vw] flex items-center justify-between p-[4.375vw] z-10">
+              <div class="relative w-full overflow-hidden h-[80vw] lg:h-[33.889vw] flex items-end justify-between p-[5vw] lg:p-[4.375vw] z-10">
                 {% if block.settings.image %}
                   <img
                     src="{{ block.settings.image | image_url: width: 1800 }}"
@@ -43,7 +43,7 @@
 
                 {%- comment -%} Brand label — bottom left {%- endcomment -%}
                 {% if block.settings.brand_label != blank %}
-                  <img src="{{ block.settings.brand_label | img_url: width: 600 }}" alt="{{ block.settings.brand_label.alt | escape }}" class="w-[15.139vw] h-auto"/>
+                  <img src="{{ block.settings.brand_label | img_url: width: 600 }}" alt="{{ block.settings.brand_label.alt | escape }}" class="w-[28vw] lg:w-[15.139vw] h-auto"/>
                 {% endif %}
 
                 {%- comment -%} Quote — bottom right {%- endcomment -%}

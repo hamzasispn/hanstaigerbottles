@@ -68,9 +68,9 @@
     '
   >
     <div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2">
-      <div class="flex gap-8 md:gap-12">
+      <div class="flex flex-col-reverse md:flex-row gap-4 md:gap-12">
         {%- comment -%} Thumbnails from product media {%- endcomment -%}
-        <aside class="flex flex-row gap-3 overflow-x-auto md:flex-col md:pt-60">
+        <aside class="flex flex-row gap-3 overflow-x-auto md:flex-col md:pt-60 md:overflow-visible lg:w-[30%]">
           {%- for m in p.media -%}
             <button
               type="button"
@@ -88,7 +88,7 @@
         </aside>
 
         {%- comment -%} Stage {%- endcomment -%}
-        <div class="relative aspect-square min-h-[420px] w-full">
+        <div class="relative aspect-square w-full min-h-[300px] md:min-h-[420px] lg:w-[80%]">
           <img
             :src="mainImage"
             :alt="'{{ p.title | escape }}'"

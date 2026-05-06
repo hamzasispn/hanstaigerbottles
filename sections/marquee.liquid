@@ -1,4 +1,4 @@
-<div class="py-[10vw] lg:py-[4.167vw] overflow-hidden max-w-[88.889vw] mx-auto">
+<div class="py-[10vw] lg:py-[4.167vw] overflow-hidden max-w-[92vw] lg:max-w-[88.889vw] mx-auto">
 
   <div
     class="swiper"
@@ -8,8 +8,12 @@
       new Swiper($el, {
         modules: [window.Autoplay, window.FreeMode],
         loop: true,
-        slidesPerView: 4,
-        spaceBetween: 160,
+        slidesPerView: 2.5,
+        spaceBetween: 40,
+        breakpoints: {
+          768: { slidesPerView: 3, spaceBetween: 80 },
+          1024: { slidesPerView: 4, spaceBetween: 160 }
+        },
         speed: {{ section.settings.speed }},
         autoplay: {
           delay: 0,

@@ -1,6 +1,6 @@
-<div class="py-[5.556vw] max-w-[88.889vw] mx-auto">
-  <div class="section-header grid grid-cols-1 lg:grid-cols-2 gap-[3vw] lg:gap-[1.111vw] mb-[5vw] lg:mb-[1.667vw]">
-    <h2 class="lg:text-[2.778vw] lg:leading-[3.056vw] text-black">{{ section.settings.heading }}</h2>
+<div class="py-[10vw] lg:py-[5.556vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto">
+  <div class="section-header grid grid-cols-1 lg:grid-cols-2 gap-[5vw] lg:gap-[1.111vw] mb-[6vw] lg:mb-[1.667vw]">
+    <h2 class="text-[7vw] leading-[8vw] lg:text-[2.778vw] lg:leading-[3.056vw] text-black">{{ section.settings.heading }}</h2>
     {%- comment -%} Feature List — top right {%- endcomment -%}
     <div class="w-full flex justify-start lg:justify-end">
       {% if section.blocks.size > 0 %}
@@ -49,16 +49,16 @@
     </div>
   </div>
 
-  <div class="lg:h-[50vw] h-[128.158vw] relative p-[2.778vw]">
+  <div class="lg:h-[50vw] h-[110vw] relative p-[5vw] lg:p-[2.778vw]">
     <img src="{{ section.settings.background_image | img_url: '1200x' }}" alt="Brochure Section Background" class="w-full h-full object-cover absolute inset-0 -z-10">
     <div class="w-full h-full flex items-end justify-end">
-       <div class="flex gap-[0.556vw]">
-            <a href="{{ section.settings.button_one_link }}" class="py-[2vw] px-[3vw] gap-[3vw] bg-(--color-primary) text-[3vw] leading-[4vw] lg:py-[0.556vw] lg:px-[0.833vw] lg:gap-[1.111vw] lg:text-[0.972vw] lg:leading-[1.389vw] text-white">
+       <div class="flex gap-[2vw] lg:gap-[0.556vw]">
+            <a href="{{ section.settings.button_one_link }}" class="py-[2.5vw] px-[4vw] gap-[3vw] bg-(--color-primary) text-[3vw] leading-[4vw] lg:py-[0.556vw] lg:px-[0.833vw] lg:gap-[1.111vw] lg:text-[0.972vw] lg:leading-[1.389vw] text-white">
                 {{ section.settings.button_one_label }}
             </a>
-            <a href="{{ section.settings.button_two_link }}" class="py-[2vw] px-[3vw] gap-[3vw] text-[3vw] leading-[4vw] lg:py-[0.556vw] lg:px-[0.833vw] lg:gap-[1.111vw] lg:text-[0.972vw] lg:leading-[1.389vw] flex items-center text-white bg-[#C4C4C4]/40 backdrop-blur-md">
+            <a href="{{ section.settings.button_two_link }}" class="py-[2.5vw] px-[4vw] gap-[2vw] text-[3vw] leading-[4vw] lg:py-[0.556vw] lg:px-[0.833vw] lg:gap-[1.111vw] lg:text-[0.972vw] lg:leading-[1.389vw] flex items-center text-white bg-[#C4C4C4]/40 backdrop-blur-md">
               {{ section.settings.button_two_label }}
-              <span class="text-[4vw] lg:text-[1.111vw]">{% render 'button-arrow' %}</span>  
+              <span class="text-[4vw] lg:text-[1.111vw]">{% render 'button-arrow' %}</span>
             </a>
         </div>
     </div>

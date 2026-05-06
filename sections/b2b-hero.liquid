@@ -1,35 +1,35 @@
-<div class="grid-cols-2 grid">
+<div class="grid grid-cols-1 lg:grid-cols-2">
   <div>
     <img
     src="{{ section.settings.background_image | img_url: '1200x' }}"
     alt="{{ section.settings.background_image.alt | escape }}"
-    class="w-full h-full object-cover"
+    class="w-full h-[60vw] lg:h-full object-cover"
     >
   </div>
-  <div class="py-[8.75vw] px-[5.556vw]">
-    <div class="flex items-start justify-between mb-[6.528vw]">
-      <h2 class="max-w-[24.583vw] text-[3.333vw] leading-[3.75vw]">{{ section.settings.heading }}</h2>
+  <div class="py-[10vw] lg:py-[8.75vw] px-[6vw] lg:px-[5.556vw]">
+    <div class="flex items-start justify-between mb-[8vw] lg:mb-[6.528vw] gap-[4vw]">
+      <h2 class="max-w-[60vw] lg:max-w-[24.583vw] text-[6.5vw] leading-[7.5vw] lg:text-[3.333vw] lg:leading-[3.75vw]">{{ section.settings.heading }}</h2>
       <img
         src="{{ section.settings.feature_image | img_url: '1080x'}}"
         alt="{{ section.settings.feature_image.alt | escape }}"
-        class="w-[11.111vw] h-[14.444vw]"
+        class="w-[22vw] h-[28vw] lg:w-[11.111vw] lg:h-[14.444vw] object-cover"
       >
     </div>
 
-    <div class="flex items-center justify-between mb-[6.528vw]">
-      <span class="text-[0.833vw] text-black uppercase font-normal">{{ section.settings.subheading_one }}</span>
-      <span class="text-[0.833vw] text-black uppercase font-normal">{{ section.settings.subheading_two }}</span>
+    <div class="flex items-center justify-between mb-[8vw] lg:mb-[6.528vw] gap-[3vw]">
+      <span class="text-[2.6vw] lg:text-[0.833vw] text-black uppercase font-normal">{{ section.settings.subheading_one }}</span>
+      <span class="text-[2.6vw] lg:text-[0.833vw] text-black uppercase font-normal">{{ section.settings.subheading_two }}</span>
     </div>
 
     <div>
-      <h2 class="max-w-[24.583vw] ml-auto text-[3.333vw] leading-[3.75vw] text-right mb-[1.736vw]">
+      <h2 class="max-w-[60vw] lg:max-w-[24.583vw] ml-auto text-[6.5vw] leading-[7.5vw] lg:text-[3.333vw] lg:leading-[3.75vw] text-right mb-[3vw] lg:mb-[1.736vw]">
         {{ section.settings.heading_two }}
       </h2>
-      <div class="flex items-end justify-between">
-        <p class="text-[#4F5257] text-[0.903vw] leading-[1.181vw] max-w-[22.639vw]">
+      <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-[4vw]">
+        <p class="text-[#4F5257] text-[3vw] leading-[4vw] lg:text-[0.903vw] lg:leading-[1.181vw] lg:max-w-[22.639vw]">
           {{ section.settings.description }}
         </p>
-        <a href="{{ section.settings.button_url }}" class="btn-primary">{{ section.settings.button_text }}</a>
+        <a href="{{ section.settings.button_url }}" class="btn-primary shrink-0">{{ section.settings.button_text }}</a>
       </div>
     </div>
   </div>
