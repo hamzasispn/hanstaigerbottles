@@ -3,6 +3,34 @@
   assign overview_label = section.settings.overview_label | default: 'Overview'
   assign header_text = section.settings.header_text
   assign cart_heading = section.settings.cart_heading | default: 'Cart'
+
+  assign current_label = overview_label
+  case template.name
+    when 'product'
+      assign current_label = product.title
+    when 'collection'
+      assign current_label = collection.title
+    when 'article'
+      assign current_label = article.title
+    when 'blog'
+      assign current_label = blog.title
+    when 'page'
+      assign current_label = page.title
+    when 'cart'
+      assign current_label = cart_heading
+    when 'search'
+      assign current_label = 'Search'
+    when 'customers/account'
+      assign current_label = 'Account'
+    when 'customers/login'
+      assign current_label = 'Sign in'
+    when 'customers/register'
+      assign current_label = 'Register'
+    when 'customers/order'
+      assign current_label = 'Order'
+    when 'customers/addresses'
+      assign current_label = 'Addresses'
+  endcase
 -%}
 
 <style>
@@ -112,7 +140,7 @@
         class="flex items-center justify-between gap-[2.5vw] lg:gap-[0.7vw]  text-white font-(--font-primary--family) tracking-[0.05em] w-full"
         :aria-expanded="openMenu"
       >
-        <span class="lg:block hidden"> Overview </span>
+        <span class="lg:block hidden truncate max-w-[12vw]">{{ current_label }}</span>
         <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
           <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
           <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
@@ -140,9 +168,21 @@
           class="pt-[4vw] lg:pt-[0.8vw] origin-top-left flex flex-col bg-black/40 backdrop-blur-3xl rounded-b-[1.5vw] lg:rounded-b-[0.4vw] absolute left-0 top-full w-full"
         >
           {%- for block in menu_items -%}
+            {%- liquid
+              assign is_active = false
+              assign link_path = block.settings.link | default: ''
+              if link_path != '' and link_path != '#'
+                if request.path == link_path
+                  assign is_active = true
+                elsif link_path != '/' and request.path contains link_path
+                  assign is_active = true
+                endif
+              endif
+            -%}
             <a
               href="{{ block.settings.link | default: '#' }}"
-              class="flex items-center gap-[3vw] lg:gap-[0.8vw] text-white text-[3.5vw] lg:text-[0.9vw] hover:bg-white/10 rounded-[1vw] lg:rounded-[0.25vw] p-[1.5vw] lg:p-[0.4vw] transition-colors"
+              class="relative flex items-center gap-[3vw] lg:gap-[0.8vw] text-white text-[3.5vw] lg:text-[0.9vw] rounded-[1vw] lg:rounded-[0.25vw] p-[1.5vw] lg:p-[0.4vw] pr-[5vw] lg:pr-[1.4vw] transition-colors {% if is_active %}bg-white/10{% else %}hover:bg-white/10{% endif %}"
+              {% if is_active %}aria-current="page"{% endif %}
               {{ block.shopify_attributes }}
             >
               {%- if block.settings.image -%}
@@ -158,6 +198,12 @@
                 ></span>
               {%- endif -%}
               <span>{{ block.settings.label }}</span>
+              {%- if is_active -%}
+                <span
+                  class="absolute right-[2vw] lg:right-[0.6vw] top-1/2 -translate-y-1/2 w-[1.4vw] h-[1.4vw] lg:w-[0.35vw] lg:h-[0.35vw] bg-white rounded-full"
+                  aria-hidden="true"
+                ></span>
+              {%- endif -%}
             </a>
           {%- endfor -%}
         </div>
