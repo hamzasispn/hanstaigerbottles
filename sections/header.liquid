@@ -130,9 +130,9 @@
   >
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
     <div
-      class="relative justify-self-start bg-black/40 backdrop-blur-3xl px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]"
+      class="relative justify-self-start bg-black/40 px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]"
       @click.outside="openMenu = false"
-      :class="openMenu ? 'w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw]'"
+      :class="openMenu ? 'w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw] backdrop-blur-3xl'"
     >
       <button
         type="button"
@@ -244,7 +244,10 @@
 
     {%- comment -%} ── Right cluster ───────────────────────────── {%- endcomment -%}
     <div>
-      <div class="ml-auto w-fit flex items-center justify-end gap-[2vw] lg:gap-[0.6vw] bg-black/40 backdrop-blur-3xl rounded-[1.5vw] lg:rounded-[0.4vw] px-[3vw] lg:px-[0.9vw] py-[1.5vw] lg:py-[0.5vw] text-white">
+      <div
+        class="ml-auto w-fit flex items-center justify-end gap-[2vw] lg:gap-[0.6vw] bg-black/40 rounded-[1.5vw] lg:rounded-[0.4vw] px-[3vw] lg:px-[0.9vw] py-[1.5vw] lg:py-[0.5vw] text-white"
+        :class="!openLang && 'backdrop-blur-3xl'"
+      >
         {%- comment -%} Language {%- endcomment -%}
         {%- assign langs = localization.available_languages -%}
         {%- if langs.size == 0 -%}{%- assign langs = shop.published_locales -%}{%- endif -%}
