@@ -361,7 +361,7 @@
             <span>{{ 'cart.title' | t | default: 'Cart' }}</span>
             <span class="relative min-w-[0.85vw] text-center inline-flex items-center justify-center">
               <span x-show="!$store.cart.loading && $store.cart.open" aria-hidden="true">{% render 'minus' %}</span>
-              <span x-show="!$store.cart.loading && !$store.cart.open && $store.cart.count === 0" aria-hidden="true">{% render 'plus-icon' %}</span>
+              <span class="w-4.5 h-4.5" x-show="!$store.cart.loading && !$store.cart.open && $store.cart.count === 0" aria-hidden="true">{% render 'plus-icon' %}</span>
               <span x-show="!$store.cart.loading && !$store.cart.open && $store.cart.count > 0" x-text="$store.cart.count"></span>
               <svg
                 x-show="$store.cart.loading"
