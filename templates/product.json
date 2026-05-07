@@ -12,9 +12,49 @@
     "main": {
       "type": "product",
       "settings": {}
+    },
+    "accordions": {
+      "type": "product-accordions",
+      "blocks": {
+        "description": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Description",
+            "metafield_namespace": "custom",
+            "metafield_key": "description"
+          }
+        },
+        "shipping": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Shipping & returns",
+            "metafield_namespace": "custom",
+            "metafield_key": "shipping_returns"
+          }
+        },
+        "reviews": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Reviews",
+            "metafield_namespace": "custom",
+            "metafield_key": "reviews"
+          }
+        },
+        "faqs": {
+          "type": "accordion",
+          "settings": {
+            "heading": "FAQs",
+            "metafield_namespace": "custom",
+            "metafield_key": "faqs"
+          }
+        }
+      },
+      "block_order": ["description", "shipping", "reviews", "faqs"],
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "accordions"
   ]
 }

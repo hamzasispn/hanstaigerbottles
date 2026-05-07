@@ -1,0 +1,193 @@
+{%- comment -%}
+  Product accordions section.
+  Each block renders one accordion row. Content can be a rich-text setting
+  or pulled from a product metafield (namespace + key).
+{%- endcomment -%}
+
+<section
+  class="product-accordions w-full bg-[#F4F4F5] px-[5.333vw] lg:px-[5.556vw] py-[8vw] lg:py-[3.5vw]"
+  x-data="{ open: {{ section.settings.default_open_index | json }} }"
+>
+  <div class="max-w-[88.889vw] mx-auto">
+    {%- for block in section.blocks -%}
+      {%- assign idx = forloop.index -%}
+      {%- assign heading = block.settings.heading -%}
+
+      {%- comment -%} Resolve content: metafield wins if set, else richtext setting {%- endcomment -%}
+      {%- assign content_html = block.settings.content -%}
+      {%- assign mf_ns = block.settings.metafield_namespace -%}
+      {%- assign mf_key = block.settings.metafield_key -%}
+      {%- if mf_ns != blank and mf_key != blank and product.metafields[mf_ns][mf_key] != blank -%}
+        {%- assign content_html = product.metafields[mf_ns][mf_key] -%}
+      {%- endif -%}
+
+      <div
+        class="accordion-row border-t border-black/15 {% if forloop.last %}border-b{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        <button
+          type="button"
+          @click="open === {{ idx }} ? open = null : open = {{ idx }}"
+          :aria-expanded="open === {{ idx }}"
+          aria-controls="accordion-panel-{{ section.id }}-{{ idx }}"
+          class="w-full flex items-center justify-between text-left py-[5vw] lg:py-[1.667vw] text-[2.8vw] lg:text-[0.833vw] tracking-[0.18em] uppercase text-[#111111] font-medium"
+        >
+          <span>{{ heading }}</span>
+          <span class="relative w-[3.5vw] h-[3.5vw] lg:w-[1vw] lg:h-[1vw] flex-shrink-0">
+            {%- comment -%} Plus → Minus morph {%- endcomment -%}
+            <span class="absolute inset-0 flex items-center justify-center">
+              <span class="block w-full h-px bg-[#111111]"></span>
+            </span>
+            <span
+              class="absolute inset-0 flex items-center justify-center transition-transform duration-300"
+              :class="open === {{ idx }} ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'"
+            >
+              <span class="block h-full w-px bg-[#111111]"></span>
+            </span>
+          </span>
+        </button>
+
+        <div
+          id="accordion-panel-{{ section.id }}-{{ idx }}"
+          x-show="open === {{ idx }}"
+          x-cloak
+          x-transition:enter="transition-[max-height,opacity] ease-out duration-300 overflow-hidden"
+          x-transition:enter-start="max-h-0 opacity-0"
+          x-transition:enter-end="max-h-[200vw] opacity-100"
+          x-transition:leave="transition-[max-height,opacity] ease-in duration-200 overflow-hidden"
+          x-transition:leave-start="max-h-[200vw] opacity-100"
+          x-transition:leave-end="max-h-0 opacity-0"
+        >
+          <div class="pb-[6vw] lg:pb-[2.222vw] pr-[8vw] lg:pr-[6vw] text-[3.4vw] leading-[5vw] lg:text-[0.833vw] lg:leading-[1.25vw] text-[#222222] accordion-content">
+            {%- if content_html != blank -%}
+              {{ content_html }}
+            {%- else -%}
+              <p class="text-[#83868E]">{{ 'general.accordions.empty' | t | default: 'No content yet.' }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .product-accordions [x-cloak] { display: none !important; }
+  .accordion-content p { margin-bottom: 1em; }
+  .accordion-content p:last-child { margin-bottom: 0; }
+  .accordion-content h3,
+  .accordion-content h4 {
+    font-weight: 500;
+    margin-bottom: 0.4em;
+    color: #111111;
+  }
+  .accordion-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1em 0;
+  }
+  .accordion-content li {
+    position: relative;
+    padding-left: 1em;
+    margin-bottom: 0.25em;
+  }
+  .accordion-content li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+  }
+  .accordion-content a {
+    color: #111111;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product accordions",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "number",
+      "id": "default_open_index",
+      "label": "Default open accordion (1-based, blank for none)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Description"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "info": "Used when no metafield is set."
+        },
+        {
+          "type": "header",
+          "content": "Metafield (optional)"
+        },
+        {
+          "type": "text",
+          "id": "metafield_namespace",
+          "label": "Metafield namespace",
+          "info": "Example: custom"
+        },
+        {
+          "type": "text",
+          "id": "metafield_key",
+          "label": "Metafield key",
+          "info": "Example: shipping_returns. When set and the product has this metafield, it overrides the Content field."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product accordions",
+      "blocks": [
+        {
+          "type": "accordion",
+          "settings": {
+            "heading": "Description",
+            "metafield_namespace": "custom",
+            "metafield_key": "description"
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "heading": "Shipping & returns",
+            "metafield_namespace": "custom",
+            "metafield_key": "shipping_returns"
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "heading": "Reviews",
+            "metafield_namespace": "custom",
+            "metafield_key": "reviews"
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "heading": "FAQs",
+            "metafield_namespace": "custom",
+            "metafield_key": "faqs"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
