@@ -79,24 +79,34 @@
   :class="scrolled ? 'fixed shadow-sm bg-white/20 backdrop-blur-3xl lg:pt-[1vw] pt-[3vw]' : 'absolute pt-[10vw] lg:pt-[2.5vw]'"
   class="top-0 left-0 right-0 z-50 w-full pb-[3vw] lg:pb-[1vw] transition-all duration-300"
 >
-  <div class="grid grid-cols-3 lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto" :class="openMenu ? 'items-start' : 'items-center'">
+  <div
+    class="grid grid-cols-3 lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto"
+    :class="openMenu ? 'items-start' : 'items-center'"
+  >
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
-    <div class="relative justify-self-start bg-black/40 backdrop-blur-3xl px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]" @click.outside="openMenu = false">
+    <div
+      class="relative justify-self-start bg-black/40 backdrop-blur-3xl px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]"
+      @click.outside="openMenu = false"
+      :class="openMenu ? 'w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw]'"
+    >
       <button
         type="button"
         @click="openMenu = !openMenu"
-        class="flex items-center gap-[2.5vw] lg:gap-[0.7vw]  text-white font-(--font-primary--family) tracking-[0.05em] w-full"
-        :class="openMenu ? 'justify-between w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw]'"
+        class="flex items-center justify-between gap-[2.5vw] lg:gap-[0.7vw]  text-white font-(--font-primary--family) tracking-[0.05em] w-full"
         :aria-expanded="openMenu"
       >
-        <span class="lg:block hidden">
-          Overview
-        </span>
+        <span class="lg:block hidden"> Overview </span>
         <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
           <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
           <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
-          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full" :class="openMenu ? 'bg-transparent' : 'bg-white'"></span>
-          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full" :class="openMenu ? 'bg-transparent' : 'bg-white'"></span>
+          <span
+            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full"
+            :class="openMenu ? 'bg-transparent' : 'bg-white'"
+          ></span>
+          <span
+            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full"
+            :class="openMenu ? 'bg-transparent' : 'bg-white'"
+          ></span>
         </span>
       </button>
 
@@ -200,7 +210,9 @@
               <path d="M12 3c-2.5 3-2.5 15 0 18"/>
             </svg>
             {%- comment -%} Desktop: language name + chevron {%- endcomment -%}
-            <span class="hidden lg:inline">{{ localization.language.endonym_name | default: localization.language.name }}</span>
+            <span class="hidden lg:inline">
+              {{- localization.language.endonym_name | default: localization.language.name -}}
+            </span>
             <svg
               class="hidden lg:block w-[0.85vw] h-[0.85vw] transition-transform"
               :class="openLang && '-rotate-180'"
