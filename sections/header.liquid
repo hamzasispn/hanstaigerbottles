@@ -76,7 +76,7 @@
 <header
   x-data="{ openMenu: false, openLang: false, scrolled: false }"
   x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })"
-  :class="scrolled ? 'fixed shadow-sm bg-white/20 backdrop-blur-3xl' : 'absolute'"
+  :class="scrolled ? 'fixed shadow-sm bg-white/20 backdrop-blur-3xl lg:pt-[2.5vw] pt-[3vw]' : 'absolute'"
   class="top-0 left-0 right-0 z-50 w-full pt-[10vw] lg:pt-[2.5vw] pb-[3vw] lg:pb-[1vw] transition-all duration-300"
 >
   <div class="grid grid-cols-3 lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto" :class="openMenu ? 'items-start' : 'items-center'">
