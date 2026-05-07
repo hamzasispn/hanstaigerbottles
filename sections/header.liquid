@@ -81,12 +81,12 @@
 >
   <div class="grid grid-cols-3 lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto" :class="openMenu ? 'items-start' : 'items-center'">
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
-    <div class="relative justify-self-start bg-black/40 backdrop-blur-3xl rounded-t-[1.5vw] lg:rounded-t-[0.4vw] px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]" @click.outside="openMenu = false">
+    <div class="relative justify-self-start bg-black/40 backdrop-blur-3xl px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw]" @click.outside="openMenu = false">
       <button
         type="button"
         @click="openMenu = !openMenu"
         class="flex items-center gap-[2.5vw] lg:gap-[0.7vw]  text-white font-(--font-primary--family) tracking-[0.05em] w-full"
-        :class="openMenu ? 'justify-between w-[50vw] lg:w-[16vw]' : 'w-fit'"
+        :class="openMenu ? 'justify-between w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw]'"
         :aria-expanded="openMenu"
       >
         <span class="lg:block hidden">
@@ -110,7 +110,7 @@
           x-transition:leave="transition ease-in duration-200"
           x-transition:leave-start="opacity-100 translate-y-0 scale-100"
           x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-          class="pt-[4vw] lg:pt-[0.8vw] origin-top-left flex flex-col bg-black/40 backdrop-blur-3xl rounded-b-[1.5vw] lg:rounded-b-[0.4vw] "
+          class="pt-[4vw] lg:pt-[0.8vw] origin-top-left flex flex-col bg-black/40 backdrop-blur-3xl rounded-b-[1.5vw] lg:rounded-b-[0.4vw] absolute left-0 top-full w-full"
         >
           {%- for block in menu_items -%}
             <a
