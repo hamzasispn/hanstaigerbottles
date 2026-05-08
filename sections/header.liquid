@@ -130,7 +130,7 @@
   >
     {%- comment -%} ── Overview / Menu ───────────────────────────── {%- endcomment -%}
     <div
-      class="relative justify-self-start bg-black/40 px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] lg:col-span-1 col-span-2"
+      class="relative justify-self-start bg-black/40 px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] lg:col-span-1 col-span-1"
       @click.outside="openMenu = false"
       :class="openMenu ? 'w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw] backdrop-blur-3xl'"
     >
@@ -217,7 +217,7 @@
     {%- endunless -%}
     <a
       href="{{ routes.root_url }}"
-      class="flex items-center justify-self-center lg:col-span-1 col-span-5"
+      class="flex items-center justify-self-center lg:col-span-1 col-span-6"
     >
       {%- if settings.logo_image != blank or settings.logo_image_dark != blank -%}
         {%- assign mobile_logo_w = section.settings.logo_width | times: 2.8 -%}
@@ -232,7 +232,7 @@
         <img
           src="{{ active_logo | image_url: width: 600 }}"
           alt="{{ logo_alt | escape }}"
-          class="block object-contain w-[30vw] lg:w-[var(--logo-w)]"
+          class="block object-contain w-full lg:w-[var(--logo-w)]"
           style="--logo-w: {{ section.settings.logo_width }}vw;"
         >
       {%- else -%}
@@ -243,7 +243,7 @@
     </a>
 
     {%- comment -%} ── Right cluster ───────────────────────────── {%- endcomment -%}
-    <div class="lg:col-span-1 col-span-5">
+    <div class="lg:col-span-1 col-span-4">
       <div
         class="ml-auto w-fit flex items-center justify-end gap-[2vw] lg:gap-[0.6vw] bg-black/40 rounded-[1.5vw] lg:rounded-[0.4vw] px-[3vw] lg:px-[0.9vw] py-[1.5vw] lg:py-[0.5vw] text-white"
         :class="!openLang && 'backdrop-blur-3xl'"
