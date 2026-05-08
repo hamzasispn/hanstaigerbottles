@@ -37,11 +37,6 @@
   [x-cloak] {
     display: none !important;
   }
-  .site-header {
-    will-change: background-color;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
 </style>
 <script>
   document.addEventListener('alpine:init', () => {
@@ -121,35 +116,47 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   "
-  :class="scrolled ? 'shadow-sm bg-white/70 backdrop-blur-md fixed top-0' : 'absolute lg:top-0 top-[7vw]'"
+  :class="scrolled ? 'lg:shadow-sm lg:bg-white/70 fixed top-0' : 'absolute lg:top-[2vw] top-[7vw]'"
   class="site-header left-0 right-0 z-50 w-full pt-[3vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw] transition-[background-color,box-shadow] duration-300"
 >
   <div
-    class="grid grid-cols-12 lg:grid-cols-3 lg:items-start gap-0 lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto"
-    :class="openMenu ? 'items-start' : 'items-center'"
+    class="grid grid-cols-12 lg:grid-cols-3 lg:items-start gap-0 lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto rounded-full lg:rounded-none lg:bg-transparent lg:shadow-none transition-[background-color,box-shadow] duration-300"
+    :class="{
+      'items-start': openMenu,
+      'items-center': !openMenu,
+      'bg-white shadow-[0_4px_18px_rgba(0,0,0,0.08)] lg:bg-transparent lg:shadow-none': scrolled,
+      'bg-black/40 lg:bg-transparent': !scrolled,
+    }"
   >
     {%- comment -%} ── Overview / Menu (desktop only) ─────────── {%- endcomment -%}
     <div
-      class="relative justify-self-start bg-black/40 px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] hidden lg:block lg:col-span-1"
+      class="relative justify-self-start  lg:bg-black/40 px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] lg:col-span-1"
       @click.outside="openMenu = false"
-      :class="openMenu ? 'w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw] backdrop-blur-3xl'"
+      :class="openMenu ? 'w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw] lg:backdrop-blur-3xl'"
     >
       <button
         type="button"
         @click="openMenu = !openMenu"
-        class="flex items-center justify-between gap-[2.5vw] lg:gap-[0.7vw]  text-white font-(--font-primary--family) tracking-[0.05em] w-full"
+        class="flex items-center justify-between gap-[2.5vw] lg:gap-[0.7vw] font-(--font-primary--family) tracking-[0.05em] w-full transition-colors duration-200"
+        :class="(scrolled || {{ always_dark | json }}) ? 'text-black lg:text-white' : 'text-white'"
         :aria-expanded="openMenu"
       >
         <span class="lg:block hidden truncate max-w-[12vw]">{{ current_label }}</span>
         <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
-          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
-          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] bg-white rounded-full"></span>
           <span
-            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full"
+            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full transition-colors duration-200"
+            :class="(scrolled || {{ always_dark | json }}) ? 'bg-black lg:bg-white' : 'bg-white'"
+          ></span>
+          <span
+            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full transition-colors duration-200"
+            :class="(scrolled || {{ always_dark | json }}) ? 'bg-black lg:bg-white' : 'bg-white'"
+          ></span>
+          <span
+            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full lg:block hidden"
             :class="openMenu ? 'bg-transparent' : 'bg-white'"
           ></span>
           <span
-            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full"
+            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full lg:block hidden"
             :class="openMenu ? 'bg-transparent' : 'bg-white'"
           ></span>
         </span>
@@ -165,7 +172,7 @@
           x-transition:leave="transition ease-in duration-200"
           x-transition:leave-start="opacity-100 translate-y-0 scale-100"
           x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-          class="pt-[4vw] lg:pt-[0.8vw] origin-top-left flex flex-col bg-black/40 backdrop-blur-3xl rounded-b-[1.5vw] lg:rounded-b-[0.4vw] absolute left-0 top-full w-full"
+          class="pt-[4vw] lg:pt-[0.8vw] origin-top-left flex flex-col bg-black/70 lg:bg-black/40 lg:backdrop-blur-3xl rounded-b-[1.5vw] lg:rounded-b-[0.4vw] absolute left-0 top-full w-full"
         >
           {%- for block in menu_items -%}
             {%- liquid
@@ -221,7 +228,7 @@
     {%- assign dark_logo = settings.logo_image_dark | default: settings.logo_image -%}
     <a
       href="{{ routes.root_url }}"
-      class="flex items-center justify-self-start lg:justify-self-center lg:col-span-1 col-span-7"
+      class="flex items-center justify-self-start lg:justify-self-center lg:col-span-1 col-span-6"
     >
       {%- if light_logo != blank or dark_logo != blank -%}
         <span class="relative block w-[{{ mobile_logo_w }}vw] lg:w-[{{ section.settings.logo_width }}vw]">
@@ -275,7 +282,7 @@
             x-transition:enter-start="opacity-0 -translate-y-[1vw]"
             x-transition:enter-end="opacity-100 translate-y-0"
             x-transition:leave="transition ease-in duration-150"
-            class="absolute right-0 top-full mt-[2vw] min-w-[28vw] origin-top-right bg-black/70 backdrop-blur-3xl text-white rounded-[1vw] p-[2vw] flex flex-col z-50"
+            class="absolute right-0 top-full mt-[2vw] min-w-[28vw] origin-top-right bg-black/85 text-white rounded-[1vw] p-[2vw] flex flex-col z-50"
           >
             {%- form 'localization' -%}
               <input type="hidden" name="_method" value="put">
