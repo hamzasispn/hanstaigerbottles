@@ -121,8 +121,8 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   "
-  :class="scrolled ? 'shadow-sm bg-white/20 backdrop-blur-3xl' : ''"
-  class="site-header fixed top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw] transition-[background-color,box-shadow] duration-300"
+  :class="scrolled ? 'shadow-sm bg-white/70 backdrop-blur-md fixed' : 'absolute'"
+  class="site-header top-0 left-0 right-0 z-50 w-full pt-[6vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw] transition-[background-color,box-shadow] duration-300"
 >
   <div
     class="grid grid-cols-3 lg:items-start gap-[2vw] lg:gap-[1vw] max-w-[92vw] lg:max-w-[88.889vw] mx-auto"
