@@ -109,15 +109,16 @@
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        scrolled = window.scrollY > 10;
+        const next = window.scrollY > 24;
+        if (next !== scrolled) scrolled = next;
         ticking = false;
       });
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   "
-  :class="scrolled ? 'lg:shadow-sm lg:bg-white/70 fixed top-0' : 'absolute lg:top-[2vw] top-[7vw]'"
-  class="site-header left-0 right-0 z-50 w-full pt-[3vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw] transition-[background-color,box-shadow] duration-300"
+  :class="scrolled ? 'lg:shadow-sm lg:bg-white/70 translate-y-0' : 'translate-y-[7vw] lg:translate-y-[2vw]'"
+  class="site-header fixed top-0 left-0 right-0 z-50 w-full pt-[3vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw] transition-[background-color,box-shadow,transform] duration-300 will-change-transform backface-hidden"
 >
   <div
     class="grid grid-cols-12 lg:grid-cols-3 lg:items-start gap-0 lg:gap-[1vw] max-w-[92vw] lg:p-0 p-[4.211vw] rounded-[2.105vw] lg:max-w-[88.889vw] mx-auto lg:rounded-none lg:bg-transparent lg:shadow-none transition-[background-color,box-shadow] duration-300"
@@ -132,7 +133,7 @@
     <div
       class="relative justify-self-start  lg:bg-black/40 px-[4vw] lg:px-[1.1vw] py-[2.5vw] lg:py-[0.85vw] text-[3vw] lg:text-[0.85vw] lg:col-span-1"
       @click.outside="openMenu = false"
-      :class="openMenu ? 'w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw] lg:backdrop-blur-3xl'"
+      :class="openMenu ? 'w-[50vw] lg:w-[16vw] rounded-t-[1.5vw] lg:rounded-t-[0.4vw]' : 'w-fit rounded-[1.5vw] lg:rounded-[0.4vw] lg:backdrop-blur-md'"
     >
       <button
         type="button"
@@ -172,7 +173,7 @@
           x-transition:leave="transition ease-in duration-200"
           x-transition:leave-start="opacity-100 translate-y-0 scale-100"
           x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-          class="pt-[4vw] lg:pt-[0.8vw] origin-top-left flex flex-col bg-black/70 lg:bg-black/40 lg:backdrop-blur-3xl rounded-b-[1.5vw] lg:rounded-b-[0.4vw] absolute left-0 top-full w-full"
+          class="pt-[4vw] lg:pt-[0.8vw] origin-top-left flex flex-col bg-black/70 lg:bg-black/60 lg:backdrop-blur-md rounded-b-[1.5vw] lg:rounded-b-[0.4vw] absolute left-0 top-full w-full"
         >
           {%- for block in menu_items -%}
             {%- liquid
@@ -333,7 +334,7 @@
       {%- comment -%} Desktop: pill cluster {%- endcomment -%}
       <div
         class="hidden lg:flex ml-auto w-fit items-center justify-end gap-[0.6vw] bg-black/40 rounded-[0.4vw] px-[0.9vw] py-[0.5vw] text-white"
-        :class="!openLang && 'backdrop-blur-3xl'"
+        :class="!openLang && 'backdrop-blur-md'"
       >
         {%- comment -%} Language {%- endcomment -%}
         <div class="relative" @click.outside="openLang = false">
@@ -368,7 +369,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 -translate-y-[2vw] scale-95"
-            class="absolute right-0 top-full mt-[0.4vw] min-w-[8vw] font-(--font-primary--family) origin-top-right bg-black/60 backdrop-blur-3xl rounded-[0.3vw] p-[0.5vw] flex flex-col"
+            class="absolute right-0 top-full mt-[0.4vw] min-w-[8vw] font-(--font-primary--family) origin-top-right bg-black/80 backdrop-blur-md rounded-[0.3vw] p-[0.5vw] flex flex-col"
           >
             {%- form 'localization' -%}
               <input type="hidden" name="_method" value="put">
