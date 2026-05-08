@@ -49,59 +49,33 @@
 
         <div
           id="accordion-panel-{{ section.id }}-{{ idx }}"
-          x-show="open === {{ idx }}"
-          x-cloak
-          x-transition:enter="transition-[max-height,opacity] ease-out duration-300 overflow-hidden"
-          x-transition:enter-start="max-h-0 opacity-0"
-          x-transition:enter-end="max-h-[200vw] opacity-100"
-          x-transition:leave="transition-[max-height,opacity] ease-in duration-200 overflow-hidden"
-          x-transition:leave-start="max-h-[200vw] opacity-100"
-          x-transition:leave-end="max-h-0 opacity-0"
+          class="grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none"
+          :class="open === {{ idx }} ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
+          :aria-hidden="open !== {{ idx }}"
         >
-          <div class="pb-[6vw] lg:pb-[2.222vw] pr-[8vw] lg:pr-[6vw] text-[3.4vw] leading-[5vw] lg:text-[0.833vw] lg:leading-[1.25vw] text-[#222222] accordion-content">
-            {%- if content_html != blank -%}
-              {{ content_html }}
-            {%- else -%}
-              <p class="text-[#83868E]">{{ 'general.accordions.empty' | t | default: 'No content yet.' }}</p>
-            {%- endif -%}
+          <div class="overflow-hidden min-h-0">
+            <div
+              class="pb-[6vw] lg:pb-[2.222vw] pr-[8vw] lg:pr-[6vw] text-[3.4vw] leading-[5vw] lg:text-[0.833vw] lg:leading-[1.25vw] text-[#222222]
+                [&_p]:mb-[1em] [&_p:last-child]:mb-0
+                [&_h3]:font-medium [&_h3]:mb-[0.4em] [&_h3]:text-[#111111]
+                [&_h4]:font-medium [&_h4]:mb-[0.4em] [&_h4]:text-[#111111]
+                [&_ul]:list-none [&_ul]:p-0 [&_ul]:mb-[1em]
+                [&_li]:relative [&_li]:pl-[1em] [&_li]:mb-[0.25em]
+                [&_li]:before:content-['·'] [&_li]:before:absolute [&_li]:before:left-0
+                [&_a]:text-[#111111] [&_a]:underline [&_a]:underline-offset-2"
+            >
+              {%- if content_html != blank -%}
+                {{ content_html }}
+              {%- else -%}
+                <p class="text-[#83868E]">{{ 'general.accordions.empty' | t | default: 'No content yet.' }}</p>
+              {%- endif -%}
+            </div>
           </div>
         </div>
       </div>
     {%- endfor -%}
   </div>
 </section>
-
-{% stylesheet %}
-  .product-accordions [x-cloak] { display: none !important; }
-  .accordion-content p { margin-bottom: 1em; }
-  .accordion-content p:last-child { margin-bottom: 0; }
-  .accordion-content h3,
-  .accordion-content h4 {
-    font-weight: 500;
-    margin-bottom: 0.4em;
-    color: #111111;
-  }
-  .accordion-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1em 0;
-  }
-  .accordion-content li {
-    position: relative;
-    padding-left: 1em;
-    margin-bottom: 0.25em;
-  }
-  .accordion-content li::before {
-    content: '·';
-    position: absolute;
-    left: 0;
-  }
-  .accordion-content a {
-    color: #111111;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

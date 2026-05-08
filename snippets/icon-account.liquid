@@ -1,0 +1,19 @@
+{% doc %}
+  Renders a simple account/person icon (head + shoulders). Uses currentColor.
+
+  @param {string} [class] - Optional class names for the SVG element.
+
+  @example
+  {% render 'icon-account', class: 'w-[4.5vw] h-[4.5vw]' %}
+{% enddoc %}
+
+<svg
+  class="{{ class }}"
+  viewBox="0 0 18 18"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+  <circle cx="9" cy="6.5" r="2.75" stroke="currentColor" stroke-width="1.125"/>
+  <path d="M3.5 15.5C4.25 12.75 6.25 11.25 9 11.25C11.75 11.25 13.75 12.75 14.5 15.5" stroke="currentColor" stroke-width="1.125" stroke-linecap="round"/>
+</svg>
