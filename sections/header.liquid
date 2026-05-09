@@ -31,11 +31,42 @@
     when 'customers/addresses'
       assign current_label = 'Addresses'
   endcase
+
+  assign always_dark = false
+  unless template.name == 'index' or template.name == 'password'
+    assign always_dark = true
+  endunless
+
+  assign mobile_logo_w = section.settings.logo_width | times: 2.8
+  assign logo_alt = header_text | default: shop.name
+  assign light_logo = settings.logo_image | default: settings.logo_image_dark
+  assign dark_logo = settings.logo_image_dark | default: settings.logo_image
 -%}
 
 <style>
-  [x-cloak] {
-    display: none !important;
+  [x-cloak] { display: none !important; }
+
+  /* Logo + wordmark color states are driven by data-scrolled / data-dark on <header>.
+     Mobile (default): always show the light logo / white wordmark.
+     Desktop: flip on scrolled OR data-dark. */
+  .site-header .logo-light,
+  .site-header .logo-dark {
+    transition: opacity 200ms ease;
+  }
+  .site-header .logo-light { opacity: 1; }
+  .site-header .logo-dark  { opacity: 0; }
+  .site-header .wordmark {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 200ms ease;
+  }
+
+  @media (min-width: 1024px) {
+    .site-header[data-scrolled="true"] .logo-light,
+    .site-header[data-dark="true"]      .logo-light { opacity: 0; }
+    .site-header[data-scrolled="true"] .logo-dark,
+    .site-header[data-dark="true"]      .logo-dark  { opacity: 1; }
+    .site-header[data-scrolled="true"] .wordmark,
+    .site-header[data-dark="true"]      .wordmark   { color: rgba(0, 0, 0, 0.8); }
   }
 </style>
 <script>
@@ -117,17 +148,14 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   "
+  :data-scrolled="scrolled"
+  data-dark="{{ always_dark }}"
   :class="scrolled ? 'lg:shadow-sm lg:bg-white/70 translate-y-0' : 'translate-y-[7vw] lg:translate-y-[2vw]'"
   class="site-header fixed top-0 left-0 right-0 z-50 w-full pt-[3vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw] transition-[background-color,box-shadow,transform] duration-300 will-change-transform backface-hidden"
 >
   <div
-    class="grid grid-cols-12 lg:grid-cols-3 lg:items-start gap-0 lg:gap-[1vw] max-w-[92vw] lg:p-0 p-[4.211vw] rounded-[2.105vw] lg:max-w-[88.889vw] mx-auto lg:rounded-none lg:bg-transparent lg:shadow-none transition-[background-color,box-shadow] duration-300"
-    :class="{
-      'items-start': openMenu,
-      'items-center': !openMenu,
-      'bg-white shadow-[0_4px_18px_rgba(0,0,0,0.08)] lg:bg-transparent lg:shadow-none': scrolled,
-      'bg-black/40 lg:bg-transparent': !scrolled,
-    }"
+    class="grid grid-cols-12 lg:grid-cols-3 lg:items-start gap-0 lg:gap-[1vw] max-w-[92vw] lg:p-0 p-[4.211vw] rounded-[2.105vw] lg:max-w-[88.889vw] mx-auto lg:rounded-none bg-black/40 lg:bg-transparent lg:shadow-none"
+    :class="openMenu ? 'items-start' : 'items-center'"
   >
     {%- comment -%} ── Overview / Menu (desktop only) ─────────── {%- endcomment -%}
     <div
@@ -138,20 +166,13 @@
       <button
         type="button"
         @click="openMenu = !openMenu"
-        class="flex items-center justify-between gap-[2.5vw] lg:gap-[0.7vw] font-(--font-primary--family) tracking-[0.05em] w-full transition-colors duration-200"
-        :class="(scrolled || {{ always_dark | json }}) ? 'text-black lg:text-white' : 'text-white'"
+        class="flex items-center justify-between gap-[2.5vw] lg:gap-[0.7vw] font-(--font-primary--family) tracking-[0.05em] w-full text-white"
         :aria-expanded="openMenu"
       >
         <span class="lg:block hidden truncate max-w-[12vw]">{{ current_label }}</span>
         <span class="grid grid-cols-2 gap-[0.4vw] lg:gap-[0.15vw]">
-          <span
-            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full transition-colors duration-200"
-            :class="(scrolled || {{ always_dark | json }}) ? 'bg-black lg:bg-white' : 'bg-white'"
-          ></span>
-          <span
-            class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full transition-colors duration-200"
-            :class="(scrolled || {{ always_dark | json }}) ? 'bg-black lg:bg-white' : 'bg-white'"
-          ></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full bg-white"></span>
+          <span class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full bg-white"></span>
           <span
             class="w-[0.5vw] h-[0.5vw] lg:w-[0.15vw] lg:h-[0.15vw] rounded-full lg:block hidden"
             :class="openMenu ? 'bg-transparent' : 'bg-white'"
@@ -219,14 +240,6 @@
     </div>
 
     {%- comment -%} ── Wordmark ─────────────────────────────────── {%- endcomment -%}
-    {%- assign always_dark = false -%}
-    {%- unless template.name == 'index' or template.name == 'password' -%}
-      {%- assign always_dark = true -%}
-    {%- endunless -%}
-    {%- assign mobile_logo_w = section.settings.logo_width | times: 2.8 -%}
-    {%- assign logo_alt = header_text | default: shop.name -%}
-    {%- assign light_logo = settings.logo_image | default: settings.logo_image_dark -%}
-    {%- assign dark_logo = settings.logo_image_dark | default: settings.logo_image -%}
     <a
       href="{{ routes.root_url }}"
       class="flex items-center justify-self-start lg:justify-self-center lg:col-span-1 col-span-6"
@@ -236,22 +249,17 @@
           <img
             src="{{ light_logo | image_url: width: 600 }}"
             alt="{{ logo_alt | escape }}"
-            class="block w-full object-contain transition-opacity duration-200"
-            :class="(scrolled || {{ always_dark | json }}) ? 'opacity-0' : 'opacity-100'"
+            class="logo-light block w-full object-contain"
           >
           <img
             src="{{ dark_logo | image_url: width: 600 }}"
             alt=""
             aria-hidden="true"
-            class="absolute inset-0 w-full h-full object-contain transition-opacity duration-200"
-            :class="(scrolled || {{ always_dark | json }}) ? 'opacity-100' : 'opacity-0'"
+            class="logo-dark absolute inset-0 w-full h-full object-contain"
           >
         </span>
       {%- else -%}
-        <span
-          class="text-[3.5vw] lg:text-[1.4vw] tracking-[0.5em] font-medium uppercase transition-colors duration-200"
-          :class="(scrolled || {{ always_dark | json }}) ? 'text-black/80' : 'text-white/80'"
-        >
+        <span class="wordmark text-[3.5vw] lg:text-[1.4vw] tracking-[0.5em] font-medium uppercase">
           {{ header_text | default: shop.name }}
         </span>
       {%- endif -%}
@@ -263,8 +271,7 @@
       {%- assign langs = localization.available_languages -%}
       {%- if langs.size == 0 -%}{%- assign langs = shop.published_locales -%}{%- endif -%}
       <div
-        class="lg:hidden ml-auto flex items-center justify-end gap-[3.5vw] tracking-[0.1em] uppercase transition-colors duration-200"
-        :class="(scrolled || {{ always_dark | json }}) ? 'text-black' : 'text-white'"
+        class="lg:hidden ml-auto flex items-center justify-end gap-[3.5vw] tracking-[0.1em] uppercase text-white"
       >
         <div class="relative" @click.outside="openLang = false">
           <button
@@ -302,8 +309,7 @@
         </div>
 
         <span
-          class="block w-px h-[3.5vw] transition-colors duration-200"
-          :class="(scrolled || {{ always_dark | json }}) ? 'bg-black/40' : 'bg-white/50'"
+          class="block w-px h-[3.5vw] bg-white/50"
           aria-hidden="true"
         ></span>
 
@@ -325,8 +331,7 @@
           <span
             x-show="!$store.cart.loading && $store.cart.count > 0"
             x-text="$store.cart.count"
-            class="absolute -top-[1vw] -right-[1.5vw] flex items-center justify-center min-w-[3vw] h-[3vw] px-[0.5vw] rounded-full bg-black text-white text-[2vw] font-medium leading-none"
-            :class="(scrolled || {{ always_dark | json }}) ? 'bg-black text-white' : 'bg-white text-black'"
+            class="absolute -top-[1vw] -right-[1.5vw] flex items-center justify-center min-w-[3vw] h-[3vw] px-[0.5vw] rounded-full bg-white text-black text-[2vw] font-medium leading-none"
           ></span>
         </button>
       </div>

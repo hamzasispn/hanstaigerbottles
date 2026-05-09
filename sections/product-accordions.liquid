@@ -5,7 +5,7 @@
 {%- endcomment -%}
 
 <section
-  class="product-accordions w-full bg-[#F4F4F5] px-[5.333vw] lg:px-[5.556vw] py-[8vw] lg:py-[3.5vw]"
+  class="product-accordions w-full bg-[#F4F4F5] px-[5.333vw] lg:px-[5.556vw] py-[8vw] lg:py-[3.5vw] contain-[layout_paint]"
   x-data="{ open: {{ section.settings.default_open_index | json }} }"
 >
   <div class="max-w-[88.889vw] mx-auto">
@@ -22,7 +22,7 @@
       {%- endif -%}
 
       <div
-        class="accordion-row border-t border-black/15 {% if forloop.last %}border-b{% endif %}"
+        class="accordion-row border-t border-black/15 contain-[layout_paint] {% if forloop.last %}border-b{% endif %}"
         {{ block.shopify_attributes }}
       >
         <button
@@ -49,8 +49,8 @@
 
         <div
           id="accordion-panel-{{ section.id }}-{{ idx }}"
-          class="grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none"
-          :class="open === {{ idx }} ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
+          class="grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none"
+          :class="open === {{ idx }} ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
           :aria-hidden="open !== {{ idx }}"
         >
           <div class="overflow-hidden min-h-0">
