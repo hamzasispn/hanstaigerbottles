@@ -43,32 +43,7 @@
   assign dark_logo = settings.logo_image_dark | default: settings.logo_image
 -%}
 
-<style>
-  [x-cloak] { display: none !important; }
-
-  /* Logo + wordmark color states are driven by data-scrolled / data-dark on <header>.
-     Mobile (default): always show the light logo / white wordmark.
-     Desktop: flip on scrolled OR data-dark. */
-  .site-header .logo-light,
-  .site-header .logo-dark {
-    transition: opacity 200ms ease;
-  }
-  .site-header .logo-light { opacity: 1; }
-  .site-header .logo-dark  { opacity: 0; }
-  .site-header .wordmark {
-    color: rgba(255, 255, 255, 0.8);
-    transition: color 200ms ease;
-  }
-
-  @media (min-width: 1024px) {
-    .site-header[data-scrolled="true"] .logo-light,
-    .site-header[data-dark="true"]      .logo-light { opacity: 0; }
-    .site-header[data-scrolled="true"] .logo-dark,
-    .site-header[data-dark="true"]      .logo-dark  { opacity: 1; }
-    .site-header[data-scrolled="true"] .wordmark,
-    .site-header[data-dark="true"]      .wordmark   { color: rgba(0, 0, 0, 0.8); }
-  }
-</style>
+<style>[x-cloak] { display: none !important; }</style>
 <script>
   document.addEventListener('alpine:init', () => {
     Alpine.store('cart', {
@@ -133,25 +108,9 @@
 </script>
 
 <header
-  x-data="{ openMenu: false, openLang: false, scrolled: false }"
-  x-init="
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const next = window.scrollY > 24;
-        if (next !== scrolled) scrolled = next;
-        ticking = false;
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  "
-  :data-scrolled="scrolled"
+  x-data="{ openMenu: false, openLang: false }"
   data-dark="{{ always_dark }}"
-  :class="scrolled ? 'lg:shadow-sm lg:bg-white/70 translate-y-0' : 'translate-y-[7vw] lg:translate-y-[2vw]'"
-  class="site-header fixed top-0 left-0 right-0 z-50 w-full pt-[3vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw] transition-[background-color,box-shadow,transform] duration-300 will-change-transform backface-hidden"
+  class="site-header group/header fixed top-0 left-0 right-0 z-50 w-full pt-[3vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw]"
 >
   <div
     class="grid grid-cols-12 lg:grid-cols-3 lg:items-start gap-0 lg:gap-[1vw] max-w-[92vw] lg:p-0 p-[4.211vw] rounded-[2.105vw] lg:max-w-[88.889vw] mx-auto lg:rounded-none bg-black/40 lg:bg-transparent lg:shadow-none"
@@ -249,17 +208,17 @@
           <img
             src="{{ light_logo | image_url: width: 600 }}"
             alt="{{ logo_alt | escape }}"
-            class="logo-light block w-full object-contain"
+            class="block w-full object-contain opacity-100 lg:group-data-[dark=true]/header:opacity-0"
           >
           <img
             src="{{ dark_logo | image_url: width: 600 }}"
             alt=""
             aria-hidden="true"
-            class="logo-dark absolute inset-0 w-full h-full object-contain"
+            class="absolute inset-0 w-full h-full object-contain opacity-0 lg:group-data-[dark=true]/header:opacity-100"
           >
         </span>
       {%- else -%}
-        <span class="wordmark text-[3.5vw] lg:text-[1.4vw] tracking-[0.5em] font-medium uppercase">
+        <span class="text-[3.5vw] lg:text-[1.4vw] tracking-[0.5em] font-medium uppercase text-white/80 lg:group-data-[dark=true]/header:text-black/80">
           {{ header_text | default: shop.name }}
         </span>
       {%- endif -%}
