@@ -7,12 +7,12 @@
     >
   </div>
   <div class="py-[10vw] lg:py-[8.75vw] px-[6vw] lg:px-[5.556vw]">
-    <div class="flex items-start justify-between mb-[8vw] lg:mb-[6.528vw] gap-[4vw]">
+    <div class="flex lg:flex-row flex-col items-start justify-between mb-[8vw] lg:mb-[6.528vw] gap-[4vw]">
       <h2 class="max-w-[60vw] lg:max-w-[24.583vw] text-[6.5vw] leading-[7.5vw] lg:text-[3.333vw] lg:leading-[3.75vw]">{{ section.settings.heading }}</h2>
       <img
         src="{{ section.settings.feature_image | img_url: '1080x'}}"
         alt="{{ section.settings.feature_image.alt | escape }}"
-        class="w-[22vw] h-[28vw] lg:w-[11.111vw] lg:h-[14.444vw] object-cover"
+        class="w-[22vw] h-[28vw] lg:w-[11.111vw] lg:h-[14.444vw] object-cover self-end"
       >
     </div>
 
