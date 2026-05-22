@@ -108,7 +108,9 @@
 </script>
 
 <header
-  x-data="{ openMenu: false, openLang: false }"
+  x-data="{ openMenu: false, openLang: false, scrolled: false }"
+  x-init="scrolled = window.scrollY > 80; window.addEventListener('scroll', () => { scrolled = window.scrollY > 80; }, { passive: true })"
+  :data-dark="({{ always_dark }} || scrolled).toString()"
   data-dark="{{ always_dark }}"
   class="site-header group/header fixed top-[7vw] lg:top-[2vw] left-0 right-0 z-50 w-full pt-[3vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw]"
 >
