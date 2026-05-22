@@ -108,18 +108,23 @@
 </script>
 
 <header
-  x-data="{ openMenu: false, openLang: false, scrolled: false }"
+  x-data="{ openMenu: false, openLang: false }"
   x-init="
-    const update = () => { const s = window.scrollY > 80; if (s !== scrolled) scrolled = s; };
-    update();
+    const el = $el;
+    const baseDark = {{ always_dark }};
+    let isDark = baseDark || window.scrollY > 80;
+    el.dataset.dark = isDark.toString();
     let ticking = false;
     window.addEventListener('scroll', () => {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(() => { update(); ticking = false; });
+      requestAnimationFrame(() => {
+        const next = baseDark || window.scrollY > 80;
+        if (next !== isDark) { isDark = next; el.dataset.dark = isDark.toString(); }
+        ticking = false;
+      });
     }, { passive: true });
   "
-  :data-dark="({{ always_dark }} || scrolled).toString()"
   data-dark="{{ always_dark }}"
   class="site-header group/header fixed top-[7vw] lg:top-[2vw] left-0 right-0 z-50 w-full pt-[3vw] lg:pt-[2vw] pb-[3vw] lg:pb-[1vw]"
 >
@@ -219,13 +224,19 @@
           <img
             src="{{ light_logo | image_url: width: 600 }}"
             alt="{{ logo_alt | escape }}"
-            class="block w-full object-contain opacity-100 lg:group-data-[dark=true]/header:opacity-0"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            class="block w-full object-contain opacity-100 transition-opacity duration-300 ease-out will-change-[opacity] lg:group-data-[dark=true]/header:opacity-0"
           >
           <img
             src="{{ dark_logo | image_url: width: 600 }}"
             alt=""
             aria-hidden="true"
-            class="absolute inset-0 w-full h-full object-contain opacity-0 lg:group-data-[dark=true]/header:opacity-100"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            class="absolute inset-0 w-full h-full object-contain opacity-0 transition-opacity duration-300 ease-out will-change-[opacity] lg:group-data-[dark=true]/header:opacity-100"
           >
         </span>
       {%- else -%}
