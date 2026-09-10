@@ -253,11 +253,7 @@
                   [animation-delay:calc({{ forloop.index0 }}*50ms)]
                   {% if col_pos == 1 %}card--offset{% endif %}
                 ">
-                  {% render 'product-card',
-                    product: product,
-                    lazy: forloop.index > 4,
-                    show_vendor: section.settings.show_vendor
-                  %}
+                  {% render 'product-card', product: product, lazy: forloop.index, show_vendor: section.settings.show_vendor %}
                 </div>
               {%- endfor -%}
             </div>
@@ -489,4 +485,19 @@
     { "name": "Collection Explore" }
   ]
 }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'product-card',
+                        product: product,
+                        lazy: forloop.index > 4,
+                        show_vendor: section.settings.show_vendor
+                      %}
+  to: "{% render 'product-card', product: product, lazy: forloop.index, show_vendor:
+    section.settings.show_vendor %}"
+  position: 14147..14256
+{%- endcomment -%}
