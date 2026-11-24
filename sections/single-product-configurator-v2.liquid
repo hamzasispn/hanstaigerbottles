@@ -1,0 +1,139 @@
+{%- liquid
+  assign p = product
+  assign uid = section.id
+  assign current_variant = p.selected_or_first_available_variant
+-%}
+{%- if p == blank -%}
+  <section class="p-8 text-center">{{ 'products.product.not_found' | t }}</section>
+{%- else -%}
+  {%- capture variants_json -%}[{%- for v in p.variants -%}
+    {"id":{{ v.id }},"available":{{ v.available | json }},"option1":{{ v.option1 | json }},"option2":{{ v.option2 | json }},"option3":{{ v.option3 | json }},"featured_image":{% if v.featured_image %}{{ v.featured_image | image_url: width: 1200 | json }}{% else %}null{% endif %}}{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}]{%- endcapture -%}
+  <section id="spc-{{ uid }}" class="spcv2 bg-white px-4 py-8 md:px-8 md:py-12"
+    x-data='{
+      variants:{{ variants_json | strip_newlines }},
+      selected:{{ current_variant.options | json }},
+      mainImage:{% if current_variant.featured_image %}{{ current_variant.featured_image | image_url: width: 1200 | json }}{% elsif p.featured_media %}{{ p.featured_media | image_url: width: 1200 | json }}{% else %}""{% endif %},
+      purchaseType:"subscription", frequency:"quarterly", bottle:false, hydration:true,
+      get currentVariant(){return this.variants.find(v=>(v.option1??null)===(this.selected[0]??null)&&(v.option2??null)===(this.selected[1]??null)&&(v.option3??null)===(this.selected[2]??null))||this.variants.find(v=>v.available)||this.variants[0]},
+      money(c){return (Number(c||0)/100).toLocaleString("es-ES",{minimumFractionDigits:2,maximumFractionDigits:2})+" €"},
+      get displayPrice(){if(this.purchaseType==="one-time")return {{ section.settings.one_time_price | times: 100 }};if(this.frequency==="monthly")return {{ section.settings.monthly_price | times: 100 }};if(this.frequency==="annual")return {{ section.settings.annual_price | times: 100 }};return {{ section.settings.quarterly_price | times: 100 }}},
+      get totalPrice(){return this.displayPrice+(this.bottle&&this.purchaseType==="one-time"?{{ section.settings.bottle_extra | times: 100 }}:0)}
+    }'>
+    <div class="mx-auto grid max-w-7xl grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-12">
+      <div class="flex flex-col-reverse gap-4 md:flex-row">
+        <aside class="flex gap-3 overflow-x-auto md:flex-col">
+          {%- for m in p.media -%}{%- if m.media_type == 'image' -%}
+            <button type="button" class="spcv2-thumb h-16 w-16 shrink-0 border bg-white p-1" :class="mainImage==={{ m | image_url: width: 1200 | json }}?'active':''" @click="mainImage={{ m | image_url: width: 1200 | json }}">
+              {{ m | image_url: width: 160 | image_tag: loading: 'lazy', class: 'h-full w-full object-contain', alt: p.title }}
+            </button>
+          {%- endif -%}{%- endfor -%}
+        </aside>
+        <div class="relative aspect-square w-full min-h-[300px] md:min-h-[520px] bg-neutral-100">
+          <img :src="mainImage" :alt="{{ p.title | json }}" class="absolute inset-0 h-full w-full object-contain">
+        </div>
+      </div>
+
+      <div class="spcv2-panel">
+        <h1 class="spcv2-title">{{ p.title | default: section.settings.product_title }}</h1>
+        <p class="spcv2-subtitle">{{ section.settings.subtitle }}</p>
+        <div class="spcv2-price"><span x-text="money(displayPrice)"></span><span x-show="purchaseType==='subscription'" x-text="frequency==='monthly'?' cada mes':frequency==='annual'?' cada año':' cada 3 meses'"></span></div>
+        <p class="spcv2-note">{{ section.settings.price_note }}</p>
+        <div class="spcv2-rule"></div>
+
+        <div class="spcv2-label"><span>Compra</span><span>Suscripción</span></div>
+        <div class="spcv2-options">
+          <button type="button" :class="purchaseType==='subscription'?'chosen':''" @click="purchaseType='subscription'">SUSCRIPCIÓN <b>{{ section.settings.quarterly_price | times: 100 | money }}</b></button>
+          <button type="button" :class="purchaseType==='one-time'?'chosen':''" @click="purchaseType='one-time'">COMPRA ÚNICA <b>{{ section.settings.one_time_price | times: 100 | money }}</b></button>
+        </div>
+        <div class="spcv2-rule"></div>
+
+        <div class="spcv2-label"><span>Frecuencia</span><span x-text="frequency==='monthly'?'Mensual · 1 daypack':frequency==='annual'?'Anual · 12 daypacks':'Trimestral · 3 daypacks'"></span></div>
+        <div class="spcv2-options" x-show="purchaseType==='subscription'">
+          <button type="button" :class="frequency==='monthly'?'chosen':''" @click="frequency='monthly'">MENSUAL</button>
+          <button type="button" :class="frequency==='quarterly'?'chosen':''" @click="frequency='quarterly'">TRIMESTRAL</button>
+          <button type="button" :class="frequency==='annual'?'chosen':''" @click="frequency='annual'">ANUAL</button>
+        </div>
+        <div class="spcv2-rule"></div>
+
+        <div class="spcv2-label"><span>Botella de regalo</span><span>{{ section.settings.bottle_name }}</span></div>
+        <div class="flex gap-2">
+          <button type="button" class="spcv2-bottle" :class="bottle?'chosen':''" @click="bottle=!bottle">
+            {% if section.settings.bottle_image_1 != blank %}{{ section.settings.bottle_image_1 | image_url: width: 100 | image_tag: alt: section.settings.bottle_name }}{% else %}＋{% endif %}
+          </button>
+          <button type="button" class="spcv2-bottle" :class="!bottle?'chosen':''" @click="bottle=false">
+            {% if section.settings.bottle_image_2 != blank %}{{ section.settings.bottle_image_2 | image_url: width: 100 | image_tag: alt: section.settings.bottle_name }}{% else %}＋{% endif %}
+          </button>
+        </div>
+        <div class="spcv2-rule"></div>
+
+        <label class="spcv2-hydration">
+          <input type="checkbox" x-model="hydration">
+          <span><b>{{ section.settings.hydration_title }}</b><small>{{ section.settings.hydration_description }}</small><em>{{ section.settings.regulatory_note }}</em></span>
+        </label>
+        <div class="spcv2-rule"></div>
+
+        <div class="spcv2-label"><span>Total</span><b x-text="money(totalPrice)"></b></div>
+        <p class="spcv2-summary"><span x-text="purchaseType==='subscription'?'Suscripción · '+(frequency==='monthly'?'Mensual':frequency==='annual'?'Anual':'Trimestral'):'Compra única'"></span><span x-show="bottle"> · {{ section.settings.bottle_name }}</span><span x-show="hydration"> · Recovery Hydration</span></p>
+        {%- form 'product', p, class: 'm-0' -%}
+          <input type="hidden" name="id" :value="currentVariant ? currentVariant.id : {{ current_variant.id }}">
+          <button class="spcv2-cart" type="submit" :disabled="!currentVariant || !currentVariant.available"><span>Añadir al carrito</span><span>→</span></button>
+        {%- endform -%}
+        <a class="spcv2-sample" href="{{ section.settings.sample_link | default: '#' }}">PROBAR 5 SOBRES · {{ section.settings.sample_price | times: 100 | money }}</a>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<style>
+#spc-{{ uid }}{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#171717}
+#spc-{{ uid }} .spcv2-panel{max-width:560px;width:100%;margin:auto;font-size:12px;line-height:1.35}
+#spc-{{ uid }} .spcv2-title{font-size:clamp(25px,2.3vw,36px);line-height:1.05;font-weight:400;letter-spacing:-.035em;margin:0}
+#spc-{{ uid }} .spcv2-subtitle{font-size:18px;line-height:1.15;margin:2px 0 8px}
+#spc-{{ uid }} .spcv2-price{font-size:12px}.spcv2-note{font-size:9px;color:#555;margin:2px 0 0}
+#spc-{{ uid }} .spcv2-rule{height:1px;background:#e5e5e5;margin:10px 0}
+#spc-{{ uid }} .spcv2-label{display:flex;justify-content:space-between;gap:10px;font-size:10px;margin-bottom:5px}
+#spc-{{ uid }} .spcv2-options{display:flex;gap:6px;flex-wrap:wrap}
+#spc-{{ uid }} .spcv2-options button{font-size:8px;padding:4px 6px;border:1px solid #e3e3e3;background:#f7f7f7;color:#444;cursor:pointer}
+#spc-{{ uid }} .spcv2-options button.chosen,#spc-{{ uid }} .spcv2-bottle.chosen,#spc-{{ uid }} .spcv2-thumb.active{border-color:#171717;background:#fff;color:#171717}
+#spc-{{ uid }} .spcv2-bottle{width:31px;height:43px;border:1px solid #ddd;background:#fff;padding:2px;font-size:15px}
+#spc-{{ uid }} .spcv2-bottle img{width:100%;height:100%;object-fit:contain}
+#spc-{{ uid }} .spcv2-hydration{display:flex;align-items:flex-start;gap:7px;font-size:9px}
+#spc-{{ uid }} .spcv2-hydration input{width:12px;height:12px;margin:2px 0 0;accent-color:#f37021}
+#spc-{{ uid }} .spcv2-hydration span{display:flex;flex-direction:column;gap:3px}
+#spc-{{ uid }} .spcv2-hydration b{font-size:10px;font-weight:500}
+#spc-{{ uid }} .spcv2-hydration small{font-size:9px;color:#333}
+#spc-{{ uid }} .spcv2-hydration em{font-size:8px;color:#f37021;font-style:normal}
+#spc-{{ uid }} .spcv2-summary{font-size:9px;color:#666;margin:3px 0 10px}
+#spc-{{ uid }} .spcv2-cart{width:100%;min-height:38px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;background:#f37021;color:#111;border:0;font-size:11px}
+#spc-{{ uid }} .spcv2-sample{display:block;text-align:center;margin-top:8px;color:#171717;text-decoration:none;font-size:8px}
+@media(max-width:767px){#spc-{{ uid }} .spcv2-panel{max-width:none}#spc-{{ uid }} .spcv2-title{font-size:28px}}
+</style>
+
+{% schema %}
+{
+  "name":"Product Configurator V2",
+  "tag":"section",
+  "class":"section-product-configurator-v2",
+  "enabled_on":{"templates":["product"]},
+  "settings":[
+    {"type":"text","id":"product_title","label":"Fallback product title","default":"ElectricLemon"},
+    {"type":"text","id":"subtitle","label":"Product subtitle","default":"Electrolitos · 30 sobres"},
+    {"type":"number","id":"monthly_price","label":"Monthly subscription price (€)","default":39},
+    {"type":"number","id":"quarterly_price","label":"Quarterly subscription price (€)","default":99},
+    {"type":"number","id":"annual_price","label":"Annual subscription price (€)","default":349},
+    {"type":"number","id":"one_time_price","label":"One-time purchase price (€)","default":39},
+    {"type":"number","id":"bottle_extra","label":"Bottle extra (€)","default":20},
+    {"type":"text","id":"price_note","label":"Price note","default":"1,10 € al día · Ahorras un 15 % · Sin permanencia"},
+    {"type":"text","id":"bottle_name","label":"Gift bottle name","default":"SixSixty 660 ml"},
+    {"type":"image_picker","id":"bottle_image_1","label":"Bottle image 1"},
+    {"type":"image_picker","id":"bottle_image_2","label":"Bottle image 2"},
+    {"type":"text","id":"hydration_title","label":"Hydration title","default":"Recovery Hydration · 250 mg de vitamina C por sobre"},
+    {"type":"textarea","id":"hydration_description","label":"Hydration description","default":"La vitamina C contribuye a mantener el funcionamiento normal del sistema inmunitario durante el ejercicio físico intenso y después de este."},
+    {"type":"text","id":"regulatory_note","label":"Regulatory note","default":"Pendiente de validación del asesor regulatorio"},
+    {"type":"number","id":"sample_price","label":"Sample price (€)","default":9},
+    {"type":"url","id":"sample_link","label":"Sample product link"}
+  ],
+  "presets":[{"name":"Product Configurator V2"}]
+}
+{% endschema %}
