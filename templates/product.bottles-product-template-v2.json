@@ -58,6 +58,46 @@
       "name": "Product accordions",
       "settings": {}
     },
+    "gallery_VxUbBd": {
+      "type": "gallery",
+      "blocks": {
+        "image_card_hnCkgH": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Imagen.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
+          }
+        },
+        "image_card_L6TMQM": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Imagen_1.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_card_hnCkgH",
+        "image_card_L6TMQM"
+      ],
+      "name": "Gallery Section",
+      "settings": {
+        "subtitle": "",
+        "brackets_color": "#e53d00",
+        "heading": "",
+        "column_mode": "manual",
+        "columns_desktop": 2,
+        "columns_mobile": "2"
+      }
+    },
     "related_products_F73E4y": {
       "type": "related-products",
       "name": "Related products",
@@ -106,55 +146,6 @@
         "link": "",
         "second_text": "Always perfect",
         "feature_color": "#f37021"
-      }
-    },
-    "gallery_VxUbBd": {
-      "type": "gallery",
-      "blocks": {
-        "image_card_hnCkgH": {
-          "type": "image-card",
-          "settings": {
-            "img": "shopify://shop_images/Img_18.jpg",
-            "show_content": false,
-            "title": "",
-            "description": "",
-            "button_text": "",
-            "button_link": ""
-          }
-        },
-        "image_card_L6TMQM": {
-          "type": "image-card",
-          "settings": {
-            "img": "shopify://shop_images/Img_3.jpg",
-            "show_content": false,
-            "title": "",
-            "description": "",
-            "button_text": "",
-            "button_link": ""
-          }
-        },
-        "image_card_KNkJEA": {
-          "type": "image-card",
-          "settings": {
-            "img": "shopify://shop_images/Img_19.jpg",
-            "show_content": false,
-            "title": "",
-            "description": "",
-            "button_text": "",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "image_card_hnCkgH",
-        "image_card_L6TMQM",
-        "image_card_KNkJEA"
-      ],
-      "name": "Gallery Section",
-      "settings": {
-        "subtitle": "",
-        "brackets_color": "#e53d00",
-        "heading": ""
       }
     },
     "image_box_gF9bPq": {
@@ -211,9 +202,9 @@
     "main",
     "single_product_configurator_XQFT3e",
     "product_accordions_qK7R4z",
+    "gallery_VxUbBd",
     "related_products_F73E4y",
     "custom_text_LtGPBX",
-    "gallery_VxUbBd",
     "image_box_gF9bPq",
     "trusted_brands_slider_ypNfwf"
   ]
