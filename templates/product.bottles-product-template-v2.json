@@ -98,6 +98,14 @@
         "columns_mobile": "2"
       }
     },
+    "related_products_F73E4y": {
+      "type": "related-products",
+      "name": "Related products",
+      "settings": {
+        "heading": "Related products",
+        "products_to_show": 5
+      }
+    },
     "icon_info_row_Cf8R4J": {
       "type": "icon-info-row",
       "blocks": {
@@ -167,105 +175,6 @@
         "top_text_color": "#111111",
         "short_text_color": "#6B6B6B"
       }
-    },
-    "related_products_F73E4y": {
-      "type": "related-products",
-      "name": "Related products",
-      "settings": {
-        "heading": "Related products",
-        "products_to_show": 5
-      }
-    },
-    "custom_text_LtGPBX": {
-      "type": "custom-text",
-      "blocks": {
-        "feature_76HCP4": {
-          "type": "feature",
-          "settings": {
-            "feature_text": "100% Sustainable"
-          }
-        },
-        "feature_gW9A8U": {
-          "type": "feature",
-          "settings": {
-            "feature_text": "Cold for 20h"
-          }
-        },
-        "feature_PiMQmB": {
-          "type": "feature",
-          "settings": {
-            "feature_text": "Hot for 10h"
-          }
-        },
-        "feature_3fAXwz": {
-          "type": "feature",
-          "settings": {
-            "feature_text": "Dishwasher safe"
-          }
-        }
-      },
-      "block_order": [
-        "feature_76HCP4",
-        "feature_gW9A8U",
-        "feature_PiMQmB",
-        "feature_3fAXwz"
-      ],
-      "name": "Custom Text Box",
-      "settings": {
-        "description": "Every detail is designed to work as hard as you do. Vacuum-insulated double-wall technology keeps your drinks cold for up to 20 hours and hot for up to 10, so whether it's your morning coffee or your afternoon water, it arrives exactly as it should. Built from premium stainless steel with a scratch-resistant powder-coated finish, it is made to last, and when it needs cleaning, it goes straight in the dishwasher.\n<br><br>\n\nFrom the bottle itself to every layer of packaging, sustainability is non-negotiable: no BPA, no plastic, no compromise.",
-        "link": "",
-        "second_text": "Always perfect",
-        "feature_color": "#f37021"
-      }
-    },
-    "image_box_gF9bPq": {
-      "type": "image-box",
-      "name": "Image Box",
-      "settings": {
-        "background_image": "shopify://shop_images/Image_6.jpg",
-        "image_fit": "cover",
-        "heading": "Hydration, elevated. Explore the full collection.",
-        "heading_color": "#ffffff",
-        "subheading": "Find the one that fits your rhythm",
-        "subheading_color": "#ffffff",
-        "description": "Every Hanstaiger tumbler is built for the way you live, premium materials, thoughtful design and thermal performance that goes the distance.",
-        "description_color": "#ececec",
-        "button_url": "#",
-        "button_label": "",
-        "button_bg_color": "rgba(209, 209, 209, 0.5)",
-        "button_text_color": "#111111",
-        "font_family": "Helvetica Neue"
-      }
-    },
-    "trusted_brands_slider_ypNfwf": {
-      "type": "trusted-brands-slider",
-      "blocks": {
-        "slide_3WMah4": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Image_4.jpg",
-            "brand_label": "shopify://shop_images/logos.svg",
-            "quote": "“The response time and clarity were exceptional. Everything was handled with precision”"
-          }
-        },
-        "slide_tYtdNr": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/image_5.jpg",
-            "brand_label": "shopify://shop_images/logos.svg",
-            "quote": "“The response time and clarity were exceptional. Everything was handled with precision”"
-          }
-        }
-      },
-      "block_order": [
-        "slide_3WMah4",
-        "slide_tYtdNr"
-      ],
-      "name": "Trusted Brands Slider",
-      "settings": {
-        "heading": "Trusted by brands that value precision",
-        "description": "From private charters to custom objects, Hanstaiger is chosen for its speed, quality and attention to detail."
-      }
     }
   },
   "order": [
@@ -273,10 +182,7 @@
     "single_product_configurator_XQFT3e",
     "product_accordions_qK7R4z",
     "gallery_VxUbBd",
-    "icon_info_row_Cf8R4J",
     "related_products_F73E4y",
-    "custom_text_LtGPBX",
-    "image_box_gF9bPq",
-    "trusted_brands_slider_ypNfwf"
+    "icon_info_row_Cf8R4J"
   ]
 }
