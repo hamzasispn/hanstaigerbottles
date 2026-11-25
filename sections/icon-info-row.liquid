@@ -1,0 +1,432 @@
+<section id="icon-info-{{ section.id }}" class="icon-info-section">
+  <div class="icon-info-inner">
+    <div class="icon-info-grid">
+      {% for block in section.blocks %}
+        <div class="icon-info-item" {{ block.shopify_attributes }}>
+
+          {% if block.settings.top_text != blank %}
+            <p class="icon-info-top">
+              {{ block.settings.top_text }}
+            </p>
+          {% endif %}
+
+          {% if block.settings.short_text != blank %}
+            <div class="icon-info-short">
+              {{ block.settings.short_text }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.icon != blank %}
+            <div class="icon-info-icon">
+              {{
+                block.settings.icon
+                | image_url: width: 200
+                | image_tag:
+                  loading: 'lazy',
+                  alt: block.settings.icon_alt,
+                  class: 'icon-info-image'
+              }}
+            </div>
+          {% endif %}
+
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #icon-info-{{ section.id }} {
+    background: {{ section.settings.background }};
+    padding-top: {{ section.settings.padding_vertical }}vw;
+    padding-bottom: {{ section.settings.padding_vertical }}vw;
+  }
+
+  #icon-info-{{ section.id }} .icon-info-inner {
+    width: 92vw;
+    max-width: 92vw;
+    margin: 0 auto;
+  }
+
+  #icon-info-{{ section.id }} .icon-info-grid {
+    display: grid;
+    grid-template-columns: repeat(
+      {{ section.settings.columns_mobile }},
+      minmax(0, 1fr)
+    );
+    gap: {{ section.settings.gap_mobile }}vw;
+  }
+
+  #icon-info-{{ section.id }} .icon-info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 0;
+  }
+
+  /* TOP TEXT */
+
+  #icon-info-{{ section.id }} .icon-info-top {
+    margin: 0 0 {{ section.settings.top_text_spacing_mobile }}vw;
+    font-size: {{ section.settings.top_text_size_mobile }}vw;
+    line-height: 1.2;
+    letter-spacing: {{ section.settings.letter_spacing }}em;
+    text-transform: uppercase;
+    color: {{ section.settings.top_text_color }};
+    font-weight: {{ section.settings.top_text_weight }};
+  }
+
+  /* SHORT TEXT */
+
+  #icon-info-{{ section.id }} .icon-info-short {
+    width: 100%;
+    max-width: {{ section.settings.text_width_mobile }}%;
+    margin: 0 auto;
+    font-size: {{ section.settings.short_text_size_mobile }}vw;
+    line-height: 1.25;
+    color: {{ section.settings.short_text_color }};
+    font-weight: {{ section.settings.short_text_weight }};
+  }
+
+  /* ICON */
+
+  #icon-info-{{ section.id }} .icon-info-icon {
+    width: {{ section.settings.icon_size_mobile }}vw;
+    height: {{ section.settings.icon_size_mobile }}vw;
+    margin-top: {{ section.settings.icon_spacing_mobile }}vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #icon-info-{{ section.id }} .icon-info-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* DESKTOP */
+
+  @media (min-width: 1024px) {
+
+    #icon-info-{{ section.id }} .icon-info-inner {
+      width: 88.889vw;
+      max-width: 88.889vw;
+    }
+
+    #icon-info-{{ section.id }} .icon-info-grid {
+      grid-template-columns: repeat(
+        {{ section.settings.columns_desktop }},
+        minmax(0, 1fr)
+      );
+      gap: {{ section.settings.gap_desktop }}vw;
+    }
+
+    #icon-info-{{ section.id }} .icon-info-top {
+      margin-bottom: {{ section.settings.top_text_spacing_desktop }}vw;
+      font-size: 0.833vw;
+      line-height: 1.2;
+    }
+
+    #icon-info-{{ section.id }} .icon-info-short {
+      max-width: {{ section.settings.text_width_desktop }}%;
+      font-size: 1.389vw;
+      line-height: 1.2;
+    }
+
+    #icon-info-{{ section.id }} .icon-info-icon {
+      width: 2.222vw;
+      height: 2.222vw;
+      margin-top: {{ section.settings.icon_spacing_desktop }}vw;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Icon Info Row",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background color",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Section padding top/bottom",
+      "min": 0,
+      "max": 30,
+      "step": 0.5,
+      "default": 13.5,
+      "unit": "vw"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Mobile columns",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ],
+      "default": "2"
+    },
+    {
+  "type": "range",
+  "id": "gap_desktop",
+  "label": "Desktop column gap",
+  "min": 0,
+  "max": 8,
+  "step": 0.1,
+  "default": 1.5,
+  "unit": "vw"
+},
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Mobile column gap",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "default": 4,
+      "unit": "vw"
+    },
+    {
+      "type": "range",
+      "id": "top_text_size_mobile",
+      "label": "Top text size - mobile",
+      "min": 2,
+      "max": 5,
+      "step": 0.1,
+      "default": 2.8,
+      "unit": "vw"
+    },
+    {
+      "type": "range",
+      "id": "short_text_size_mobile",
+      "label": "Short text size - mobile",
+      "min": 3,
+      "max": 7,
+      "step": 0.1,
+      "default": 4,
+      "unit": "vw"
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Icon size - mobile",
+      "min": 4,
+      "max": 12,
+      "step": 0.5,
+      "default": 6,
+      "unit": "vw"
+    },
+    {
+      "type": "range",
+      "id": "text_width_mobile",
+      "label": "Text width - mobile",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 90,
+      "unit": "%"
+    },
+    {
+  "type": "range",
+  "id": "top_text_spacing_mobile",
+  "label": "Top text bottom spacing - mobile",
+  "min": 0,
+  "max": 5,
+  "step": 0.1,
+  "default": 1.5,
+  "unit": "vw"
+},
+    {
+  "type": "range",
+  "id": "icon_spacing_mobile",
+  "label": "Icon top spacing - mobile",
+  "min": 0,
+  "max": 6,
+  "step": 0.1,
+  "default": 2,
+  "unit": "vw"
+},
+    {
+      "type": "range",
+      "id": "text_width_desktop",
+      "label": "Text width - desktop",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 90,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "top_text_spacing_desktop",
+      "label": "Top text bottom spacing - desktop",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "default": 0.5,
+      "unit": "vw"
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing_desktop",
+      "label": "Icon top spacing - desktop",
+      "min": 0,
+      "max": 3,
+      "step": 0.1,
+      "default": 1,
+      "unit": "vw"
+    },
+    {
+      "type": "select",
+      "id": "top_text_weight",
+      "label": "Top text weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "short_text_weight",
+      "label": "Short text weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Top text letter spacing",
+      "min": 0,
+      "max": 0.2,
+      "step": 0.1,
+      "default": 0.1,
+      "unit": "em"
+    },
+    {
+      "type": "color",
+      "id": "top_text_color",
+      "label": "Top text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "short_text_color",
+      "label": "Short text color",
+      "default": "#6B6B6B"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "info_item",
+      "name": "Info item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "top_text",
+          "label": "Top text",
+          "default": "ENVÍO GRATIS"
+        },
+        {
+          "type": "textarea",
+          "id": "short_text",
+          "label": "Short text",
+          "default": "Con cada doypack, en península."
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Upload icon"
+        },
+        {
+          "type": "text",
+          "id": "icon_alt",
+          "label": "Icon alt text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon Info Row",
+      "blocks": [
+        {
+          "type": "info_item",
+          "settings": {
+            "top_text": "ENVÍO GRATIS",
+            "short_text": "Con cada doypack, en península."
+          }
+        },
+        {
+          "type": "info_item",
+          "settings": {
+            "top_text": "GARANTÍA X1-LAB",
+            "short_text": "Si no te gusta, te devolvemos el dinero."
+          }
+        },
+        {
+          "type": "info_item",
+          "settings": {
+            "top_text": "PAGO SEGURO",
+            "short_text": "Tarjeta, Apple Pay, Google Pay y PayPal."
+          }
+        },
+        {
+          "type": "info_item",
+          "settings": {
+            "top_text": "CONTACTO",
+            "short_text": "¿Dudas? Escríbenos a contact@hanstaiger.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
