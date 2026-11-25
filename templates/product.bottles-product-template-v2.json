@@ -98,6 +98,76 @@
         "columns_mobile": "2"
       }
     },
+    "icon_info_row_Cf8R4J": {
+      "type": "icon-info-row",
+      "blocks": {
+        "info_item_p464NN": {
+          "type": "info_item",
+          "settings": {
+            "top_text": "ENVÍO GRATIS",
+            "short_text": "Con cada doypack, en península.",
+            "icon": "shopify://shop_images/box_0165da94-1cb7-4017-b5cd-61cad9d7fd07.png",
+            "icon_alt": ""
+          }
+        },
+        "info_item_qkEp4P": {
+          "type": "info_item",
+          "settings": {
+            "top_text": "GARANTÍA X1-LAB",
+            "short_text": "Si no te gusta, te devolvemos el dinero.",
+            "icon": "shopify://shop_images/protection_575c7a7f-c60a-4c4d-8128-e488a22de9a4.png",
+            "icon_alt": ""
+          }
+        },
+        "info_item_zBDqxN": {
+          "type": "info_item",
+          "settings": {
+            "top_text": "PAGO SEGURO",
+            "short_text": "Tarjeta, Apple Pay, Google Pay y PayPal.",
+            "icon": "shopify://shop_images/protect_8fba4169-1042-440f-aba3-a0732bf6a8aa.png",
+            "icon_alt": ""
+          }
+        },
+        "info_item_LFrXLf": {
+          "type": "info_item",
+          "settings": {
+            "top_text": "CONTACTO",
+            "short_text": "¿Dudas? Escríbenos a contact@hanstaiger.com",
+            "icon": "shopify://shop_images/email_5579f39e-919c-41f3-aee9-3e23d4414e2b.png",
+            "icon_alt": ""
+          }
+        }
+      },
+      "block_order": [
+        "info_item_p464NN",
+        "info_item_qkEp4P",
+        "info_item_zBDqxN",
+        "info_item_LFrXLf"
+      ],
+      "name": "Icon Info Row",
+      "settings": {
+        "background": "#F4F4F4",
+        "padding_vertical": 13.5,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "gap_desktop": 1.5,
+        "gap_mobile": 4,
+        "top_text_size_mobile": 2.8,
+        "short_text_size_mobile": 4,
+        "icon_size_mobile": 6,
+        "text_width_mobile": 90,
+        "top_text_spacing_mobile": 1.5,
+        "icon_spacing_mobile": 2,
+        "text_width_desktop": 90,
+        "top_text_spacing_desktop": 0.5,
+        "icon_spacing_desktop": 1,
+        "top_text_weight": "400",
+        "short_text_weight": "400",
+        "letter_spacing": 0.1,
+        "top_text_color": "#111111",
+        "short_text_color": "#6B6B6B"
+      }
+    },
     "related_products_F73E4y": {
       "type": "related-products",
       "name": "Related products",
@@ -203,6 +273,7 @@
     "single_product_configurator_XQFT3e",
     "product_accordions_qK7R4z",
     "gallery_VxUbBd",
+    "icon_info_row_Cf8R4J",
     "related_products_F73E4y",
     "custom_text_LtGPBX",
     "image_box_gF9bPq",
