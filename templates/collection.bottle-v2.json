@@ -137,51 +137,6 @@
         "columns_mobile": "2"
       }
     },
-    "blog_section_4rKDgh": {
-      "type": "blog-section",
-      "blocks": {
-        "slide_crTWdq": {
-          "type": "slide",
-          "settings": {
-            "heading": "Effortless refinement",
-            "description": "Cut from premium Italian linen, our shirts breathe naturally in the heat while maintaining a crisp silhouette. Tailored for those who understand that true luxury lies in the details.",
-            "button_label": "Explore linen shirts",
-            "button_url": ""
-          }
-        },
-        "slide_ybKxBM": {
-          "type": "slide",
-          "settings": {
-            "heading": "Understated authority",
-            "description": "The X1 Cap: unstructured, essential. A finishing touch for those who know. Designed for the discerning eye.",
-            "button_label": "Explore caps",
-            "button_url": ""
-          }
-        },
-        "slide_BXiaBR": {
-          "type": "slide",
-          "settings": {
-            "heading": "Built for motion",
-            "description": "Precision-cut performance pieces that move with you — from morning sessions to evening engagements, without compromise.",
-            "button_label": "Shop performance",
-            "button_url": ""
-          }
-        }
-      },
-      "block_order": [
-        "slide_crTWdq",
-        "slide_ybKxBM",
-        "slide_BXiaBR"
-      ],
-      "name": "Blocks Slider",
-      "settings": {
-        "label": "Collection",
-        "heading": "Crafted for every occasion",
-        "description": "Explore our curated pieces, each designed with intention.",
-        "link": "",
-        "link_text": "View all"
-      }
-    },
     "collection_explore_3mXEdQ": {
       "type": "collection-explore",
       "name": "Collection Explore",
@@ -219,7 +174,6 @@
     "banner_v2_mhdVwm",
     "custom_text_kcat7N",
     "gallery_8YeBPd",
-    "blog_section_4rKDgh",
     "collection_explore_3mXEdQ",
     "image_box_qiYrVm"
   ]
