@@ -11,55 +11,181 @@
   "sections": {
     "main": {
       "type": "product",
+      "disabled": true,
       "settings": {}
     },
-    "accordions": {
+    "single_product_configurator_XQFT3e": {
+      "type": "single-product-configurator",
+      "name": "Product Configurator",
+      "settings": {}
+    },
+    "product_accordions_qK7R4z": {
       "type": "product-accordions",
       "blocks": {
-        "description": {
+        "accordion_7LYXgb": {
           "type": "accordion",
           "settings": {
             "heading": "Description",
+            "content": "<p>The Hydration Lab Tumbler keeps your drinks cold for up to 20 hours and hot for up to 10, so every sip is exactly as it should be, whenever you need it. Lightweight and built from vacuum-insulated stainless steel, its leak-proof system means you can toss it in any bag without a second thought.</p><p>At Hanstaiger World, we care about the planet. This tumbler is fully BPA-free and eco-friendly, from the bottle itself to the packaging it arrives in. Made from SAE 304 stainless steel with outstanding resistance to oxidation and corrosion, the powder-coated exterior finish is scratch-resistant and built to stay looking new.</p><p><strong>Specifications</strong></p><p>Weight: 350g<br/>Height: 24.8cm<br/>Diameter: 7.1cm<br/>Mouth diameter: 3.5cm</p><p><br/><strong>Care</strong><br/>Hand wash only. Never microwave. We recommend using a bottle cleaning brush for best results.<br/><br/></p>",
             "metafield_namespace": "custom",
             "metafield_key": "description"
           }
         },
-        "shipping": {
+        "accordion_rBDrYE": {
           "type": "accordion",
           "settings": {
             "heading": "Shipping & returns",
+            "content": "<p>Payment methodsWe offer a refined and secure checkout experience through PayPal, Apple Pay, and all major debit and credit cards.Shipping rates & delivery timesFull details on shipping rates and estimated delivery windows are available at checkout. Please note that delivery timelines begin from the date you receive your shipping confirmation email, and are calculated in business days, exclpcing public holidays.My order hasn't arrived. What should I do?We kindly ask that you allow the following before reaching out to our team:· 4 business days for orders placed within the United Kingdom· 10 business days for orders placed within EuropeIf your order has not arrived within that window, we recommend checking whether a delivery notice was left, and verifying with neighbors or any secure drop-off points in your area. If the matter remains unresolved, our Customer Care team is available through our contact form and will respond within 1–2 business days. Please inclpce your order number so we can assist you promptly.Do you ship outside the EU?At this time, Hanstaiger World ships exclusively within the European Union. We are continuously expanding our reach — if we don't yet deliver to your country, we are working to change that as soon as possible.Can I modify or cancel my order?If you wish to cancel or amend your order, please contact our Customer Care team at hello@hanstaigerworld.com as early as possible. Once our warehouse has processed your order, cancellation is no longer possible — in that case, you are welcome to return the item upon delivery. Please note that a handling fee of €5.00 will be deducted from your refund to cover processing costs.Returns & exchangesWe want every Hanstaiger World experience to be exceptional. If you are not fully satisfied, received an incorrect item, or something is missing from your order, we are here to make it right — simply reach out through our contact form with your order number as it appears on your invoice.Returns and exchanges are accepted within 14 days of receipt. Please send the item back to our address in its original, unused condition — and if you are requesting an exchange, kindly indicate the item you would like in its place. Once received and inspected, we will dispatch your new item or process your refund accordingly.Please note that return shipping costs are the responsibility of the customer. We do offer a convenient managed return service for €4.50, which inclpces a scheduled collection. Returns are typically processed within 1–2 weeks of receipt, and a confirmation email will be sent as soon as your return has been registered.<br/><br/></p>",
             "metafield_namespace": "custom",
             "metafield_key": "shipping_returns"
           }
         },
-        "reviews": {
-          "type": "accordion",
-          "settings": {
-            "heading": "Reviews",
-            "metafield_namespace": "custom",
-            "metafield_key": "reviews"
-          }
-        },
-        "faqs": {
+        "accordion_fnrPA7": {
           "type": "accordion",
           "settings": {
             "heading": "FAQs",
+            "content": "<p>What are Hanstaiger World products made of?Our tumblers are crafted from premium 18/8 food-grade stainless steel, highly resistant to rust and completely free of BPA. Every product is independently tested and certified to meet all applicable regulatory standards, offering a sustainable and elevated alternative to single-use plastic bottles.How does my Hanstaiger tumbler work?Our double-wall vacuum insulation technology, featuring a copper layer, keeps your drinks cold for up to 20 hours and hot for up to 10, while maintaining a completely condensation-free exterior. Performance claims are based on standardised testing conditions using water at standard temperatures.Can I store any type of drink in it?Your Hanstaiger tumbler is designed to keep your beverages at their best throughout the day, but is not intended for long-term liquid storage. We advise against storing alcohol, certain juices or dairy-based drinks, as these may deteriorate and cause pressure build-up, potentially affecting the lid and your safety. Avoid placing your tumbler in the refrigerator, as this may compromise the vacuum seal.Can I travel with my tumbler?Absolutely, your Hanstaiger tumbler is airport security-friendly. Simply ensure it is empty before going through the checkpoint.Will my tumbler sweat?Never. The double-wall insulation with copper layer ensures the exterior remains completely dry and condensation-free at all times.Where are Hanstaiger products made?Our tumblers are conceived and designed by our creative team, and manufactured responsibly with the highest quality standards.Safety testing & certificationsBefore any product reaches your hands, it is independently tested by an accredited external laboratory to ensure full compliance with all relevant regulations, inclpcing BPA, LFGB, 1935/2004 and FDA standards.How will my order be packaged?At Hanstaiger World, sustainability is not an afterthought, it is built into every detail. Our packaging is entirely plastic-free, uses responsibly sourced materials, and is designed to minimise environmental impact from our logistics facilities all the way to your door.Can I put my tumbler in the microwave, fridge or freezer?No, please avoid placing your Hanstaiger tumbler in the microwave, refrigerator or freezer, as doing so may damage the vacuum seal and compromise the tumbler's thermal performance.How do I clean my tumbler?We recommend hand washing with warm soapy water after each use, then drying and storing with the lid open. A bottle cleaning brush is ideal for a thorough clean. Avoid submerging the bottle or lid for extended periods, as this may affect the vacuum seal. While the tumbler is technically dishwasher-safe, hand washing is strongly recommended to protect the finish and preserve the thermal technology over time. After washing, dry upside down without the lid to allow proper ventilation — this keeps your tumbler fresh and looking its best.Extended care instructionsNever use bleach or chlorine-based cleaners. If your tumbler develops an odour, mix a solution of ¼ cup of white vinegar and ¾ tablespoon of baking soda, leave it to soak overnight, then rinse thoroughly and air dry. For interior stains, soak in warm water with two tablespoons of baking soda for at least one hour, or overnight for stubborn marks.The lid gasket can be cleaned in the dishwasher using a small basket, or soaked in the same vinegar and baking soda solution overnight.Important reminders· Do not overfill with hot liquids· Always ensure the lid is fully closed and tightened to prevent leaks· If using with carbonated drinks, open carefully — the airtight seal maintains pressure· Not intended for prolonged liquid storageFor any further questions, our team is available at contact@hanstaiger.com.<br/><br/></p>",
             "metafield_namespace": "custom",
             "metafield_key": "faqs"
           }
         }
       },
       "block_order": [
-        "description",
-        "shipping",
-        "reviews",
-        "faqs"
+        "accordion_7LYXgb",
+        "accordion_rBDrYE",
+        "accordion_fnrPA7"
       ],
+      "name": "Product accordions",
       "settings": {}
+    },
+    "gallery_VxUbBd": {
+      "type": "gallery",
+      "blocks": {
+        "image_card_hnCkgH": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Imagen.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
+          }
+        },
+        "image_card_L6TMQM": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Imagen_1.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_card_hnCkgH",
+        "image_card_L6TMQM"
+      ],
+      "name": "Gallery Section",
+      "settings": {
+        "subtitle": "",
+        "brackets_color": "#e53d00",
+        "heading": "",
+        "column_mode": "manual",
+        "columns_desktop": 2,
+        "columns_mobile": "2"
+      }
+    },
+    "related_products_F73E4y": {
+      "type": "related-products",
+      "custom_css": [
+        ".related-products-section{padding-top: 0px; }"
+      ],
+      "name": "Related products",
+      "settings": {
+        "heading": "Combínalo con tu botella",
+        "products_to_show": 5
+      }
+    },
+    "icon_info_row_Cf8R4J": {
+      "type": "icon-info-row",
+      "blocks": {
+        "info_item_p464NN": {
+          "type": "info_item",
+          "settings": {
+            "top_text": "ENVÍO GRATIS",
+            "short_text": "Con cada doypack, en península.",
+            "icon": "shopify://shop_images/box_0165da94-1cb7-4017-b5cd-61cad9d7fd07.png",
+            "icon_alt": ""
+          }
+        },
+        "info_item_qkEp4P": {
+          "type": "info_item",
+          "settings": {
+            "top_text": "GARANTÍA X1-LAB",
+            "short_text": "Si no te gusta, te devolvemos el dinero.",
+            "icon": "shopify://shop_images/protection_575c7a7f-c60a-4c4d-8128-e488a22de9a4.png",
+            "icon_alt": ""
+          }
+        },
+        "info_item_zBDqxN": {
+          "type": "info_item",
+          "settings": {
+            "top_text": "PAGO SEGURO",
+            "short_text": "Tarjeta, Apple Pay, Google Pay y PayPal.",
+            "icon": "shopify://shop_images/protect_8fba4169-1042-440f-aba3-a0732bf6a8aa.png",
+            "icon_alt": ""
+          }
+        },
+        "info_item_LFrXLf": {
+          "type": "info_item",
+          "settings": {
+            "top_text": "CONTACTO",
+            "short_text": "¿Dudas? Escríbenos a contact@hanstaiger.com",
+            "icon": "shopify://shop_images/email_5579f39e-919c-41f3-aee9-3e23d4414e2b.png",
+            "icon_alt": ""
+          }
+        }
+      },
+      "block_order": [
+        "info_item_p464NN",
+        "info_item_qkEp4P",
+        "info_item_zBDqxN",
+        "info_item_LFrXLf"
+      ],
+      "name": "Icon Info Row",
+      "settings": {
+        "background": "#F4F4F4",
+        "padding_vertical": 13.5,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "gap_desktop": 1.5,
+        "gap_mobile": 4,
+        "top_text_size_mobile": 2.8,
+        "short_text_size_mobile": 4,
+        "icon_size_mobile": 6,
+        "text_width_mobile": 90,
+        "top_text_spacing_mobile": 1.5,
+        "icon_spacing_mobile": 2,
+        "text_width_desktop": 90,
+        "top_text_spacing_desktop": 0.5,
+        "icon_spacing_desktop": 1,
+        "top_text_weight": "400",
+        "short_text_weight": "400",
+        "letter_spacing": 0.1,
+        "top_text_color": "#111111",
+        "short_text_color": "#6B6B6B"
+      }
     }
   },
   "order": [
     "main",
-    "accordions"
+    "single_product_configurator_XQFT3e",
+    "product_accordions_qK7R4z",
+    "gallery_VxUbBd",
+    "related_products_F73E4y",
+    "icon_info_row_Cf8R4J"
   ]
 }
