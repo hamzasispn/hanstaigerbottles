@@ -1,0 +1,65 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "product",
+      "settings": {}
+    },
+    "accordions": {
+      "type": "product-accordions",
+      "blocks": {
+        "description": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Description",
+            "metafield_namespace": "custom",
+            "metafield_key": "description"
+          }
+        },
+        "shipping": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Shipping & returns",
+            "metafield_namespace": "custom",
+            "metafield_key": "shipping_returns"
+          }
+        },
+        "reviews": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Reviews",
+            "metafield_namespace": "custom",
+            "metafield_key": "reviews"
+          }
+        },
+        "faqs": {
+          "type": "accordion",
+          "settings": {
+            "heading": "FAQs",
+            "metafield_namespace": "custom",
+            "metafield_key": "faqs"
+          }
+        }
+      },
+      "block_order": [
+        "description",
+        "shipping",
+        "reviews",
+        "faqs"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "accordions"
+  ]
+}
