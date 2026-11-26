@@ -207,9 +207,9 @@
       "type": "split-banner",
       "name": "Split Banner",
       "settings": {
-        "heading": "Built to last.  Designerd to endure.",
-        "subtext": "A lifetime investment in hydration. Choose the bottle that will acompany you through every journey.",
-        "button_label": "Choose your bottle",
+        "heading": "Hechas para durar.Pensadas para acompañarte.",
+        "subtext": "Elige la botella que va contigo cada día.",
+        "button_label": "Elegir mi botella",
         "button_link": "",
         "left_image": "shopify://shop_images/Content.jpg",
         "image": "shopify://shop_images/IMG_15.jpg"
