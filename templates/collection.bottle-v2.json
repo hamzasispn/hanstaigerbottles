@@ -173,9 +173,9 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/Background_2.jpg",
-            "heading": "X1 Electrolytes",
-            "description": "Developed to pair seamlessly with our bottles. Balanced formulation for consistent performance.",
-            "button_label": "Explore electrolytes",
+            "heading": "ElectricLemon",
+            "description": "Electrolitos, vitaminas y fibra. 30 sobres, sabor limón.",
+            "button_label": "Ver ElectricLemon",
             "button_url": "#"
           }
         },
@@ -184,8 +184,8 @@
           "settings": {
             "image": "shopify://shop_images/Background_1.jpg",
             "heading": "Hanstaiger Gear",
-            "description": "Timeless pieces inspired by life onboard. Comfort and durability in every detail.",
-            "button_label": "Explore gear",
+            "description": "Piezas inspiradas en la vida a bordo.",
+            "button_label": "Ver Gear",
             "button_url": "#"
           }
         }
@@ -196,8 +196,8 @@
       ],
       "name": "Blocks Slider",
       "settings": {
-        "label": "OTHER Collection",
-        "heading": "Complete your hydration system",
+        "label": "Otras colecciones",
+        "heading": "Completa tu hidratación",
         "description": "",
         "link": "",
         "link_text": "View all"
