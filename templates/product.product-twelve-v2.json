@@ -14,10 +14,16 @@
       "disabled": true,
       "settings": {}
     },
-    "single_product_configurator_XQFT3e": {
-      "type": "single-product-configurator",
-      "name": "Product Configurator",
-      "settings": {}
+    "single_product_configurator_twelve_v2_3wiXMt": {
+      "type": "single-product-configurator-twelve-v2",
+      "name": "Twelve Configurator V2",
+      "settings": {
+        "background_color": "#F4F4F4",
+        "shipping_text": "IVA incluido. Envío 5,90 € en península, gratis si añades un duopack.",
+        "description_heading": "Descripción",
+        "button_text": "Añadir al carrito",
+        "bottom_text": "Prestaciones (frío/calor, antigoteo, sin BPA): solo se publican con el certificado del proveedor."
+      }
     },
     "product_accordions_qK7R4z": {
       "type": "product-accordions",
@@ -255,7 +261,7 @@
   },
   "order": [
     "main",
-    "single_product_configurator_XQFT3e",
+    "single_product_configurator_twelve_v2_3wiXMt",
     "product_accordions_qK7R4z",
     "related_products_F73E4y",
     "custom_text_KxXDaB",
