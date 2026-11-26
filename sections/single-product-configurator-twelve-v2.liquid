@@ -1,0 +1,872 @@
+```liquid
+{%- liquid
+  assign p = product
+  assign uid = section.id
+-%}
+
+{%- if p == blank -%}
+
+  <section class="p-8 text-center text-sm text-neutral-500">
+    {{ 'products.product.not_found' | t: default: 'Product not found. Use this section on a product template.' }}
+  </section>
+
+{%- else -%}
+
+  {%- capture variants_json -%}
+  [
+    {%- for v in p.variants -%}
+      {
+        "id": {{ v.id }},
+        "available": {{ v.available }},
+        "price": {{ v.price }},
+        "compare_at_price": {{ v.compare_at_price | default: 0 }},
+        "options": {{ v.options | json }},
+        "option1": {{ v.option1 | json }},
+        "option2": {{ v.option2 | json }},
+        "option3": {{ v.option3 | json }},
+        "featured_image": {% if v.featured_image %}{{ v.featured_image.src | image_url: width: 1200 | json }}{% else %}null{% endif %}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+  {%- endcapture -%}
+
+  <section
+    id="twelve-configurator-v2-{{ uid }}"
+    class="twelve-configurator-v2"
+    x-data='{
+      variants: {{ variants_json }},
+      optionNames: {{ p.options | json | escape }},
+      selected: {{ p.selected_or_first_available_variant.options | json | escape }},
+      mainImage: {% if p.selected_or_first_available_variant.featured_image %}{{ p.selected_or_first_available_variant.featured_image.src | image_url: width: 1200 | json | escape }}{% elsif p.featured_media %}{{ p.featured_media | image_url: width: 1200 | json | escape }}{% else %}""{% endif %},
+
+      get currentVariant() {
+        return this.variants.find(v =>
+          (v.option1 ?? null) === (this.selected[0] ?? null) &&
+          (v.option2 ?? null) === (this.selected[1] ?? null) &&
+          (v.option3 ?? null) === (this.selected[2] ?? null)
+        ) || this.variants.find(v => v.available) || this.variants[0];
+      },
+
+      get formattedPrice() {
+        const v = this.currentVariant;
+        if (!v) return "";
+        return (v.price/100).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) + " {{ cart.currency.symbol }}";
+      },
+
+      pick(idx, value) {
+        this.selected = this.selected.slice();
+        this.selected[idx] = value;
+
+        const v = this.currentVariant;
+        if (v && v.featured_image) {
+          this.mainImage = v.featured_image;
+        }
+      },
+
+      isAvailable(idx, value) {
+        const test = this.selected.slice();
+        test[idx] = value;
+
+        return this.variants.some(v =>
+          v.available &&
+          (idx === 0 || v.option1 === test[0]) &&
+          (idx === 1 || v.option2 === test[1]) &&
+          (idx === 2 || v.option3 === test[2]) &&
+          (v["option" + (idx + 1)] === value)
+        );
+      }
+    }'
+  >
+
+    <div class="twelve-configurator-v2-container">
+
+      <!-- LEFT: PRODUCT MEDIA -->
+
+      <div class="twelve-configurator-v2-media">
+
+        <!-- THUMBNAILS -->
+
+        <aside class="twelve-configurator-v2-thumbnails">
+
+          {%- for image in p.images -%}
+
+            <button
+              type="button"
+              class="twelve-configurator-v2-thumbnail"
+              @click="mainImage = '{{ image | image_url: width: 1200 }}'"
+              :class="mainImage === '{{ image | image_url: width: 1200 }}' ? 'is-active' : ''"
+              aria-label="View product image {{ forloop.index }}"
+            >
+              {{
+                image
+                | image_url: width: 180
+                | image_tag:
+                  loading: 'lazy',
+                  class: 'twelve-configurator-v2-thumbnail-image',
+                  alt: p.title
+              }}
+            </button>
+
+          {%- endfor -%}
+
+        </aside>
+
+
+        <!-- MAIN IMAGE -->
+
+        <div class="twelve-configurator-v2-stage">
+
+          <img
+            :src="mainImage"
+            alt="{{ p.title | escape }}"
+            class="twelve-configurator-v2-main-image"
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- RIGHT: PRODUCT INFORMATION -->
+
+      <div class="twelve-configurator-v2-info">
+
+        <!-- TITLE -->
+
+        <h1 class="twelve-configurator-v2-title">
+          {{ p.title }}
+        </h1>
+
+
+        <!-- PRICE -->
+
+        <div class="twelve-configurator-v2-price">
+
+          <span x-text="formattedPrice"></span>
+
+          <template x-if="currentVariant && currentVariant.compare_at_price > currentVariant.price">
+            <span class="twelve-configurator-v2-compare-price"
+              x-text="(currentVariant.compare_at_price/100).toFixed(2) + ' {{ cart.currency.symbol }}'">
+            </span>
+          </template>
+
+        </div>
+
+
+        <!-- SHIPPING TEXT -->
+
+        {% if section.settings.shipping_text != blank %}
+          <p class="twelve-configurator-v2-shipping">
+            {{ section.settings.shipping_text }}
+          </p>
+        {% endif %}
+
+
+        <!-- DIVIDER -->
+
+        <div class="twelve-configurator-v2-divider"></div>
+
+
+        <!-- DESCRIPTION -->
+
+        {% if p.description != blank %}
+
+          <div class="twelve-configurator-v2-description">
+
+            <h2 class="twelve-configurator-v2-description-heading">
+              {{ section.settings.description_heading }}
+            </h2>
+
+            <div class="twelve-configurator-v2-description-content">
+              {{ p.description }}
+            </div>
+
+          </div>
+
+          <div class="twelve-configurator-v2-divider"></div>
+
+        {% endif %}
+
+
+        <!-- PRODUCT OPTIONS -->
+
+        {% for opt in p.options_with_values %}
+
+          {% assign oi = forloop.index0 %}
+          {% assign oname_down = opt.name | downcase %}
+
+          <div class="twelve-configurator-v2-option">
+
+            <div class="twelve-configurator-v2-option-heading">
+
+              <span class="twelve-configurator-v2-option-name">
+                {{ opt.name }}
+              </span>
+
+              {% if oname_down contains 'color' or oname_down contains 'colour' or oname_down contains 'colores' %}
+                <span
+                  class="twelve-configurator-v2-selected-color"
+                  x-text="selected[{{ oi }}]"
+                ></span>
+              {% endif %}
+
+            </div>
+
+
+            <!-- COLOR OPTIONS -->
+
+            {% if oname_down contains 'color' or oname_down contains 'colour' or oname_down contains 'colores' %}
+
+              <div class="twelve-configurator-v2-color-options">
+
+                {% for val in opt.values %}
+
+                  {% assign color_handle = val | downcase | handleize %}
+                  {% assign swatch_color = color_handle %}
+
+                  {% case color_handle %}
+                    {% when 'naranja' %}
+                      {% assign swatch_color = '#f37021' %}
+                    {% when 'orange' %}
+                      {% assign swatch_color = '#f37021' %}
+                    {% when 'negro' %}
+                      {% assign swatch_color = '#292929' %}
+                    {% when 'black' %}
+                      {% assign swatch_color = '#292929' %}
+                    {% when 'blanco' %}
+                      {% assign swatch_color = '#ffffff' %}
+                    {% when 'white' %}
+                      {% assign swatch_color = '#ffffff' %}
+                    {% when 'gris' %}
+                      {% assign swatch_color = '#777777' %}
+                    {% when 'gray' %}
+                      {% assign swatch_color = '#777777' %}
+                    {% when 'grey' %}
+                      {% assign swatch_color = '#777777' %}
+                    {% when 'rojo' %}
+                      {% assign swatch_color = '#e53935' %}
+                    {% when 'red' %}
+                      {% assign swatch_color = '#e53935' %}
+                    {% when 'azul' %}
+                      {% assign swatch_color = '#2463a6' %}
+                    {% when 'blue' %}
+                      {% assign swatch_color = '#2463a6' %}
+                    {% when 'verde' %}
+                      {% assign swatch_color = '#27864b' %}
+                    {% when 'green' %}
+                      {% assign swatch_color = '#27864b' %}
+                  {% endcase %}
+
+                  <button
+                    type="button"
+                    class="twelve-configurator-v2-color-swatch"
+                    style="--swatch-color: {{ swatch_color }};"
+                    :class="selected[{{ oi }}] === {{ val | json | escape }} ? 'is-selected' : ''"
+                    :disabled="!isAvailable({{ oi }}, {{ val | json | escape }})"
+                    @click="pick({{ oi }}, {{ val | json | escape }})"
+                    aria-label="{{ val | escape }}"
+                    title="{{ val | escape }}"
+                  >
+                  </button>
+
+                {% endfor %}
+
+              </div>
+
+
+            <!-- OTHER OPTIONS -->
+
+            {% else %}
+
+              <div class="twelve-configurator-v2-other-options">
+
+                {% for val in opt.values %}
+
+                  <button
+                    type="button"
+                    class="twelve-configurator-v2-option-button"
+                    :class="selected[{{ oi }}] === {{ val | json | escape }} ? 'is-selected' : ''"
+                    :disabled="!isAvailable({{ oi }}, {{ val | json | escape }})"
+                    @click="pick({{ oi }}, {{ val | json | escape }})"
+                  >
+                    {{ val }}
+                  </button>
+
+                {% endfor %}
+
+              </div>
+
+            {% endif %}
+
+          </div>
+
+          <div class="twelve-configurator-v2-divider"></div>
+
+        {% endfor %}
+
+
+        <!-- ADD TO CART -->
+
+        {% form 'product', p, class: 'twelve-configurator-v2-product-form' %}
+
+          <input
+            type="hidden"
+            name="id"
+            :value="currentVariant ? currentVariant.id : ''"
+          >
+
+          <button
+            type="submit"
+            class="twelve-configurator-v2-add-to-cart"
+            :disabled="!currentVariant || !currentVariant.available"
+          >
+
+            <span
+              x-text="currentVariant && currentVariant.available ? '{{ section.settings.button_text | escape }}' : 'Sold out'"
+            ></span>
+
+            <span class="twelve-configurator-v2-arrow" aria-hidden="true">
+              →
+            </span>
+
+          </button>
+
+        {% endform %}
+
+
+        <!-- BELOW BUTTON TEXT -->
+
+        {% if section.settings.bottom_text != blank %}
+
+          <div class="twelve-configurator-v2-bottom-text">
+            {{ section.settings.bottom_text }}
+          </div>
+
+        {% endif %}
+
+      </div>
+
+    </div>
+
+  </section>
+
+{%- endif -%}
+
+
+<style>
+
+  /* MAIN SECTION */
+
+  #twelve-configurator-v2-{{ uid }} {
+    width: 100%;
+    background: {{ section.settings.background_color }};
+    padding: 3.333vw 0;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-container {
+    width: 88.889vw;
+    max-width: 88.889vw;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    gap: 4.167vw;
+    align-items: start;
+  }
+
+
+  /* MEDIA */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-media {
+    display: flex;
+    gap: 1.667vw;
+    align-items: flex-start;
+  }
+
+
+  /* THUMBNAILS */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-thumbnails {
+    display: flex;
+    flex-direction: column;
+    gap: 0.833vw;
+    width: 5.556vw;
+    flex-shrink: 0;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-thumbnail {
+    width: 5.556vw;
+    height: 5.556vw;
+    padding: 0;
+    border: 0.069vw solid transparent;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.65;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-thumbnail:hover,
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-thumbnail.is-active {
+    opacity: 1;
+    border-color: #292929;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-thumbnail-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+
+  /* IMAGE STAGE */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-main-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.25s ease;
+  }
+
+
+  /* PRODUCT INFO */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-info {
+    padding-top: 0.833vw;
+    min-width: 0;
+  }
+
+
+  /* TITLE */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-title {
+    margin: 0 0 0.833vw;
+    font-size: 2.222vw;
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: #292929;
+  }
+
+
+  /* PRICE */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-price {
+    margin-bottom: 1.111vw;
+    font-size: 1.25vw;
+    font-weight: 400;
+    line-height: 1.3;
+    color: #555555;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-compare-price {
+    margin-left: 0.556vw;
+    font-size: 0.972vw;
+    color: #999999;
+    text-decoration: line-through;
+  }
+
+
+  /* SHIPPING */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-shipping {
+    margin: 0 0 2.222vw;
+    font-size: 0.972vw;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #666666;
+  }
+
+
+  /* DIVIDERS */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-divider {
+    width: 100%;
+    height: 1px;
+    background: #dedede;
+    margin: 1.667vw 0;
+  }
+
+
+  /* DESCRIPTION */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-description-heading {
+    margin: 0 0 1.111vw;
+    font-size: 0.972vw;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #292929;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-description-content {
+    font-size: 0.972vw;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #292929;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-description-content p {
+    margin: 0 0 0.556vw;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-description-content p:last-child {
+    margin-bottom: 0;
+  }
+
+
+  /* OPTIONS */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option {
+    margin: 0;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.833vw;
+    margin-bottom: 1.111vw;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option-name {
+    font-size: 0.972vw;
+    font-weight: 400;
+    color: #292929;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-selected-color {
+    font-size: 0.972vw;
+    font-weight: 400;
+    color: #666666;
+  }
+
+
+  /* COLOR SWATCHES */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-color-options {
+    display: flex;
+    align-items: center;
+    gap: 0.833vw;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-color-swatch {
+    position: relative;
+    width: 1.667vw;
+    height: 1.667vw;
+    padding: 0;
+    border: 0.069vw solid #bdbdbd;
+    border-radius: 0.208vw;
+    background: var(--swatch-color);
+    cursor: pointer;
+    transition: outline 0.15s ease;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-color-swatch.is-selected {
+    outline: 0.104vw solid #292929;
+    outline-offset: 0.208vw;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-color-swatch:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+
+  /* OTHER OPTIONS */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-other-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.694vw;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option-button {
+    padding: 0.694vw 1.111vw;
+    background: #ffffff;
+    border: 0.069vw solid #d0d0d0;
+    border-radius: 0.139vw;
+    font-size: 0.972vw;
+    color: #292929;
+    cursor: pointer;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option-button.is-selected {
+    border-color: #292929;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option-button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+
+  /* ADD TO CART */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-product-form {
+    margin: 0;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-add-to-cart {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.667vw;
+
+    margin-top: 0.833vw;
+    padding: 0.972vw 1.667vw;
+
+    background: #f37021;
+    color: #111111;
+    border: none;
+    border-radius: 0.139vw;
+
+    font-family: inherit;
+    font-size: 1.111vw;
+    font-weight: 400;
+    line-height: 1.2;
+
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-add-to-cart:hover {
+    background: #e96312;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-add-to-cart:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-arrow {
+    font-size: 1.389vw;
+    line-height: 1;
+  }
+
+
+  /* TEXT BELOW BUTTON */
+
+  #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-bottom-text {
+    margin-top: 2.5vw;
+    font-size: 0.833vw;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #85858d;
+  }
+
+
+  /* MOBILE */
+
+  @media (max-width: 767px) {
+
+    #twelve-configurator-v2-{{ uid }} {
+      padding: 8vw 0;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-container {
+      width: 92vw;
+      max-width: 92vw;
+      grid-template-columns: 1fr;
+      gap: 8vw;
+    }
+
+
+    /* MOBILE MEDIA */
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-media {
+      flex-direction: column-reverse;
+      gap: 3vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-thumbnails {
+      flex-direction: row;
+      width: 100%;
+      gap: 2vw;
+      overflow-x: auto;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-thumbnail {
+      width: 14vw;
+      height: 14vw;
+      min-width: 14vw;
+      border-width: 0.2vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-stage {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+
+
+    /* MOBILE INFO */
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-info {
+      padding-top: 0;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-title {
+      margin-bottom: 2vw;
+      font-size: 7vw;
+      line-height: 1.1;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-price {
+      margin-bottom: 4vw;
+      font-size: 4vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-compare-price {
+      font-size: 3.2vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-shipping {
+      margin-bottom: 6vw;
+      font-size: 3.2vw;
+      line-height: 1.5;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-divider {
+      margin: 5vw 0;
+    }
+
+
+    /* MOBILE DESCRIPTION */
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-description-heading {
+      margin-bottom: 3vw;
+      font-size: 3.5vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-description-content {
+      font-size: 3.5vw;
+      line-height: 1.5;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-description-content p {
+      margin-bottom: 2vw;
+    }
+
+
+    /* MOBILE OPTIONS */
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option-heading {
+      gap: 3vw;
+      margin-bottom: 3vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option-name,
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-selected-color {
+      font-size: 3.5vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-color-options {
+      gap: 2.5vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-color-swatch {
+      width: 6vw;
+      height: 6vw;
+      border-width: 0.2vw;
+      border-radius: 0.6vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-color-swatch.is-selected {
+      outline-width: 0.3vw;
+      outline-offset: 0.6vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-other-options {
+      gap: 2vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-option-button {
+      padding: 2.5vw 4vw;
+      border-width: 0.2vw;
+      border-radius: 0.5vw;
+      font-size: 3.5vw;
+    }
+
+
+    /* MOBILE BUTTON */
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-add-to-cart {
+      margin-top: 2vw;
+      gap: 5vw;
+      padding: 3.5vw 5vw;
+      font-size: 4vw;
+      border-radius: 0.5vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-arrow {
+      font-size: 5vw;
+    }
+
+    #twelve-configurator-v2-{{ uid }} .twelve-configurator-v2-bottom-text {
+      margin-top: 7vw;
+      font-size: 3vw;
+      line-height: 1.5;
+    }
+
+  }
+
+</style>
+
+
+{% schema %}
+{
+  "name": "Twelve Configurator V2",
+  "tag": "section",
+  "class": "section-product-configurator-twelve-v2",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping Text",
+      "default": "IVA incluido. Envío 5,90 € en península, gratis si añades un duopack."
+    },
+    {
+      "type": "text",
+      "id": "description_heading",
+      "label": "Description Heading",
+      "default": "Descripción"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Añadir al carrito"
+    },
+    {
+      "type": "textarea",
+      "id": "bottom_text",
+      "label": "Text Below Button",
+      "default": "Prestaciones (frío/calor, antigoteo, sin BPA): solo se publican con el certificado del proveedor."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Twelve Configurator V2"
+    }
+  ]
+}
+{% endschema %}
+```
