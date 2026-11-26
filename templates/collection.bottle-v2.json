@@ -137,18 +137,6 @@
         "columns_mobile": "2"
       }
     },
-    "collection_explore_3mXEdQ": {
-      "type": "collection-explore",
-      "name": "Collection Explore",
-      "settings": {
-        "heading": "Explore the collection",
-        "products_per_page": 12,
-        "show_vendor": true,
-        "show_filter_count": true,
-        "enable_filtering": false,
-        "enable_sorting": true
-      }
-    },
     "collection_explore_v2_UkBQLi": {
       "type": "collection-explore-v2",
       "name": "Collection Explore V2",
@@ -184,7 +172,6 @@
     "banner_v2_mhdVwm",
     "custom_text_kcat7N",
     "gallery_8YeBPd",
-    "collection_explore_3mXEdQ",
     "collection_explore_v2_UkBQLi",
     "image_box_qiYrVm"
   ]
