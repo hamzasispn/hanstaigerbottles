@@ -161,6 +161,25 @@
         "columns_mobile": "2"
       }
     },
+    "image_box_wykXk8": {
+      "type": "image-box",
+      "name": "Image Box",
+      "settings": {
+        "background_image": "shopify://shop_images/Image_6.jpg",
+        "image_fit": "cover",
+        "heading": "Hydration, elevated. Explore the full collection.",
+        "heading_color": "#ffffff",
+        "subheading": "Find the one that fits your rhythm",
+        "subheading_color": "#ffffff",
+        "description": "Every Hanstaiger tumbler is built for the way you live, premium materials, thoughtful design and thermal performance that goes the distance.",
+        "description_color": "#ececec",
+        "button_url": "#",
+        "button_label": "",
+        "button_bg_color": "rgba(209, 209, 209, 0.5)",
+        "button_text_color": "#111111",
+        "font_family": "Helvetica Neue"
+      }
+    },
     "icon_info_row_Cf8R4J": {
       "type": "icon-info-row",
       "blocks": {
@@ -239,6 +258,7 @@
     "related_products_F73E4y",
     "custom_text_KxXDaB",
     "gallery_kVAmjk",
+    "image_box_wykXk8",
     "icon_info_row_Cf8R4J"
   ]
 }
