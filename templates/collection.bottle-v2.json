@@ -153,14 +153,14 @@
       "settings": {
         "background_image": "shopify://shop_images/Image.jpg",
         "image_fit": "cover",
-        "heading": "Automated replenishment",
+        "heading": "Probadas a bor <br>dodel Hanstaiger X1",
         "heading_color": "#4f5257",
-        "subheading": "SUBSCRIBE TO ELECTROLYTES",
+        "subheading": "La conexión X1",
         "subheading_color": "#83868e",
-        "description": "Receive a fresh 30-day supply of X1 Electrolytes every month, delivered directly to your door. Subscribe or cancel anytime. No commitments, no complexity. Currently available across Europe only.",
+        "description": "Cada botella se ha usado en el entorno <br>exigente de la navegación en alta mar.",
         "description_color": "#83868e",
         "button_url": "#",
-        "button_label": "Discover the X1",
+        "button_label": "Conoce el X1",
         "button_bg_color": "rgba(52, 52, 52, 40%)",
         "button_text_color": "#ffffff",
         "font_family": "Inter"
