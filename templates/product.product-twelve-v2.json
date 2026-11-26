@@ -60,7 +60,9 @@
     },
     "related_products_F73E4y": {
       "type": "related-products",
-      "custom_css": [],
+      "custom_css": [
+        ".related-products-section {padding-bottom: 0px;}"
+      ],
       "name": "Related products",
       "settings": {
         "heading": "Combínalo con tu botella",
