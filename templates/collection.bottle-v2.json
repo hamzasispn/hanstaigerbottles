@@ -29,42 +29,35 @@
     "custom_text_kcat7N": {
       "type": "custom-text",
       "blocks": {
-        "feature_QiBXi7": {
-          "type": "feature",
-          "settings": {
-            "feature_text": "Engineering"
-          }
-        },
         "feature_VaW3UH": {
           "type": "feature",
           "settings": {
-            "feature_text": "Durability"
+            "feature_text": "Ingeniería"
           }
         },
         "feature_eJxeyn": {
           "type": "feature",
           "settings": {
-            "feature_text": "BPA-Free Lid"
+            "feature_text": "Durabilidad"
           }
         },
         "feature_DWFz3M": {
           "type": "feature",
           "settings": {
-            "feature_text": "Performance"
+            "feature_text": "Rendimiento"
           }
         }
       },
       "block_order": [
-        "feature_QiBXi7",
         "feature_VaW3UH",
         "feature_eJxeyn",
         "feature_DWFz3M"
       ],
       "name": "Custom Text Box",
       "settings": {
-        "description": "",
+        "description": "Cada botella Hanstaiger es de acero inoxidable 18/8, con doble pared y cámara de vacío, recubrimiento interior de cobre y exterior arenado. Pensadas para acompañarte todo el día, dentro y fuera del agua.",
         "link": "",
-        "second_text": "",
+        "second_text": "Ingeniería y materiales",
         "feature_color": "#f37021"
       }
     },
@@ -107,15 +100,22 @@
         "detail_list_mKJtXr": {
           "type": "detail-list",
           "settings": {
-            "heading": "Materials",
-            "list": ""
+            "heading": "Materiales",
+            "list": "<p>Acero inoxidable 18/8.<br/><br/></p>"
           }
         },
         "detail_list_AwyPte": {
           "type": "detail-list",
           "settings": {
-            "heading": "Process",
-            "list": ""
+            "heading": "Aislamiento",
+            "list": "<p>Doble pared con cámara de vacío.<br/><br/></p>"
+          }
+        },
+        "detail_list_nDBNcx": {
+          "type": "detail-list",
+          "settings": {
+            "heading": "Acabado",
+            "list": "<p>Exterior arenado.<br/><br/></p>"
           }
         }
       },
@@ -124,15 +124,16 @@
         "image_card_33ELxB",
         "image_card_MMHCzL",
         "detail_list_mKJtXr",
-        "detail_list_AwyPte"
+        "detail_list_AwyPte",
+        "detail_list_nDBNcx"
       ],
       "name": "Gallery Section",
       "settings": {
-        "subtitle": "How we do it",
+        "subtitle": "Cómo las hacemos",
         "brackets_color": "#e53d00",
         "heading": "",
-        "column_mode": "auto",
-        "columns_desktop": 4,
+        "column_mode": "manual",
+        "columns_desktop": 3,
         "columns_mobile": "2"
       }
     },
