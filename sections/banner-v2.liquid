@@ -1,0 +1,232 @@
+```liquid
+<div id="banner-v2-{{ section.id }}" class="banner-v2-section">
+  <div class="banner-v2-inner">
+
+    <div class="banner-v2-header">
+
+      <div class="banner-v2-label">
+        {{ section.settings.label }}
+      </div>
+
+      <div class="banner-v2-content">
+
+        {% if section.settings.heading != blank %}
+          <h1 class="banner-v2-heading">
+            {{ section.settings.heading }}
+          </h1>
+        {% endif %}
+
+        {% if section.settings.link_text != blank and section.settings.link != blank %}
+          <a href="{{ section.settings.link }}" class="banner-v2-button">
+            {{ section.settings.link_text }}
+          </a>
+        {% endif %}
+
+      </div>
+    </div>
+
+    {% render 'banner-box',
+      bg-image: section.settings.banner-img,
+      banner_link: section.settings.banner-btn-link,
+      banner_btn_text: section.settings.banner_btn_text
+    %}
+
+  </div>
+</div>
+
+
+<style>
+  #banner-v2-{{ section.id }} {
+    padding-top: 24vw;
+  }
+
+  #banner-v2-{{ section.id }} .banner-v2-inner {
+    width: 92vw;
+    max-width: 92vw;
+    margin: 0 auto;
+  }
+
+  #banner-v2-{{ section.id }} .banner-v2-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    margin-bottom: 8vw;
+  }
+
+
+  /* LABEL */
+
+  #banner-v2-{{ section.id }} .banner-v2-label {
+    font-size: 0.833vw;
+    font-weight: 500;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: #777777;
+  }
+
+
+  /* CONTENT */
+
+  #banner-v2-{{ section.id }} .banner-v2-content {
+    max-width: 100%;
+  }
+
+
+  /* HEADING */
+
+  #banner-v2-{{ section.id }} .banner-v2-heading {
+    margin: 0;
+    font-size: 3.889vw;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #292929;
+  }
+
+
+  /* BUTTON */
+
+  #banner-v2-{{ section.id }} .banner-v2-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 1.667vw;
+
+    padding: 0.833vw 1.667vw;
+
+    background: #f37021;
+    color: #ffffff;
+
+    font-size: 0.972vw;
+    font-weight: 400;
+    line-height: 1.2;
+
+    text-decoration: none;
+    border-radius: 0.139vw;
+
+    transition: opacity 0.3s ease;
+  }
+
+  #banner-v2-{{ section.id }} .banner-v2-button:hover {
+    opacity: 0.85;
+  }
+
+
+  /* DESKTOP */
+
+  @media (min-width: 1024px) {
+
+    #banner-v2-{{ section.id }} {
+      padding-top: 10.694vw;
+    }
+
+    #banner-v2-{{ section.id }} .banner-v2-inner {
+      width: 88.889vw;
+      max-width: 88.889vw;
+    }
+
+    #banner-v2-{{ section.id }} .banner-v2-header {
+      margin-bottom: 8.333vw;
+    }
+
+    #banner-v2-{{ section.id }} .banner-v2-content {
+      max-width: 42vw;
+    }
+
+  }
+
+
+  /* MOBILE */
+
+  @media (max-width: 767px) {
+
+    #banner-v2-{{ section.id }} {
+      padding-top: 24vw;
+    }
+
+    #banner-v2-{{ section.id }} .banner-v2-inner {
+      width: 92vw;
+      max-width: 92vw;
+    }
+
+    #banner-v2-{{ section.id }} .banner-v2-header {
+      grid-template-columns: 1fr;
+      gap: 8vw;
+      margin-bottom: 12vw;
+    }
+
+    #banner-v2-{{ section.id }} .banner-v2-label {
+      font-size: 3.125vw;
+    }
+
+    #banner-v2-{{ section.id }} .banner-v2-heading {
+      font-size: 9vw;
+      line-height: 1.05;
+    }
+
+    #banner-v2-{{ section.id }} .banner-v2-button {
+      margin-top: 5vw;
+      font-size: 3.646vw;
+      padding: 3.125vw 6.25vw;
+      border-radius: 0.521vw;
+    }
+
+  }
+
+</style>
+
+
+{% schema %}
+{
+  "name": "Banner V2",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Hechas para durar"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Botellas pensadas para la vida en el mar"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Header Button URL"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Header Button Text",
+      "default": "Ver los modelos"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner-img",
+      "label": "Banner Image"
+    },
+    {
+      "type": "url",
+      "id": "banner-btn-link",
+      "label": "Banner Image Button Link"
+    },
+    {
+      "type": "text",
+      "id": "banner_btn_text",
+      "label": "Banner Image Button Text",
+      "default": "Ver los modelos"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner V2"
+    }
+  ]
+}
+{% endschema %}
+```
