@@ -67,6 +67,48 @@
         "products_to_show": 5
       }
     },
+    "custom_text_KxXDaB": {
+      "type": "custom-text",
+      "blocks": {
+        "feature_j8xepX": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "100% Sustainable"
+          }
+        },
+        "feature_WDPk9Q": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Cold for 20h"
+          }
+        },
+        "feature_PPhcTi": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Hot for 10h"
+          }
+        },
+        "feature_j3E8ic": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Dishwasher safe"
+          }
+        }
+      },
+      "block_order": [
+        "feature_j8xepX",
+        "feature_WDPk9Q",
+        "feature_PPhcTi",
+        "feature_j3E8ic"
+      ],
+      "name": "Custom Text Box",
+      "settings": {
+        "description": "Every detail is designed to work as hard as you do. Vacuum-insulated double-wall technology keeps your drinks cold for up to 20 hours and hot for up to 10, so whether it's your morning coffee or your afternoon water, it arrives exactly as it should. Built from premium stainless steel with a scratch-resistant powder-coated finish, it is made to last, and when it needs cleaning, it goes straight in the dishwasher.\n<br><br>\n\nFrom the bottle itself to every layer of packaging, sustainability is non-negotiable: no BPA, no plastic, no compromise.",
+        "link": "",
+        "second_text": "Always perfect",
+        "feature_color": "#f37021"
+      }
+    },
     "icon_info_row_Cf8R4J": {
       "type": "icon-info-row",
       "blocks": {
@@ -143,6 +185,7 @@
     "single_product_configurator_XQFT3e",
     "product_accordions_qK7R4z",
     "related_products_F73E4y",
+    "custom_text_KxXDaB",
     "icon_info_row_Cf8R4J"
   ]
 }
