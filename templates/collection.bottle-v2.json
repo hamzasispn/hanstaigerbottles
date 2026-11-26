@@ -14,17 +14,16 @@
       "disabled": true,
       "settings": {}
     },
-    "banner_BDrVM6": {
-      "type": "banner",
-      "name": "Banner Section",
+    "banner_v2_mhdVwm": {
+      "type": "banner-v2",
+      "name": "Banner V2",
       "settings": {
-        "label": "Breadcrumb",
-        "heading": "Breadcrumb",
-        "description": "",
-        "link": "",
-        "link_text": "",
+        "label": "Hechas para durar",
+        "heading": "Botellas pensadas para la vida en el mar",
+        "link": "#",
+        "link_text": "Ver los modelos",
         "banner-btn-link": "",
-        "banner_btn_text": ""
+        "banner_btn_text": "Ver los modelos"
       }
     },
     "custom_text_kcat7N": {
@@ -65,7 +64,8 @@
       "settings": {
         "description": "",
         "link": "",
-        "second_text": ""
+        "second_text": "",
+        "feature_color": "#f37021"
       }
     },
     "gallery_8YeBPd": {
@@ -74,19 +74,34 @@
         "image_card_Q3PUex": {
           "type": "image-card",
           "settings": {
-            "img": "shopify://shop_images/Img_2.jpg"
+            "img": "shopify://shop_images/Img_2.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
           }
         },
         "image_card_33ELxB": {
           "type": "image-card",
           "settings": {
-            "img": "shopify://shop_images/Img_3.jpg"
+            "img": "shopify://shop_images/Img_3.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
           }
         },
         "image_card_MMHCzL": {
           "type": "image-card",
           "settings": {
-            "img": "shopify://shop_images/Img_4.jpg"
+            "img": "shopify://shop_images/Img_4.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
           }
         },
         "detail_list_mKJtXr": {
@@ -113,7 +128,12 @@
       ],
       "name": "Gallery Section",
       "settings": {
-        "subtitle": "How we do it"
+        "subtitle": "How we do it",
+        "brackets_color": "#e53d00",
+        "heading": "",
+        "column_mode": "auto",
+        "columns_desktop": 4,
+        "columns_mobile": "2"
       }
     },
     "blog_section_4rKDgh": {
@@ -195,7 +215,7 @@
   },
   "order": [
     "main",
-    "banner_BDrVM6",
+    "banner_v2_mhdVwm",
     "custom_text_kcat7N",
     "gallery_8YeBPd",
     "blog_section_4rKDgh",
