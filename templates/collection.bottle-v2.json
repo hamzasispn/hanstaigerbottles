@@ -147,6 +147,43 @@
         "add_to_cart_text": "Añadir al carrito"
       }
     },
+    "blog_section_BpHj9C": {
+      "type": "blog-section",
+      "blocks": {
+        "slide_Ukgzjb": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Background_2.jpg",
+            "heading": "X1 Electrolytes",
+            "description": "Developed to pair seamlessly with our bottles. Balanced formulation for consistent performance.",
+            "button_label": "Explore electrolytes",
+            "button_url": "#"
+          }
+        },
+        "slide_WpDMim": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Background_1.jpg",
+            "heading": "Hanstaiger Gear",
+            "description": "Timeless pieces inspired by life onboard. Comfort and durability in every detail.",
+            "button_label": "Explore gear",
+            "button_url": "#"
+          }
+        }
+      },
+      "block_order": [
+        "slide_Ukgzjb",
+        "slide_WpDMim"
+      ],
+      "name": "Blocks Slider",
+      "settings": {
+        "label": "OTHER Collection",
+        "heading": "Complete your hydration system",
+        "description": "",
+        "link": "",
+        "link_text": "View all"
+      }
+    },
     "image_box_qiYrVm": {
       "type": "image-box",
       "name": "Image Box",
@@ -173,6 +210,7 @@
     "custom_text_kcat7N",
     "gallery_8YeBPd",
     "collection_explore_v2_UkBQLi",
-    "image_box_qiYrVm"
+    "image_box_qiYrVm",
+    "blog_section_BpHj9C"
   ]
 }
