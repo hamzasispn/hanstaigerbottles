@@ -109,6 +109,58 @@
         "feature_color": "#f37021"
       }
     },
+    "gallery_kVAmjk": {
+      "type": "gallery",
+      "blocks": {
+        "image_card_JjWTjx": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Img_18.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
+          }
+        },
+        "image_card_q97rAV": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Img_3.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
+          }
+        },
+        "image_card_afjxzd": {
+          "type": "image-card",
+          "settings": {
+            "img": "shopify://shop_images/Img_19.jpg",
+            "show_content": false,
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_card_JjWTjx",
+        "image_card_q97rAV",
+        "image_card_afjxzd"
+      ],
+      "name": "Gallery Section",
+      "settings": {
+        "subtitle": "",
+        "brackets_color": "#e53d00",
+        "heading": "",
+        "column_mode": "auto",
+        "columns_desktop": 4,
+        "columns_mobile": "2"
+      }
+    },
     "icon_info_row_Cf8R4J": {
       "type": "icon-info-row",
       "blocks": {
@@ -186,6 +238,7 @@
     "product_accordions_qK7R4z",
     "related_products_F73E4y",
     "custom_text_KxXDaB",
+    "gallery_kVAmjk",
     "icon_info_row_Cf8R4J"
   ]
 }
