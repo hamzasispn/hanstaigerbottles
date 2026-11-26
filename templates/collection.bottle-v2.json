@@ -149,6 +149,16 @@
         "enable_sorting": true
       }
     },
+    "collection_explore_v2_UkBQLi": {
+      "type": "collection-explore-v2",
+      "name": "Collection Explore V2",
+      "settings": {
+        "collection": "botellas",
+        "heading": "Los cuatro modelos",
+        "collection_label": "Todos",
+        "add_to_cart_text": "Añadir al carrito"
+      }
+    },
     "image_box_qiYrVm": {
       "type": "image-box",
       "name": "Image Box",
@@ -175,6 +185,7 @@
     "custom_text_kcat7N",
     "gallery_8YeBPd",
     "collection_explore_3mXEdQ",
+    "collection_explore_v2_UkBQLi",
     "image_box_qiYrVm"
   ]
 }
