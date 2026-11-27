@@ -16,8 +16,8 @@
     },
     "single_product_configurator_XQFT3e": {
       "type": "single-product-configurator",
-      "name": "Product Configurator",
       "disabled": true,
+      "name": "Product Configurator",
       "settings": {}
     },
     "electrolitos_configurator": {
@@ -110,13 +110,16 @@
         "frequency_label": "Frecuencia",
         "format_label": "Formato",
         "bottle_name1": "Negro",
+        "bottle_img1": "shopify://shop_images/img_1_ec65a907-8dfe-43fa-9fee-281b8bb9e098.png",
         "bottle_name2": "Naranja",
+        "bottle_img2": "shopify://shop_images/img_28cb6309-57cf-48b8-ba8a-ba21e1b1568d.png",
         "show_hydration": true,
         "hydration_title": "Recovery Hydration · 250 mg de vitamina C por sobre",
         "hydration_copy": "La vitamina C contribuye a mantener el funcionamiento normal del sistema inmunitario durante el ejercicio físico intenso y después de este.",
         "regulatory": "Pendiente de validación del asesor regulatorio",
         "cart_text": "Añadir al carrito",
         "sample_text": "Probar 5 sobres · 9 €",
+        "sample_url": "",
         "bg": "#f4f4f4",
         "max_width": 1360,
         "pad_y": 48
@@ -204,7 +207,7 @@
     "related_products_F73E4y": {
       "type": "related-products",
       "custom_css": [
-        ".related-products-section{padding-top: 0px; }"
+        ".related-products-section {padding-top: 0px;}"
       ],
       "name": "Related products",
       "settings": {
@@ -260,7 +263,7 @@
       ],
       "name": "Icon Info Row",
       "settings": {
-        "background": "#F4F4F4",
+        "background": "#f4f4f4",
         "padding_vertical": 13.5,
         "columns_desktop": 4,
         "columns_mobile": "2",
@@ -279,7 +282,7 @@
         "short_text_weight": "400",
         "letter_spacing": 0.1,
         "top_text_color": "#111111",
-        "short_text_color": "#6B6B6B"
+        "short_text_color": "#6b6b6b"
       }
     }
   },
