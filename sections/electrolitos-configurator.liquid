@@ -1,0 +1,354 @@
+{%- liquid
+  assign p = product
+  assign uid = section.id
+  assign title_first = p.title | split: ' ' | first
+  assign title_rest = p.title | remove_first: title_first | strip
+-%}
+{%- if p == blank -%}
+  <section class="p-8 text-center">Product not found.</section>
+{%- else -%}
+{%- capture variants_json -%}
+[{%- for v in p.variants -%}
+{"id":{{ v.id }},"title":{{ v.title | json }},"price":{{ v.price }},"available":{{ v.available | json }},"plans":[{%- for a in v.selling_plan_allocations -%}{"id":{{ a.selling_plan.id }},"price":{{ a.price }}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}]
+{%- endcapture -%}
+{%- capture groups_json -%}
+[{%- for g in p.selling_plan_groups -%}
+{"name":{{ g.name | json }},"plans":[{%- for sp in g.selling_plans -%}{{ sp.id }}{% unless forloop.last %},{% endunless %}{%- endfor -%}]}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}]
+{%- endcapture -%}
+{%- capture plan_blocks_json -%}
+[{%- assign first = true -%}{%- for b in section.blocks -%}{%- if b.type == 'plan' -%}{% unless first %},{% endunless %}{%- assign first = false -%}
+{"group":{{ b.settings.group_name | strip | json }},"label":{{ b.settings.label | json }},"caption":{{ b.settings.caption | json }},"period":{{ b.settings.period | json }},"sobres":{{ b.settings.sobres | default: 30 }},"summary":{{ b.settings.summary | json }},"bottle":{{ b.settings.show_bottle | json }},"bottleHeading":{{ b.settings.bottle_heading | json }},"bottleCaption":{{ b.settings.bottle_caption | json }}}
+{%- endif -%}{%- endfor -%}]
+{%- endcapture -%}
+{%- capture format_blocks_json -%}
+[{%- assign first = true -%}{%- for b in section.blocks -%}{%- if b.type == 'format' -%}{% unless first %},{% endunless %}{%- assign first = false -%}
+{"variant":{{ b.settings.variant_title | strip | json }},"label":{{ b.settings.label | json }},"caption":{{ b.settings.caption | json }},"note":{{ b.settings.note | json }},"summary":{{ b.settings.summary | json }},"bottle":{{ b.settings.show_bottle | json }},"bottleHeading":{{ b.settings.bottle_heading | json }},"bottleCaption":{{ b.settings.bottle_caption | json }}}
+{%- endif -%}{%- endfor -%}]
+{%- endcapture -%}
+{%- capture bottles_json -%}
+[{%- assign first = true -%}{%- for i in (1..2) -%}{%- assign key_img = 'bottle_img' | append: i -%}{%- assign key_name = 'bottle_name' | append: i -%}{%- assign bname = section.settings[key_name] -%}{%- if bname != blank -%}{% unless first %},{% endunless %}{%- assign first = false -%}{"name":{{ bname | json }},"img":{% if section.settings[key_img] %}{{ section.settings[key_img] | image_url: width: 120 | json }}{% else %}null{% endif %}}{%- endif -%}{%- endfor -%}]
+{%- endcapture -%}
+
+<section
+  id="elc-{{ uid }}"
+  class="elc"
+  x-data='{
+    variants: {{ variants_json | strip_newlines | escape }},
+    groups: {{ groups_json | strip_newlines | escape }},
+    planBlocks: {{ plan_blocks_json | strip_newlines | escape }},
+    formatBlocks: {{ format_blocks_json | strip_newlines | escape }},
+    bottles: {{ bottles_json | strip_newlines | escape }},
+    currency: {{ cart.currency.iso_code | json | escape }},
+    subEnabled: {{ section.settings.subscription_enabled | json }},
+    mode: "subscription",
+    planIdx: 0,
+    formatIdx: 0,
+    bottleIdx: 0,
+    busy: false,
+    error: "",
+    img: {% if p.featured_media %}{{ p.featured_media | image_url: width: 1400 | json | escape }}{% else %}""{% endif %},
+    init() {
+      const def = {{ section.settings.default_plan | strip | json | escape }};
+      const i = this.plans.findIndex(pl => pl.group.toLowerCase() === def.toLowerCase());
+      this.planIdx = i >= 0 ? i : 0;
+      if (!this.subEnabled || !this.plans.length) this.mode = "onetime";
+    },
+    get plans() {
+      return this.planBlocks.map(b => {
+        const g = this.groups.find(g => g.name.trim().toLowerCase() === b.group.toLowerCase());
+        if (!g) return null;
+        for (const v of this.variants) {
+          const a = v.plans.find(a => g.plans.includes(a.id));
+          if (a) return Object.assign({}, b, { planId: a.id, variant: v, price: a.price });
+        }
+        return null;
+      }).filter(Boolean);
+    },
+    get formats() {
+      return this.formatBlocks.map(b => {
+        const v = this.variants.find(v => v.title.trim().toLowerCase() === b.variant.toLowerCase());
+        return v ? Object.assign({}, b, { variant: v, price: v.price }) : null;
+      }).filter(Boolean);
+    },
+    get base() { return this.formats.length ? this.formats[0].price : 0; },
+    get plan() { return this.plans[this.planIdx] || null; },
+    get format() { return this.formats[this.formatIdx] || null; },
+    get current() { return this.mode === "subscription" ? this.plan : this.format; },
+    get price() { return this.current ? this.current.price : 0; },
+    money(c, whole) {
+      const n = Number(c || 0) / 100;
+      const opts = { style: "currency", currency: this.currency };
+      if (whole && Number.isInteger(n)) { opts.minimumFractionDigits = 0; opts.maximumFractionDigits = 0; }
+      return new Intl.NumberFormat("es-ES", opts).format(n);
+    },
+    savings(pl) { if (!pl || !this.base) return 0; return Math.round((1 - pl.price / (this.base * pl.sobres / 30)) * 100); },
+    get maxSavings() { return this.plans.reduce((m, pl) => Math.max(m, this.savings(pl)), 0); },
+    get priceLine() {
+      if (!this.current) return "";
+      return this.money(this.price) + (this.mode === "subscription" && this.plan.period ? " " + this.plan.period : "");
+    },
+    get note() {
+      if (!this.current) return "";
+      if (this.mode === "subscription") {
+        return this.money(Math.round(this.plan.price / this.plan.sobres)) + " al día · Ahorras un " + this.savings(this.plan) + " % · Sin permanencia";
+      }
+      return [this.money(Math.round(this.base / 30)) + " al día", this.format.note, "Sin permanencia"].filter(Boolean).join(" · ");
+    },
+    get showBottle() { return !!(this.current && this.current.bottle && this.bottles.length); },
+    get bottle() { return this.bottles[this.bottleIdx] || null; },
+    get summary() { return this.current ? this.current.summary : ""; },
+    selectMode(m) { if (m === "subscription" && (!this.subEnabled || !this.plans.length)) return; this.mode = m; this.bottleIdx = 0; },
+    async addToCart() {
+      const cur = this.current;
+      if (!cur || !cur.variant.available || this.busy) return;
+      this.busy = true; this.error = "";
+      const body = { id: cur.variant.id, quantity: 1 };
+      if (this.mode === "subscription") body.selling_plan = cur.planId;
+      if (this.showBottle && this.bottle) {
+        body.properties = {};
+        body.properties[cur.bottleHeading || "Botella"] = [cur.bottleCaption, this.bottle.name].filter(Boolean).join(" · ");
+      }
+      try {
+        const r = await fetch("/cart/add.js", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body) });
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.description || j.message || "Error");
+        window.dispatchEvent(new CustomEvent("cart:refresh"));
+      } catch (e) { this.error = e.message; }
+      this.busy = false;
+    }
+  }'
+>
+  <div class="elc__grid">
+    <div class="elc__gallery">
+      {%- if p.media.size > 1 -%}
+        <div class="elc__thumbs">
+          {%- for m in p.media -%}
+            {%- if m.media_type == 'image' -%}
+              <button
+                type="button"
+                class="elc__thumb"
+                :class="img === {{ m | image_url: width: 1400 | json | escape }} ? 'is-active' : ''"
+                @click="img = {{ m | image_url: width: 1400 | json | escape }}"
+                aria-label="{{ m.alt | default: p.title | escape }}"
+              >
+                {{ m | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+              </button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      <div class="elc__stage">
+        {%- if p.featured_media -%}
+          <img :src="img" src="{{ p.featured_media | image_url: width: 1400 }}" alt="{{ p.title | escape }}" width="1400" height="{{ 1400 | divided_by: p.featured_media.aspect_ratio | round }}">
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="elc__panel">
+      <h1 class="elc__title">{{ title_first }}{% if title_rest != blank %}<br>{{ title_rest }}{% endif %}</h1>
+      <p class="elc__price" x-text="priceLine">{{ p.price | money }}</p>
+      <p class="elc__note" x-text="note"></p>
+
+      <div class="elc__block elc__block--first">
+        <div class="elc__label">
+          <span>{{ section.settings.purchase_label }}</span>
+          <span x-text="mode === 'subscription' ? {{ section.settings.subscription_text | json | escape }} : {{ section.settings.onetime_text | json | escape }} + (!subEnabled && {{ section.settings.subscription_unavailable_text | json | escape }} ? ' · ' + {{ section.settings.subscription_unavailable_text | json | escape }} : '')"></span>
+        </div>
+        <div class="elc__row">
+          <button type="button" class="elc__opt" :class="{ 'is-selected': mode === 'subscription' }" :disabled="!subEnabled || !plans.length" @click="selectMode('subscription')">{{ section.settings.subscription_text | upcase }}</button>
+          <span class="elc__opt-price" x-show="subEnabled && plans.length" x-text="mode === 'subscription' ? money(price) : 'Hasta −' + maxSavings + ' %'"></span>
+          <button type="button" class="elc__opt" :class="{ 'is-selected': mode === 'onetime' }" @click="selectMode('onetime')">{{ section.settings.onetime_text | upcase }}</button>
+          <span class="elc__opt-price" x-text="money(mode === 'onetime' && format ? format.price : base)"></span>
+        </div>
+      </div>
+
+      <template x-if="mode === 'subscription'">
+        <div class="elc__block">
+          <div class="elc__label"><span>{{ section.settings.frequency_label }}</span><span x-text="plan ? plan.caption : ''"></span></div>
+          <div class="elc__row">
+            <template x-for="(pl, i) in plans" :key="pl.planId">
+              <button type="button" class="elc__opt" :class="{ 'is-selected': i === planIdx }" :disabled="!pl.variant.available" @click="planIdx = i; bottleIdx = 0" x-text="pl.label"></button>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <template x-if="mode === 'onetime'">
+        <div class="elc__block">
+          <div class="elc__label"><span>{{ section.settings.format_label }}</span><span x-text="format ? format.caption : ''"></span></div>
+          <div class="elc__row">
+            <template x-for="(fm, i) in formats" :key="fm.variant.id">
+              <button type="button" class="elc__opt" :class="{ 'is-selected': i === formatIdx }" :disabled="!fm.variant.available" @click="formatIdx = i; bottleIdx = 0" x-text="fm.label + (fm.price > base ? ' · +' + money(fm.price - base, true) : '')"></button>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <div class="elc__block" x-show="showBottle" x-cloak>
+        <div class="elc__label"><span x-text="current ? current.bottleHeading : ''"></span><span x-text="current ? current.bottleCaption : ''"></span></div>
+        <div class="elc__row">
+          <template x-for="(b, i) in bottles" :key="i">
+            <button type="button" class="elc__bottle" :class="{ 'is-selected': i === bottleIdx }" @click="bottleIdx = i" :aria-label="b.name" :title="b.name">
+              <template x-if="b.img"><img :src="b.img" :alt="b.name" width="36" height="36" loading="lazy"></template>
+              <template x-if="!b.img"><span x-text="b.name"></span></template>
+            </button>
+          </template>
+        </div>
+      </div>
+
+      {%- if section.settings.show_hydration -%}
+        <div class="elc__block elc__hyd">
+          <p class="elc__hyd-title"><span class="elc__br">[</span>{{ section.settings.hydration_title }}<span class="elc__br">]</span></p>
+          <p class="elc__hyd-copy">{{ section.settings.hydration_copy }}</p>
+          {%- if section.settings.regulatory != blank -%}<p class="elc__hyd-reg">{{ section.settings.regulatory }}</p>{%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="elc__block">
+        <div class="elc__total"><span>Total</span><span x-text="money(price)"></span></div>
+        <p class="elc__summary" x-text="summary"></p>
+        <div class="elc__actions">
+          <button type="button" class="elc__cart" :disabled="busy || !current || !current.variant.available" @click="addToCart()">
+            <span x-text="current && !current.variant.available ? 'Agotado' : {{ section.settings.cart_text | json | escape }}">{{ section.settings.cart_text }}</span>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true"><path d="M0 6h14M9 1l5 5-5 5" stroke="currentColor" stroke-width="1.4"/></svg>
+          </button>
+          {%- if section.settings.sample_text != blank -%}
+            <a class="elc__sample" href="{{ section.settings.sample_url | default: '#' }}">
+              {{ section.settings.sample_text }}
+              <svg width="9" height="8" viewBox="0 0 16 12" fill="none" aria-hidden="true"><path d="M0 6h14M9 1l5 5-5 5" stroke="currentColor" stroke-width="2"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
+        <p class="elc__error" x-show="error" x-text="error" x-cloak></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #elc-{{ uid }} { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: {{ section.settings.bg }}; color: #171717; padding: {{ section.settings.pad_y }}px 80px {{ section.settings.pad_y }}px 40px; }
+  #elc-{{ uid }} [x-cloak] { display: none !important; }
+  #elc-{{ uid }} p { margin: 0; }
+  #elc-{{ uid }} button { font-family: inherit; cursor: pointer; }
+  #elc-{{ uid }} .elc__grid { max-width: {{ section.settings.max_width }}px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 416px; gap: 64px; align-items: start; }
+  #elc-{{ uid }} .elc__gallery { display: flex; align-items: center; gap: 24px; min-height: 100%; position: sticky; top: 40px; }
+  #elc-{{ uid }} .elc__thumbs { display: flex; flex-direction: column; gap: 2px; flex: 0 0 64px; }
+  #elc-{{ uid }} .elc__thumb { width: 64px; height: 56px; padding: 0; border: 1px solid transparent; background: #e6e6e6; overflow: hidden; opacity: .85; }
+  #elc-{{ uid }} .elc__thumb.is-active, #elc-{{ uid }} .elc__thumb:hover { opacity: 1; }
+  #elc-{{ uid }} .elc__thumb.is-active { border-color: #171717; }
+  #elc-{{ uid }} .elc__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #elc-{{ uid }} .elc__stage { flex: 1; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; }
+  #elc-{{ uid }} .elc__stage img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+  #elc-{{ uid }} .elc__panel { padding-top: 80px; }
+  #elc-{{ uid }} .elc__title { font-size: 32px; line-height: 1.06; font-weight: 400; letter-spacing: -0.01em; margin: 0 0 10px; }
+  #elc-{{ uid }} .elc__price { font-size: 15px; color: #555; margin-bottom: 4px; }
+  #elc-{{ uid }} .elc__note { font-size: 13px; color: #555; }
+  #elc-{{ uid }} .elc__block { border-top: 1px solid #dcdcdc; padding: 16px 0 18px; }
+  #elc-{{ uid }} .elc__block--first { margin-top: 40px; }
+  #elc-{{ uid }} .elc__label { display: flex; gap: 8px; font-size: 13px; margin-bottom: 8px; }
+  #elc-{{ uid }} .elc__row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  #elc-{{ uid }} .elc__opt { font-size: 10px; letter-spacing: .04em; text-transform: uppercase; line-height: 1; padding: 5px 4px; border: 1px solid #e2e2e2; background: transparent; color: #8a8a8a; }
+  #elc-{{ uid }} .elc__opt.is-selected { border-color: #171717; color: #171717; }
+  #elc-{{ uid }} .elc__opt:disabled { cursor: not-allowed; color: #c4c4c4; border-color: #ececec; }
+  #elc-{{ uid }} .elc__opt-price { font-size: 12px; color: #171717; margin-right: 18px; }
+  #elc-{{ uid }} .elc__opt:not(.is-selected) + .elc__opt-price { color: #8a8a8a; }
+  #elc-{{ uid }} .elc__bottle { width: 42px; height: 42px; padding: 3px; border: 1px solid #e2e2e2; background: #fff; display: grid; place-items: center; font-size: 8px; color: #555; }
+  #elc-{{ uid }} .elc__bottle.is-selected { border-color: #171717; }
+  #elc-{{ uid }} .elc__bottle img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  #elc-{{ uid }} .elc__hyd-title { font-size: 13px; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  #elc-{{ uid }} .elc__br { font-size: 22px; font-weight: 300; color: #8a8a8a; line-height: 1; }
+  #elc-{{ uid }} .elc__hyd-copy { font-size: 12px; line-height: 1.35; color: #555; }
+  #elc-{{ uid }} .elc__hyd-reg { font-size: 10px; color: #f37021; margin-top: 6px; }
+  #elc-{{ uid }} .elc__total { display: flex; justify-content: space-between; font-size: 13px; }
+  #elc-{{ uid }} .elc__summary { font-size: 12px; color: #777; margin: 4px 0 20px; }
+  #elc-{{ uid }} .elc__actions { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  #elc-{{ uid }} .elc__cart { display: inline-flex; align-items: center; gap: 16px; background: #f37021; color: #171717; border: 0; padding: 10px 12px; font-size: 14px; }
+  #elc-{{ uid }} .elc__cart:disabled { opacity: .5; cursor: not-allowed; }
+  #elc-{{ uid }} .elc__sample { display: inline-flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: .04em; color: #171717; text-decoration: none; text-transform: uppercase; }
+  #elc-{{ uid }} .elc__error { font-size: 12px; color: #c0392b; margin-top: 10px; }
+  @media (max-width: 989px) {
+    #elc-{{ uid }} { padding: 24px 16px 40px; }
+    #elc-{{ uid }} .elc__grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    #elc-{{ uid }} .elc__gallery { position: static; flex-direction: column-reverse; gap: 12px; }
+    #elc-{{ uid }} .elc__thumbs { flex-direction: row; flex: none; overflow-x: auto; max-width: 100%; }
+    #elc-{{ uid }} .elc__stage { width: 100%; }
+    #elc-{{ uid }} .elc__panel { padding-top: 0; }
+    #elc-{{ uid }} .elc__title { font-size: 28px; }
+    #elc-{{ uid }} .elc__block--first { margin-top: 24px; }
+  }
+</style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Electrolitos configurator",
+  "tag": "section",
+  "class": "section-electrolitos-configurator",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Compra" },
+    { "type": "checkbox", "id": "subscription_enabled", "label": "Subscription available", "default": true },
+    { "type": "text", "id": "subscription_unavailable_text", "label": "Text when subscription is unavailable", "default": "Suscripción disponible el 7 de enero" },
+    { "type": "text", "id": "default_plan", "label": "Default plan (selling plan group name)", "default": "Trimestral" },
+    { "type": "text", "id": "purchase_label", "label": "Purchase label", "default": "Compra" },
+    { "type": "text", "id": "subscription_text", "label": "Subscription text", "default": "Suscripción" },
+    { "type": "text", "id": "onetime_text", "label": "One-time text", "default": "Compra única" },
+    { "type": "text", "id": "frequency_label", "label": "Frequency label", "default": "Frecuencia" },
+    { "type": "text", "id": "format_label", "label": "Format label", "default": "Formato" },
+    { "type": "header", "content": "Gift bottles" },
+    { "type": "text", "id": "bottle_name1", "label": "Bottle 1 name", "default": "Negro" },
+    { "type": "image_picker", "id": "bottle_img1", "label": "Bottle 1 image" },
+    { "type": "text", "id": "bottle_name2", "label": "Bottle 2 name", "default": "Naranja" },
+    { "type": "image_picker", "id": "bottle_img2", "label": "Bottle 2 image" },
+    { "type": "header", "content": "Recovery Hydration" },
+    { "type": "checkbox", "id": "show_hydration", "label": "Show hydration text", "default": true },
+    { "type": "text", "id": "hydration_title", "label": "Title", "default": "Recovery Hydration · 250 mg de vitamina C por sobre" },
+    { "type": "textarea", "id": "hydration_copy", "label": "Description", "default": "La vitamina C contribuye a mantener el funcionamiento normal del sistema inmunitario durante el ejercicio físico intenso y después de este." },
+    { "type": "text", "id": "regulatory", "label": "Regulatory note", "default": "Pendiente de validación del asesor regulatorio" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "cart_text", "label": "Add to cart text", "default": "Añadir al carrito" },
+    { "type": "text", "id": "sample_text", "label": "Sample link text", "default": "Probar 5 sobres · 9 €" },
+    { "type": "url", "id": "sample_url", "label": "Sample link URL" },
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg", "label": "Background", "default": "#f4f4f4" },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 900, "max": 1600, "step": 20, "default": 1360, "unit": "px" },
+    { "type": "range", "id": "pad_y", "label": "Vertical padding", "min": 0, "max": 120, "step": 4, "default": 48, "unit": "px" }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Subscription plan",
+      "settings": [
+        { "type": "paragraph", "content": "Links a Shopify Subscriptions plan (by its title) to this button. The plan's variant and price come from Shopify." },
+        { "type": "text", "id": "group_name", "label": "Subscription plan title", "default": "Mensual" },
+        { "type": "text", "id": "label", "label": "Button label", "default": "Mensual" },
+        { "type": "text", "id": "caption", "label": "Caption", "default": "Mensual · 1 doypack al mes" },
+        { "type": "text", "id": "period", "label": "Price suffix", "default": "al mes" },
+        { "type": "number", "id": "sobres", "label": "Sachets per billing (for per-day price and savings)", "default": 30 },
+        { "type": "text", "id": "summary", "label": "Total summary", "default": "Suscripción · Mensual" },
+        { "type": "checkbox", "id": "show_bottle", "label": "Show gift bottle choice", "default": false },
+        { "type": "text", "id": "bottle_heading", "label": "Bottle heading", "default": "Botella de regalo" },
+        { "type": "text", "id": "bottle_caption", "label": "Bottle caption", "default": "SixSixty 660 ml" }
+      ]
+    },
+    {
+      "type": "format",
+      "name": "One-time format",
+      "settings": [
+        { "type": "paragraph", "content": "Links a product variant (by its exact title) to a one-time purchase button. The first format is the base price." },
+        { "type": "text", "id": "variant_title", "label": "Variant title", "default": "1 doypack" },
+        { "type": "text", "id": "label", "label": "Button label", "default": "Solo doypack" },
+        { "type": "text", "id": "caption", "label": "Caption", "default": "1 doypack · 30 sobres" },
+        { "type": "text", "id": "note", "label": "Note under price", "default": "Envío gratis en península" },
+        { "type": "text", "id": "summary", "label": "Total summary", "default": "Compra única · Solo doypack" },
+        { "type": "checkbox", "id": "show_bottle", "label": "Show bottle choice", "default": false },
+        { "type": "text", "id": "bottle_heading", "label": "Bottle heading", "default": "Botella" },
+        { "type": "text", "id": "bottle_caption", "label": "Bottle caption", "default": "SixSixty 660 ml" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Electrolitos configurator" }]
+}
+{% endschema %}

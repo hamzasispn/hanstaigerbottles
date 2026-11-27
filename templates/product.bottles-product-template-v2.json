@@ -17,7 +17,110 @@
     "single_product_configurator_XQFT3e": {
       "type": "single-product-configurator",
       "name": "Product Configurator",
+      "disabled": true,
       "settings": {}
+    },
+    "electrolitos_configurator": {
+      "type": "electrolitos-configurator",
+      "blocks": {
+        "plan_mensual": {
+          "type": "plan",
+          "settings": {
+            "group_name": "Mensual",
+            "label": "Mensual",
+            "caption": "Mensual · 1 doypack al mes",
+            "period": "al mes",
+            "sobres": 30,
+            "summary": "Suscripción · Mensual",
+            "show_bottle": false,
+            "bottle_heading": "Botella de regalo",
+            "bottle_caption": "SixSixty 660 ml"
+          }
+        },
+        "plan_trimestral": {
+          "type": "plan",
+          "settings": {
+            "group_name": "Trimestral",
+            "label": "Trimestral",
+            "caption": "Trimestral · 3 doypacks",
+            "period": "cada 3 meses",
+            "sobres": 90,
+            "summary": "Suscripción · Trimestral · Botella SixSixty 660 ml de regalo",
+            "show_bottle": true,
+            "bottle_heading": "Botella de regalo",
+            "bottle_caption": "SixSixty 660 ml"
+          }
+        },
+        "plan_anual": {
+          "type": "plan",
+          "settings": {
+            "group_name": "Anual",
+            "label": "Anual",
+            "caption": "Anual · 12 doypacks en 4 envíos",
+            "period": "al año",
+            "sobres": 360,
+            "summary": "Suscripción · Anual · Botellas SixSixty y TwelveH de regalo",
+            "show_bottle": true,
+            "bottle_heading": "Botellas de regalo",
+            "bottle_caption": "SixSixty 660 ml + TwelveH 1,2 L"
+          }
+        },
+        "format_solo": {
+          "type": "format",
+          "settings": {
+            "variant_title": "1 doypack",
+            "label": "Solo doypack",
+            "caption": "1 doypack · 30 sobres",
+            "note": "Envío gratis en península",
+            "summary": "Compra única · Solo doypack",
+            "show_bottle": false,
+            "bottle_heading": "Botella",
+            "bottle_caption": "SixSixty 660 ml"
+          }
+        },
+        "format_botella": {
+          "type": "format",
+          "settings": {
+            "variant_title": "1 doypack + botella",
+            "label": "Con botella",
+            "caption": "X1 Welcome Pack",
+            "note": "Solo en tu primer pedido",
+            "summary": "Compra única · X1 Welcome Pack con SixSixty 660 ml",
+            "show_bottle": true,
+            "bottle_heading": "Botella",
+            "bottle_caption": "SixSixty 660 ml"
+          }
+        }
+      },
+      "block_order": [
+        "plan_mensual",
+        "plan_trimestral",
+        "plan_anual",
+        "format_solo",
+        "format_botella"
+      ],
+      "name": "Electrolitos configurator",
+      "settings": {
+        "subscription_enabled": true,
+        "subscription_unavailable_text": "Suscripción disponible el 7 de enero",
+        "default_plan": "Trimestral",
+        "purchase_label": "Compra",
+        "subscription_text": "Suscripción",
+        "onetime_text": "Compra única",
+        "frequency_label": "Frecuencia",
+        "format_label": "Formato",
+        "bottle_name1": "Negro",
+        "bottle_name2": "Naranja",
+        "show_hydration": true,
+        "hydration_title": "Recovery Hydration · 250 mg de vitamina C por sobre",
+        "hydration_copy": "La vitamina C contribuye a mantener el funcionamiento normal del sistema inmunitario durante el ejercicio físico intenso y después de este.",
+        "regulatory": "Pendiente de validación del asesor regulatorio",
+        "cart_text": "Añadir al carrito",
+        "sample_text": "Probar 5 sobres · 9 €",
+        "bg": "#f4f4f4",
+        "max_width": 1360,
+        "pad_y": 48
+      }
     },
     "product_accordions_qK7R4z": {
       "type": "product-accordions",
@@ -183,6 +286,7 @@
   "order": [
     "main",
     "single_product_configurator_XQFT3e",
+    "electrolitos_configurator",
     "product_accordions_qK7R4z",
     "gallery_VxUbBd",
     "related_products_F73E4y",
