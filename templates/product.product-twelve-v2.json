@@ -14,9 +14,24 @@
       "disabled": true,
       "settings": {}
     },
+    "vaso_configurator": {
+      "type": "vaso-configurator",
+      "name": "Vaso configurator",
+      "settings": {
+        "shipping_text": "IVA incluido. Envío 5,90 € en península, gratis si añades un doypack.",
+        "description_heading": "Descripción",
+        "color_map": "Orange|Naranja|#f37021\nWhite|Blanco|#ffffff\nBlack|Negro|#2b2b2b",
+        "button_text": "Añadir al carrito",
+        "soldout_text": "Agotado",
+        "bottom_text": "Prestaciones (frío/calor, antigoteo, sin BPA): solo se publican con el certificado del proveedor",
+        "background_color": "#f4f4f4",
+        "pad_y": 48
+      }
+    },
     "single_product_configurator_twelve_v2_3wiXMt": {
       "type": "single-product-configurator-twelve-v2",
       "name": "Twelve Configurator V2",
+      "disabled": true,
       "settings": {
         "background_color": "#F4F4F4",
         "shipping_text": "IVA incluido. Envío 5,90 € en península, gratis si añades un duopack.",
@@ -262,6 +277,7 @@
   "order": [
     "main",
     "single_product_configurator_twelve_v2_3wiXMt",
+    "vaso_configurator",
     "product_accordions_qK7R4z",
     "related_products_F73E4y",
     "custom_text_KxXDaB",
